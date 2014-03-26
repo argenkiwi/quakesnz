@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="unnoticeable">#a7a7a7</color>
+    <color name="weak">#1f73ba</color>
+    <color name="light">#1eae49</color>
+    <color name="moderate">#fee303</color>
+    <color name="strong">#f6861f</color>
+    <color name="severe">#ec1b23</color>
+
+</resources>

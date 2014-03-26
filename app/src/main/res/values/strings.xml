@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Quake NZ</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="magnitude">Magnitude: %1$.1f</string>
+    <string name="depth">Depth: %1$.0f km</string>
+
+</resources>
