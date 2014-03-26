@@ -19,7 +19,6 @@ public class QuakeDetailFragment extends Fragment {
 
     private static final String ARG_FEATURE = "arg_feature";
     private static final SimpleDateFormat sDateFormat;
-    private static final String TAG = QuakeDetailFragment.class.getSimpleName();
 
     static {
         sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",
@@ -77,7 +76,7 @@ public class QuakeDetailFragment extends Fragment {
         String intensity = properties.getIntensity();
         final int colorForIntensity = getColorForIntensity(intensity);
         mMagnitudeBigView.setTextColor(colorForIntensity);
-        mMagnitudeSmallView.setText("" + magnitude[1]);
+        mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
         mIntensityView.setText(intensity);
         mTabView.setBackgroundColor(colorForIntensity);

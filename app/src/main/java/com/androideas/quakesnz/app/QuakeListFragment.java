@@ -59,7 +59,7 @@ public class QuakeListFragment extends ListFragment {
             String intensity = item.getProperties().getIntensity();
             final int colorForIntensity = getColorForIntensity(intensity);
             viewHolder.txtMagnitudeBig.setTextColor(colorForIntensity);
-            viewHolder.txtMagnitudeSmall.setText("" + magnitude[1]);
+            viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
             viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
             viewHolder.txtIntensity.setText(intensity);
             viewHolder.vTab.setBackgroundColor(colorForIntensity);
