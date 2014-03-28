@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.androideas.quakesnz.app.model.Feature;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class QuakeListFragment extends ListFragment {
@@ -20,6 +21,7 @@ public class QuakeListFragment extends ListFragment {
         TextView txtMagnitudeBig;
         TextView txtMagnitudeSmall;
         TextView txtIntensity;
+        TextView txtTime;
         View vTab;
     }
 
@@ -27,6 +29,11 @@ public class QuakeListFragment extends ListFragment {
 
         public FeatureAdapter(Context context, Feature[] objects) {
             super(context, 0, objects);
+        }
+
+        @Override
+        public Feature getItem(int position) {
+            return super.getItem(super.getCount() - position - 1);
         }
 
         @Override
@@ -44,6 +51,7 @@ public class QuakeListFragment extends ListFragment {
                 viewHolder.txtMagnitudeSmall = (TextView) convertView
                         .findViewById(R.id.magnitude_small);
                 viewHolder.txtIntensity = (TextView) convertView.findViewById(R.id.intensity);
+                viewHolder.txtTime = (TextView) convertView.findViewById(R.id.time);
                 viewHolder.vTab = convertView.findViewById(R.id.colorTab);
 
                 convertView.setTag(viewHolder);
@@ -62,9 +70,11 @@ public class QuakeListFragment extends ListFragment {
             viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
             viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
             viewHolder.txtIntensity.setText(intensity);
+            viewHolder.txtTime.setText(SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(item.getProperties().getOriginTime()));
             viewHolder.vTab.setBackgroundColor(colorForIntensity);
             return convertView;
         }
+
     }
 
     public int getColorForIntensity(String intensity) {
