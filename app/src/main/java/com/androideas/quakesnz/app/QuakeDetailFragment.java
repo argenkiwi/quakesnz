@@ -19,7 +19,6 @@ public class QuakeDetailFragment extends Fragment {
 
     private static final String ARG_FEATURE = "arg_feature";
     private static final SimpleDateFormat sDateFormat;
-    private static final String TAG = QuakeDetailFragment.class.getSimpleName();
 
     static {
         sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",
@@ -47,7 +46,7 @@ public class QuakeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_map, container,
+        View v = inflater.inflate(R.layout.fragment_quake_detail, container,
                 false);
 
         mMagnitudeBigView = (TextView) v

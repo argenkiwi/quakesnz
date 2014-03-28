@@ -13,18 +13,17 @@ import android.widget.Toast;
 
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.model.FeatureCollection;
+import com.androideas.quakesnz.app.utils.DateDeserializer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 public class MainActivity extends FragmentActivity {
-
-    public static final String EXTRA_QUAKE_POSITION = "extra_quake_position";
-
-    public static final String ACTION_QUAKE_SELECTED = "action_quake_selected";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -36,7 +35,7 @@ public class MainActivity extends FragmentActivity {
             FileInputStream input = openFileInput(GeonetService.QUAKES_FILE);
             InputStreamReader reader = new InputStreamReader(input);
 
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
 
             FeatureCollection featureCollection = gson.fromJson(reader,
                     FeatureCollection.class);

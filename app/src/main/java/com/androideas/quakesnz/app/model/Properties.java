@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class Properties implements Parcelable {
 
     public static final Parcelable.Creator<Properties> CREATOR = new Creator<Properties>() {
@@ -26,7 +28,7 @@ public class Properties implements Parcelable {
     private float magnitude;
 
     @SerializedName("origintime")
-    private String originTime;
+    private Date originTime;
 
     @SerializedName("publicid")
     private String publicId;
@@ -34,17 +36,17 @@ public class Properties implements Parcelable {
     private String status;
 
     @SerializedName("updatetime")
-    private String updateTime;
+    private Date updateTime;
 
     public Properties(Parcel source) {
         agency = source.readString();
         depth = source.readFloat();
         intensity = source.readString();
         magnitude = source.readFloat();
-        originTime = source.readString();
+        originTime = new Date(source.readLong());
         publicId = source.readString();
         status = source.readString();
-        updateTime = source.readString();
+        updateTime = new Date(source.readLong());
     }
 
     @Override
@@ -69,7 +71,7 @@ public class Properties implements Parcelable {
         return magnitude;
     }
 
-    public String getOriginTime() {
+    public Date getOriginTime() {
         return originTime;
     }
 
@@ -81,7 +83,7 @@ public class Properties implements Parcelable {
         return status;
     }
 
-    public String getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
@@ -101,7 +103,7 @@ public class Properties implements Parcelable {
         this.magnitude = magnitude;
     }
 
-    public void setOriginTime(String originTime) {
+    public void setOriginTime(Date originTime) {
         this.originTime = originTime;
     }
 
@@ -113,12 +115,19 @@ public class Properties implements Parcelable {
         this.status = status;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(agency);
+        dest.writeFloat(depth);
+        dest.writeString(intensity);
+        dest.writeFloat(magnitude);
+        dest.writeLong(originTime.getTime());
+        dest.writeString(publicId);
+        dest.writeString(status);
+        dest.writeLong(updateTime.getTime());
     }
 }
