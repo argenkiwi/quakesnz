@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app;
+package com.androideas.quakesnz.app.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 
 import java.text.SimpleDateFormat;
@@ -155,6 +156,13 @@ public class QuakeListFragment extends ListFragment {
 
     }
 
+    private void runReturnAnimation() {
+        int count = getListView().getChildCount();
+        for (int i = 0; i < count; i++) {
+            getListView().getChildAt(i).animate().setDuration(250).translationY(0);
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void runExitAnimation(View v, final Feature item) {
 
@@ -186,5 +194,9 @@ public class QuakeListFragment extends ListFragment {
         }
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        runReturnAnimation();
+    }
 }

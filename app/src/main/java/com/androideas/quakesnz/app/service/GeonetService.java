@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app;
+package com.androideas.quakesnz.app.service;
 
 import android.app.IntentService;
 import android.content.Intent;

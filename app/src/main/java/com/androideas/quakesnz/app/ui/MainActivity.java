@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app;
+package com.androideas.quakesnz.app.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.androideas.quakesnz.app.service.GeonetService;
+import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.model.FeatureCollection;
 import com.androideas.quakesnz.app.utils.DateDeserializer;
@@ -125,7 +127,10 @@ public class MainActivity extends FragmentActivity {
                 .replace(R.id.content_layer, f).commit();
     }
 
-    public void showQuakeDetail(Feature item) {
-        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.content_layer, QuakeDetailFragment.newInstance(item)).commit();
+    public void showQuakeDetail(Feature feature) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
+        startActivity(intent);
+        overridePendingTransition(0,0);
     }
 }

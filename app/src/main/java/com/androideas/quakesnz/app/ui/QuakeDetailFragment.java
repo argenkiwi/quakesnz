@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app;
+package com.androideas.quakesnz.app.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.model.Properties;
-import com.androideas.quakesnz.app.ui.MyMapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.text.SimpleDateFormat;

@@ -21,6 +21,7 @@ public class Geometry implements Parcelable {
     private float[] coordinates;
 
     public Geometry(Parcel source) {
+        coordinates = new float[source.readInt()];
         source.readFloatArray(coordinates);
     }
 
@@ -39,6 +40,7 @@ public class Geometry implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(coordinates.length);
         dest.writeFloatArray(coordinates);
     }
 
