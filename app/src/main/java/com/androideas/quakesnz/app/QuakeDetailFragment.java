@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.model.Properties;
+import com.androideas.quakesnz.app.ui.MyMapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -31,6 +33,7 @@ public class QuakeDetailFragment extends Fragment {
     private View mTabView;
     private TextView mMagnitudeSmallView;
     private TextView mIntensityView;
+    private TextView mTimeView;
 
     public static Fragment newInstance(Feature feature) {
 
@@ -54,6 +57,7 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeSmallView = (TextView) v
                 .findViewById(R.id.magnitude_small);
         mIntensityView = (TextView) v.findViewById(R.id.intensity);
+        mTimeView = (TextView) v.findViewById(R.id.time);
         mTabView = v.findViewById(R.id.colorTab);
         return v;
     }
@@ -61,11 +65,18 @@ public class QuakeDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mFeature = getArguments().getParcelable(ARG_FEATURE);
+
+        if (savedInstanceState == null) {
+            SupportMapFragment fragment = MyMapFragment.newInstance(mFeature.getGeometry());
+            getChildFragmentManager().beginTransaction().add(R.id.map, fragment).commit();
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         super.onActivityCreated(savedInstanceState);
 
         Properties properties = mFeature.getProperties();
@@ -79,20 +90,8 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
         mIntensityView.setText(intensity);
+        mTimeView.setText(SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(properties.getOriginTime()));
         mTabView.setBackgroundColor(colorForIntensity);
-
-//		try {
-//			Log.d(TAG, properties.getOriginTime());
-//			Date date = sDateFormat.parse(properties.getOriginTime().substring(
-//					0, properties.getOriginTime().length() - 3));
-//			mDateView.setText(DateUtils.getRelativeTimeSpanString(
-//					date.getTime(), Calendar.getInstance().getTimeInMillis(),
-//					DateUtils.MINUTE_IN_MILLIS));
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
     }
 
     public int getColorForIntensity(String intensity) {

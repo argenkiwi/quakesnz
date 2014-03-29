@@ -91,8 +91,10 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, GeonetService.class);
-        startService(intent);
+        if(savedInstanceState == null) {
+            Intent intent = new Intent(this, GeonetService.class);
+            startService(intent);
+        }
     }
 
     @Override

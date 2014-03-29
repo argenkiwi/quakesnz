@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="magnitude">Magnitude: %1$.1f</string>
     <string name="depth">Depth: %1$.0f km</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
