@@ -1,7 +1,9 @@
 package com.androideas.quakesnz.app;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -21,6 +23,7 @@ public class QuakeListFragment extends ListFragment {
         TextView txtMagnitudeBig;
         TextView txtMagnitudeSmall;
         TextView txtIntensity;
+        TextView txtLocation;
         TextView txtTime;
         View vTab;
     }
@@ -51,6 +54,7 @@ public class QuakeListFragment extends ListFragment {
                 viewHolder.txtMagnitudeSmall = (TextView) convertView
                         .findViewById(R.id.magnitude_small);
                 viewHolder.txtIntensity = (TextView) convertView.findViewById(R.id.intensity);
+                viewHolder.txtLocation = (TextView) convertView.findViewById(R.id.location);
                 viewHolder.txtTime = (TextView) convertView.findViewById(R.id.time);
                 viewHolder.vTab = convertView.findViewById(R.id.colorTab);
 
@@ -138,11 +142,49 @@ public class QuakeListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+
         super.onListItemClick(l, v, position, id);
 
         Feature item = (Feature) l.getItemAtPosition(position);
 
-        ((MainActivity) getActivity()).showQuakeDetail(item);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            runExitAnimation(v, item);
+        } else {
+            ((MainActivity) getActivity()).showQuakeDetail(item);
+        }
 
     }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void runExitAnimation(View v, final Feature item) {
+
+        int[] location = new int[2];
+
+        v.getLocationOnScreen(location);
+
+        int bottomY = getListView().getHeight() - getListView().getPaddingBottom() - getListView().getDividerHeight() - location[1];
+
+        v.animate().setDuration(250).translationYBy(bottomY).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity) getActivity()).showQuakeDetail(item);
+            }
+        });
+
+        int topY = location[1] - v.getHeight();
+
+        int count = getListView().getChildCount();
+        for (int i = 0; i < count; i++) {
+            View sibling = getListView().getChildAt(i);
+            if (!v.equals(sibling) && sibling != null) {
+                if (sibling.getY() > v.getY()) {
+                    sibling.animate().setDuration(250).translationYBy(bottomY);
+                } else {
+                    sibling.animate().setDuration(250).translationYBy(-topY);
+                }
+            }
+        }
+    }
+
+
 }
