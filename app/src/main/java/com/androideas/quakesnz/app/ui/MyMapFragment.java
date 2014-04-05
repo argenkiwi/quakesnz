@@ -16,11 +16,11 @@ public class MyMapFragment extends SupportMapFragment {
 
     public static MyMapFragment newInstance(Geometry geometry) {
 
-        float[] coordinates = geometry.getCoordinates();
+        LatLng coordinates = geometry.getCoordinates();
 
         Bundle args = new Bundle();
-        args.putFloat(ARG_LATITUDE, coordinates[0]);
-        args.putFloat(ARG_LONGITUDE, coordinates[1]);
+        args.putDouble(ARG_LATITUDE, coordinates.latitude);
+        args.putDouble(ARG_LONGITUDE, coordinates.longitude);
 
         MyMapFragment f = new MyMapFragment();
         f.setArguments(args);
@@ -34,7 +34,7 @@ public class MyMapFragment extends SupportMapFragment {
 
         GoogleMap map = getMap();
 
-        LatLng location = new LatLng(getArguments().getFloat(ARG_LONGITUDE), getArguments().getFloat(ARG_LATITUDE));
+        LatLng location = new LatLng(getArguments().getDouble(ARG_LATITUDE), getArguments().getDouble(ARG_LONGITUDE));
 
         map.addMarker(new MarkerOptions().position(location));
 

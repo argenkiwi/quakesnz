@@ -3,6 +3,8 @@ package com.androideas.quakesnz.app.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Geometry implements Parcelable {
 
     public static final Parcelable.Creator<Geometry> CREATOR = new Creator<Geometry>() {
@@ -18,11 +20,10 @@ public class Geometry implements Parcelable {
         }
     };
 
-    private float[] coordinates;
+    private LatLng coordinates;
 
     public Geometry(Parcel source) {
-        coordinates = new float[source.readInt()];
-        source.readFloatArray(coordinates);
+        coordinates = source.readParcelable(LatLng.class.getClassLoader());
     }
 
     @Override
@@ -30,18 +31,17 @@ public class Geometry implements Parcelable {
         return 0;
     }
 
-    public float[] getCoordinates() {
+    public LatLng getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(float[] coordinates) {
+    public void setCoordinates(LatLng coordinates) {
         this.coordinates = coordinates;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(coordinates.length);
-        dest.writeFloatArray(coordinates);
+        dest.writeParcelable(coordinates, flags);
     }
 
 }

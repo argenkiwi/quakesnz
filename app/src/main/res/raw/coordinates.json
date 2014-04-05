@@ -1,0 +1,44 @@
+[
+  {
+    "city": "Auckland",
+    "coordinates": [
+      -36.85,
+      174.76
+    ]
+  },
+  {
+    "city": "Whagarei",
+    "coordinates": [
+      -35.72,
+      174.31
+    ]
+  },
+  {
+    "city": "Pukekohe",
+    "coordinates": [
+      -37.19,
+      174.95
+    ]
+  },
+  {
+    "city": "Hamilton",
+    "coordinates": [
+      -37.78,
+      175.28
+    ]
+  },
+  {
+    "city": "Tauranga",
+    "coordinates": [
+      -37.7,
+      176.15
+    ]
+  },
+  {
+    "city": "Wellington",
+    "coordinates": [
+      -41.28,
+      174.78
+    ]
+  }
+]

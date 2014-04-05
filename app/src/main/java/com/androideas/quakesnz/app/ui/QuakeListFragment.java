@@ -148,11 +148,11 @@ public class QuakeListFragment extends ListFragment {
 
         Feature item = (Feature) l.getItemAtPosition(position);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            runExitAnimation(v, item);
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            runExitAnimation(v, item);
+//        } else {
             ((MainActivity) getActivity()).showQuakeDetail(item);
-        }
+//        }
 
     }
 
@@ -192,11 +192,5 @@ public class QuakeListFragment extends ListFragment {
                 }
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        runReturnAnimation();
     }
 }

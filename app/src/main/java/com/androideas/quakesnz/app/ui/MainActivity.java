@@ -8,14 +8,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.Toast;
 
-import com.androideas.quakesnz.app.service.GeonetService;
 import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.model.FeatureCollection;
+import com.androideas.quakesnz.app.service.GeonetService;
 import com.androideas.quakesnz.app.utils.DateDeserializer;
+import com.androideas.quakesnz.app.utils.LatLngAdapter;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -37,7 +38,7 @@ public class MainActivity extends FragmentActivity {
             FileInputStream input = openFileInput(GeonetService.QUAKES_FILE);
             InputStreamReader reader = new InputStreamReader(input);
 
-            Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
+            Gson gson = new GsonBuilder().registerTypeAdapter(LatLng.class, new LatLngAdapter()).registerTypeAdapter(Date.class, new DateDeserializer()).create();
 
             FeatureCollection featureCollection = gson.fromJson(reader,
                     FeatureCollection.class);
@@ -93,16 +94,10 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Intent intent = new Intent(this, GeonetService.class);
             startService(intent);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
     }
 
     @Override
@@ -131,6 +126,5 @@ public class MainActivity extends FragmentActivity {
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
         startActivity(intent);
-        overridePendingTransition(0,0);
     }
 }
