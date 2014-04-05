@@ -75,6 +75,7 @@ public class QuakeListFragment extends ListFragment {
             viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
             viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
             viewHolder.txtIntensity.setText(intensity);
+            viewHolder.txtLocation.setText(item.getClosestCity().getName());
             viewHolder.txtTime.setText(SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(item.getProperties().getOriginTime()));
             viewHolder.vTab.setBackgroundColor(colorForIntensity);
             return convertView;

@@ -34,6 +34,7 @@ public class QuakeDetailFragment extends Fragment {
     private TextView mMagnitudeSmallView;
     private TextView mIntensityView;
     private TextView mTimeView;
+    private TextView mLocationView;
 
     public static Fragment newInstance(Feature feature) {
 
@@ -57,6 +58,7 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeSmallView = (TextView) v
                 .findViewById(R.id.magnitude_small);
         mIntensityView = (TextView) v.findViewById(R.id.intensity);
+        mLocationView = (TextView) v.findViewById(R.id.location);
         mTimeView = (TextView) v.findViewById(R.id.time);
         mTabView = v.findViewById(R.id.colorTab);
         return v;
@@ -90,6 +92,7 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
         mIntensityView.setText(intensity);
+        mLocationView.setText(mFeature.getClosestCity().getName());
         mTimeView.setText(SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(properties.getOriginTime()));
         mTabView.setBackgroundColor(colorForIntensity);
     }

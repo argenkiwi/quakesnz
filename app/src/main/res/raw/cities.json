@@ -2,43 +2,43 @@
   {
     "city": "Auckland",
     "coordinates": [
-      -36.85,
-      174.76
+      174.76,
+      -36.85
     ]
   },
   {
     "city": "Whagarei",
     "coordinates": [
-      -35.72,
-      174.31
+      174.31,
+      -35.72
     ]
   },
   {
     "city": "Pukekohe",
     "coordinates": [
-      -37.19,
-      174.95
+      174.95,
+      -37.19
     ]
   },
   {
     "city": "Hamilton",
     "coordinates": [
-      -37.78,
-      175.28
+      175.28,
+      -37.78
     ]
   },
   {
     "city": "Tauranga",
     "coordinates": [
-      -37.7,
-      176.15
+      176.15,
+      -37.7
     ]
   },
   {
     "city": "Wellington",
     "coordinates": [
-      -41.28,
-      174.78
+      174.78,
+      -41.28
     ]
   }
 ]

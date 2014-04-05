@@ -26,12 +26,14 @@ public class Feature implements Parcelable {
     private String geometryName;
     private String id;
     private Properties properties;
+    private City closestCity;
 
     public Feature(Parcel source) {
         geometry = source.readParcelable(Geometry.class.getClassLoader());
         geometryName = source.readString();
         id = source.readString();
         properties = source.readParcelable(Properties.class.getClassLoader());
+        closestCity = source.readParcelable(City.class.getClassLoader());
     }
 
     @Override
@@ -77,6 +79,15 @@ public class Feature implements Parcelable {
         dest.writeString(geometryName);
         dest.writeString(id);
         dest.writeParcelable(properties, flags);
+        dest.writeParcelable(closestCity, flags);
     }
 
+
+    public City getClosestCity() {
+        return closestCity;
+    }
+
+    public void setClosestCity(City closestCity) {
+        this.closestCity = closestCity;
+    }
 }

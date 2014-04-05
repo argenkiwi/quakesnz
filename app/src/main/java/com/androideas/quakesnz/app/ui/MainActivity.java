@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
@@ -11,18 +12,20 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.androideas.quakesnz.app.R;
+import com.androideas.quakesnz.app.model.City;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.model.FeatureCollection;
 import com.androideas.quakesnz.app.service.GeonetService;
 import com.androideas.quakesnz.app.utils.DateDeserializer;
 import com.androideas.quakesnz.app.utils.LatLngAdapter;
+import com.androideas.quakesnz.app.utils.LatLngUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 
@@ -35,13 +38,23 @@ public class MainActivity extends FragmentActivity {
     protected void loadData() {
 
         try {
-            FileInputStream input = openFileInput(GeonetService.QUAKES_FILE);
-            InputStreamReader reader = new InputStreamReader(input);
-
             Gson gson = new GsonBuilder().registerTypeAdapter(LatLng.class, new LatLngAdapter()).registerTypeAdapter(Date.class, new DateDeserializer()).create();
+
+            // Load queakes.
+            InputStream input = openFileInput(GeonetService.QUAKES_FILE);
+            InputStreamReader reader = new InputStreamReader(input);
 
             FeatureCollection featureCollection = gson.fromJson(reader,
                     FeatureCollection.class);
+
+            reader.close();
+            input.close();
+
+            // Load cities.
+            input = getResources().openRawResource(R.raw.cities);
+            reader = new InputStreamReader(input);
+
+            City[] cities = gson.fromJson(reader, City[].class);
 
             reader.close();
             input.close();
@@ -54,6 +67,9 @@ public class MainActivity extends FragmentActivity {
                 aux = features[i];
                 features[i] = features[count - 1 - i];
                 features[count - 1 - i] = aux;
+
+                features[i].setClosestCity(findClosest(features[i].getGeometry().getCoordinates(), cities));
+                aux.setClosestCity(findClosest(aux.getGeometry().getCoordinates(), cities));
             }
 
             showQuakeList(features);
@@ -64,6 +80,24 @@ public class MainActivity extends FragmentActivity {
             Log.e(TAG, "Input/Output error.", e);
         }
     }
+
+    private City findClosest(LatLng coordinates, City[] cities) {
+
+        City result = null;
+
+        double minDistance = Double.MAX_VALUE;
+        for (City city : cities) {
+            final double distance = LatLngUtils.findDistance(coordinates, city.getCoordinates());
+            if(minDistance > distance){
+                minDistance = distance;
+                result = city;
+            }
+        }
+
+        return result;
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
