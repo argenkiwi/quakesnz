@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
+import com.androideas.quakesnz.app.utils.LatLngUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -75,7 +76,7 @@ public class QuakeListFragment extends ListFragment {
             viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
             viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
             viewHolder.txtIntensity.setText(intensity);
-            viewHolder.txtLocation.setText(item.getClosestCity().getName());
+            viewHolder.txtLocation.setText(getString(R.string.location, Math.round(LatLngUtils.findDistance(item.getGeometry().getCoordinates(), item.getClosestCity().getCoordinates())/ 1000), item.getClosestCity().getName()));
             viewHolder.txtTime.setText(SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(item.getProperties().getOriginTime()));
             viewHolder.vTab.setBackgroundColor(colorForIntensity);
             return convertView;

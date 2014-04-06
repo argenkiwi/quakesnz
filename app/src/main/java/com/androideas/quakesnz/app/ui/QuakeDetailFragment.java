@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.model.Properties;
+import com.androideas.quakesnz.app.utils.LatLngUtils;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.text.SimpleDateFormat;
@@ -92,7 +93,7 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
         mIntensityView.setText(intensity);
-        mLocationView.setText(mFeature.getClosestCity().getName());
+        mLocationView.setText(getString(R.string.location, Math.round(LatLngUtils.findDistance(mFeature.getGeometry().getCoordinates(), mFeature.getClosestCity().getCoordinates())/ 1000), mFeature.getClosestCity().getName()));
         mTimeView.setText(SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(properties.getOriginTime()));
         mTabView.setBackgroundColor(colorForIntensity);
     }
