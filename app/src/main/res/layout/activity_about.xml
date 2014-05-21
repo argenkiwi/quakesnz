@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background_repeat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -9,8 +10,38 @@
     tools:context="com.androideas.quakesnz.app.ui.AboutActivity">
 
     <TextView
-        android:text="@string/acknowledgements"
+        android:id="@+id/textView1"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/about"
+        android:textSize="24sp"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:text="@string/abouttext"
+        android:layout_below="@id/textView1"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/acknowledgements"
+        android:textSize="24sp"
+        android:layout_below="@id/textView2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:text="@string/acknowledgementstext"
+        android:layout_below="@id/textView3"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
 
 </RelativeLayout>
