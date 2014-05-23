@@ -4,135 +4,64 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.androideas.quakesnz.app.R;
-import com.androideas.quakesnz.app.model.City;
 import com.androideas.quakesnz.app.model.Feature;
-import com.androideas.quakesnz.app.model.FeatureCollection;
 import com.androideas.quakesnz.app.service.GeonetService;
-import com.androideas.quakesnz.app.utils.DateDeserializer;
-import com.androideas.quakesnz.app.utils.LatLngAdapter;
-import com.androideas.quakesnz.app.utils.LatLngUtils;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Date;
+public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener,
+        QuakeListFragment.Listener {
 
-public class MainActivity extends FragmentActivity {
-
+    public static final String STATE_SCOPE = "state_scope";
     private static final String TAG = MainActivity.class.getSimpleName();
-
     private BroadcastReceiver mReceiver;
-
-    protected void loadData() {
-
-        try {
-            Gson gson = new GsonBuilder().registerTypeAdapter(LatLng.class, new LatLngAdapter()).registerTypeAdapter(Date.class, new DateDeserializer()).create();
-
-            // Load queakes.
-            InputStream input = openFileInput(GeonetService.QUAKES_FILE);
-            InputStreamReader reader = new InputStreamReader(input);
-
-            FeatureCollection featureCollection = gson.fromJson(reader,
-                    FeatureCollection.class);
-
-            reader.close();
-            input.close();
-
-            // Load cities.
-            input = getResources().openRawResource(R.raw.cities);
-            reader = new InputStreamReader(input);
-
-            City[] cities = gson.fromJson(reader, City[].class);
-
-            reader.close();
-            input.close();
-
-            Feature[] features = featureCollection.getFeatures();
-
-            Feature aux;
-            final int count = features.length;
-            for (int i = 0; i < count / 2; i++) {
-                aux = features[i];
-                features[i] = features[count - 1 - i];
-                features[count - 1 - i] = aux;
-
-                features[i].setClosestCity(findClosest(features[i].getGeometry().getCoordinates(), cities));
-                aux.setClosestCity(findClosest(aux.getGeometry().getCoordinates(), cities));
-            }
-
-            showQuakeList(features);
-
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found.", e);
-        } catch (IOException e) {
-            Log.e(TAG, "Input/Output error.", e);
-        }
-    }
-
-    private City findClosest(LatLng coordinates, City[] cities) {
-
-        City result = null;
-
-        double minDistance = Double.MAX_VALUE;
-        for (City city : cities) {
-            final double distance = LatLngUtils.findDistance(coordinates, city.getCoordinates());
-            if(minDistance > distance){
-                minDistance = distance;
-                result = city;
-            }
-        }
-
-        return result;
-    }
-
-
+    private int mCurrentScope;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getSupportActionBar()
+                        .getThemedContext(), R.array.filters,
+                android.R.layout.simple_spinner_dropdown_item
+        );
+
+        getSupportActionBar().setListNavigationCallbacks(adapter, this);
+
+        setContentView(R.layout.activity_main);
 
         mReceiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-
-                if (GeonetService.ACTION_DOWNLOAD_SUCCESS.equals(intent
-                        .getAction())) {
-                    loadData();
-                } else if (GeonetService.ACTION_DOWNLOAD_FAILURE.equals(intent
-                        .getAction())) {
-                    if (getFileStreamPath(GeonetService.QUAKES_FILE).exists()) {
-                        Toast.makeText(MainActivity.this,
-                                "Could not update data.", Toast.LENGTH_SHORT)
-                                .show();
-                        loadData();
-                    } else {
-                        Toast.makeText(MainActivity.this, "No data available.",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                if (GeonetService.ACTION_DOWNLOAD_FAILURE.equals(intent.getAction())) {
+                    Toast.makeText(MainActivity.this, "Could not update data.",
+                            Toast.LENGTH_SHORT).show();
                 }
+                showQuakeList();
             }
         };
 
-        setContentView(R.layout.activity_main);
-
         if (savedInstanceState == null) {
+            Log.d(TAG, "Start GeoNet service.");
             Intent intent = new Intent(this, GeonetService.class);
+            intent.putExtra(GeonetService.EXTRA_SCOPE, GeonetService.SCOPE_ALL);
             startService(intent);
+        } else {
+            Log.d(TAG, "Restore scope.");
+            mCurrentScope = savedInstanceState.getInt(STATE_SCOPE);
         }
     }
 
@@ -142,8 +71,7 @@ public class MainActivity extends FragmentActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(GeonetService.ACTION_DOWNLOAD_SUCCESS);
         filter.addAction(GeonetService.ACTION_DOWNLOAD_FAILURE);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
-                filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -152,16 +80,10 @@ public class MainActivity extends FragmentActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
-    private void showQuakeList(Feature[] features) {
-        QuakeListFragment f = QuakeListFragment.newInstance(features);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_layer, f).commit();
-    }
-
-    public void showQuakeDetail(Feature feature) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
-        startActivity(intent);
+    private void showQuakeList() {
+        Log.d(TAG, "Show quake list.");
+        QuakeListFragment f = QuakeListFragment.newInstance(mCurrentScope);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_layer, f).commit();
     }
 
     @Override
@@ -182,4 +104,32 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(int position, long l) {
+
+        Log.d(TAG, "Navigation item selected.");
+
+        if (mCurrentScope != position) {
+            mCurrentScope = position;
+
+            Intent intent = new Intent(this, GeonetService.class);
+            intent.putExtra(GeonetService.EXTRA_SCOPE, position);
+            startService(intent);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onFeatureSelected(Feature feature) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_SCOPE, mCurrentScope);
+    }
 }
