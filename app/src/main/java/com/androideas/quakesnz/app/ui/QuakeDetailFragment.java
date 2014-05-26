@@ -3,6 +3,7 @@ package com.androideas.quakesnz.app.ui;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +95,8 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeSmallView.setTextColor(colorForIntensity);
         mIntensityView.setText(intensity);
         mLocationView.setText(getString(R.string.location, Math.round(LatLngUtils.findDistance(mFeature.getGeometry().getCoordinates(), mFeature.getClosestCity().getCoordinates())/ 1000), mFeature.getClosestCity().getName()));
-        mTimeView.setText(SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(properties.getOriginTime()));
+        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getOriginTime()
+                .getTime()));
         mTabView.setBackgroundColor(colorForIntensity);
     }
 
