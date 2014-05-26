@@ -6,19 +6,41 @@
     <string name="depth">Depth: %1$.0f km</string>
     <string name="location">%1$d km away from %2$s</string>
     <string name="about">About</string>
-    <string name="abouttext">Pellentesque habitant morbi tristique senectus et netus et
-malesuada fames ac turpis egestas. Vestibulum tortor quam,
-feugiat vitae, ultricies eget, tempor sit amet, ante.
-
-Donec eu libero sit amet quam egestas semper. Aenean
-ultricies mi vitae est. Mauris placerat eleifend leo.
-
-Quisque sit amet est et sapien ullamcorper pharetra.
-Vestibulum erat wisi, condimentum sed, commodo vitae,
-ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt
-condimentum, eros ipsum rutrum orci, sagittis tempus lacus
-enim ac dui. Donec non enim in turpis pulvinar facilisis.</string>
+    <string name="abouttext">Quakes NZ was built in Wellington, New Zealand by Leandro Peralta and Daniel Watts.</string>
+    <string name="leandro">Leandro Peralta - Developer</string>
+    <string name="leandroemail">email@email.com</string>
+    <string name="daniel">Daniel Watts - Designer</string>
+    <string name="danielemail">email@email.com</string>
     <string name="acknowledgements">Acknowledgements</string>
-    <string name="acknowledgementstext">We acknowledge the New Zealand GeoNet project and its sponsors EQC, GNS Science and LINZ, for providing data used in this app.</string>
+    <string name="acknowledgementstext">We would like to thank the following organisations for providing the awesome data used within this app.</string>
+    <string name="acknowledgementsgeonet">The New Zealand GeoNet project and its sponsors EQC, GNS Science and LINZ.</string>
+    <string name="acknowledgementsgetthru">Getthru.govt.nz text to follow</string>
+    <string name="earthquakebefore">Before an Earthquake</string>
+    <string name="earthquakebefore1">Getting ready before an earthquake strikes will help reduce damage to your home and business and help you survive.</string>
+    <string name="earthquakebefore2">Develop a Household Emergency Plan. Assemble and maintain your emergency survival Items for your home and workplace, as well as a portable getaway kit.</string>
+    <string name="earthquakebefore3">Practice Drop, Cover and Hold.</string>
+    <string name="earthquakebefore4">Identify safe places within your home, school or workplace. See the right-hand panel for more information about safe places.</string>
+    <string name="earthquakebefore5">Check your household insurance policy for cover and amount.</string>
+    <string name="earthquakebefore6">Seek qualified advice to make sure your house is secured to its foundations and ensure any renovations comply with the New Zealand Building Code.</string>
+    <string name="earthquakebefore7">Secure heavy items of furniture to the floor or wall.
+Visit www.eqc.govt.nz to find out how to quake-safe your home.</string>
+    <string name="earthquakeduring">During an Earthquake</string>
+    <string name="earthquakeduring1">If you are inside a building, move no more than a few steps, drop, cover and hold. Stay indoors till the shaking stops and you are sure it is safe to exit. In most buildings in New Zealand you are safer if you stay where you are until the shaking stops.</string>
+    <string name="earthquakeduring2">If you are in an elevator, drop, cover and hold. When the shaking stops, try and get out at the nearest floor if you can safely do so.</string>
+    <string name="earthquakeduring3">If you are outdoors when the shaking starts, move no more than a few steps away from buildings, trees, streetlights, and power lines, then Drop, Cover and Hold.</string>
+    <string name="earthquakeduring4">If you are at the beach or near the coast, drop, cover and hold then move to higher ground immediately in case a tsunami follows the quake.</string>
+    <string name="earthquakeduring5">If you are driving, pull over to a clear location, stop and stay there with your seatbelt fastened until the shaking stops. Once the shaking stops, proceed with caution and avoid bridges or ramps that might have been damaged.</string>
+    <string name="earthquakeduring6">If you are in a mountainous area or near unstable slopes or cliffs, be alert for falling debris or landslides.</string>
+    <string name="earthquakeafter">After an Earthquake</string>
+    <string name="earthquakeafter1">Listen to your local radio stations as emergency management officials will be broadcasting the most appropriate advice for your community and situation.</string>
+    <string name="earthquakeafter2">Expect to feel aftershocks.</string>
+    <string name="earthquakeafter3">Check yourself for injuries and get first aid if necessary. Help others if you can.</string>
+    <string name="earthquakeafter4">Be aware that electricity supply could be cut, and fire alarms and sprinkler systems can go off in buildings during an earthquake even if there is no fire. Check for, and extinguish, small fires.</string>
+    <string name="earthquakeafter5">If you are in a damaged building, try to get outside and find a safe, open place. Use the stairs, not the elevators.</string>
+    <string name="earthquakeafter6">Watch out for fallen power lines or broken gas lines, and stay out of damaged areas.</string>
+    <string name="earthquakeafter7">Only use the phone for short essential calls to keep the lines clear for emergency calls.</string>
+    <string name="earthquakeafter8">If you smell gas or hear a blowing or hissing noise, open a window, get everyone out quickly and turn off the gas if you can. If you see sparks, broken wires or evidence of electrical system damage, turn off the electricity at the main fuse box if it is safe to do so.</string>
+    <string name="earthquakeafter9">Keep your animals under your direct control as they can become disorientated. Take measures to protect your animals from hazards, and to protect other people from your animals.</string>
+    <string name="earthquakeafter10">If your property is damaged, take notes and photographs for insurance purposes. If you rent your property, contact your landlord and your contents insurance company as soon as possible.</string>
 
 </resources>
