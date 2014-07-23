@@ -1,9 +1,13 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:qnz="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_info"
+        android:title="@string/info"
+        qnz:showAsAction="never" />
+    <item
         android:id="@+id/action_about"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/about"/>
+        android:title="@string/about"
+        qnz:showAsAction="never" />
 
 </menu>
