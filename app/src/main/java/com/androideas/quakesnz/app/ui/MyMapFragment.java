@@ -34,7 +34,8 @@ public class MyMapFragment extends SupportMapFragment {
 
         GoogleMap map = getMap();
 
-        LatLng location = new LatLng(getArguments().getDouble(ARG_LATITUDE), getArguments().getDouble(ARG_LONGITUDE));
+        LatLng location = new LatLng(getArguments().getDouble(ARG_LATITUDE),
+                getArguments().getDouble(ARG_LONGITUDE));
 
         map.addMarker(new MarkerOptions().position(location));
 

@@ -96,12 +96,13 @@ public class QuakeListFragment extends ListFragment
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         super.onActivityCreated(savedInstanceState);
 
         int padding = (int) getResources().getDimension(R.dimen.padding_medium);
 
         ListView listView = getListView();
-        listView.setBackgroundColor(Color.parseColor("#CCCCCC"));
+        listView.setBackgroundResource(R.drawable.background_repeat);
         listView.setPadding(padding, padding, padding, padding);
         listView.setClipToPadding(false);
         listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
