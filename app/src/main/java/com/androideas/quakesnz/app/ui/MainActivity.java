@@ -97,14 +97,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_info) {
+
+        if (id == R.id.action_refresh) {
+            Intent intent = new Intent(this, GeonetService.class);
+            intent.putExtra(GeonetService.EXTRA_SCOPE, mCurrentScope);
+            startService(intent);
+        } else if (id == R.id.action_info) {
             startActivity(new Intent(this, InfoActivity.class));
-            return true;
         } else if (id == R.id.action_about) {
             startActivity(new Intent(this, AboutActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        } else
+            return super.onOptionsItemSelected(item);
+
+        return true;
     }
 
     @Override

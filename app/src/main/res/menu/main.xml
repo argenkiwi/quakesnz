@@ -2,6 +2,11 @@
     xmlns:qnz="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_action_navigation_refresh"
+        android:title="@string/refresh"
+        qnz:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_info"
         android:title="@string/info"
         qnz:showAsAction="never" />
@@ -9,5 +14,4 @@
         android:id="@+id/action_about"
         android:title="@string/about"
         qnz:showAsAction="never" />
-
 </menu>
