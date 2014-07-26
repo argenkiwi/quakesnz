@@ -15,9 +15,12 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.androideas.quakesnz.app.QuakesNZApplication;
 import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.service.GeonetService;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener,
         QuakeListFragment.Listener {
@@ -31,6 +34,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        ((QuakesNZApplication) getApplication())
+                .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
@@ -77,12 +83,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         filter.addAction(GeonetService.ACTION_DOWNLOAD_SUCCESS);
         filter.addAction(GeonetService.ACTION_DOWNLOAD_FAILURE);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void showQuakeList() {
