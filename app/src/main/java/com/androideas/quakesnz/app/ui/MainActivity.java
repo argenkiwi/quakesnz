@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -55,12 +56,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         };
 
         if (savedInstanceState == null) {
-            Log.d(TAG, "Start GeoNet service.");
-            Intent intent = new Intent(this, GeonetService.class);
-            intent.putExtra(GeonetService.EXTRA_SCOPE, GeonetService.SCOPE_ALL);
-            startService(intent);
+            Log.d(TAG, "Restore scope from preferences.");
+            final int scope = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getInt(STATE_SCOPE, GeonetService.SCOPE_ALL);
+
+            // Set invalid scope value to force load.
+            mCurrentScope = -1;
+
+            getSupportActionBar().setSelectedNavigationItem(scope);
         } else {
-            Log.d(TAG, "Restore scope.");
+            Log.d(TAG, "Restore scope from state.");
             mCurrentScope = savedInstanceState.getInt(STATE_SCOPE);
         }
     }
@@ -139,5 +144,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SCOPE, mCurrentScope);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putInt(STATE_SCOPE, mCurrentScope).commit();
     }
 }
