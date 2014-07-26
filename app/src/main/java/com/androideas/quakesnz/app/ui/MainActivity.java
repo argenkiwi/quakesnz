@@ -20,6 +20,7 @@ import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.service.GeonetService;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener,
@@ -112,6 +113,18 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
+
+            // Get tracker.
+            Tracker t = ((QuakesNZApplication)getApplication())
+                    .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
+
+            // Build and send an Event.
+            t.send(new HitBuilders.EventBuilder()
+                    .setCategory("Interactions")
+                    .setAction("Refresh")
+                    .setLabel("Refresh")
+                    .build());
+
             Intent intent = new Intent(this, GeonetService.class);
             intent.putExtra(GeonetService.EXTRA_SCOPE, mCurrentScope);
             startService(intent);
