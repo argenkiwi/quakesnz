@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     public static final String STATE_SCOPE = "state_scope";
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mReceiver;
-    private int mCurrentScope;
+    private int mCurrentScope = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +66,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             Log.d(TAG, "Restore scope from preferences.");
             final int scope = PreferenceManager.getDefaultSharedPreferences(this)
                     .getInt(STATE_SCOPE, GeonetService.SCOPE_ALL);
-
-            // Set invalid scope value to force load.
-            mCurrentScope = -1;
-
             getSupportActionBar().setSelectedNavigationItem(scope);
         } else {
             Log.d(TAG, "Restore scope from state.");
             mCurrentScope = savedInstanceState.getInt(STATE_SCOPE);
+            getSupportActionBar().setSelectedNavigationItem(mCurrentScope);
         }
     }
 
@@ -115,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         if (id == R.id.action_refresh) {
 
             // Get tracker.
-            Tracker t = ((QuakesNZApplication)getApplication())
+            Tracker t = ((QuakesNZApplication) getApplication())
                     .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
             // Build and send an Event.
