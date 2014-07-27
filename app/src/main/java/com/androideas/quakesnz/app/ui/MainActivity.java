@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -14,9 +15,13 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.androideas.quakesnz.app.QuakesNZApplication;
 import com.androideas.quakesnz.app.R;
 import com.androideas.quakesnz.app.model.Feature;
 import com.androideas.quakesnz.app.service.GeonetService;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener,
         QuakeListFragment.Listener {
@@ -30,6 +35,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        ((QuakesNZApplication) getApplication())
+                .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
@@ -55,12 +63,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         };
 
         if (savedInstanceState == null) {
-            Log.d(TAG, "Start GeoNet service.");
-            Intent intent = new Intent(this, GeonetService.class);
-            intent.putExtra(GeonetService.EXTRA_SCOPE, GeonetService.SCOPE_ALL);
-            startService(intent);
+            Log.d(TAG, "Restore scope from preferences.");
+            final int scope = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getInt(STATE_SCOPE, GeonetService.SCOPE_ALL);
+
+            // Set invalid scope value to force load.
+            mCurrentScope = -1;
+
+            getSupportActionBar().setSelectedNavigationItem(scope);
         } else {
-            Log.d(TAG, "Restore scope.");
+            Log.d(TAG, "Restore scope from state.");
             mCurrentScope = savedInstanceState.getInt(STATE_SCOPE);
         }
     }
@@ -72,12 +84,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         filter.addAction(GeonetService.ACTION_DOWNLOAD_SUCCESS);
         filter.addAction(GeonetService.ACTION_DOWNLOAD_FAILURE);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void showQuakeList() {
@@ -97,14 +111,31 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_info) {
+
+        if (id == R.id.action_refresh) {
+
+            // Get tracker.
+            Tracker t = ((QuakesNZApplication)getApplication())
+                    .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
+
+            // Build and send an Event.
+            t.send(new HitBuilders.EventBuilder()
+                    .setCategory("Interactions")
+                    .setAction("Refresh")
+                    .setLabel("Refresh")
+                    .build());
+
+            Intent intent = new Intent(this, GeonetService.class);
+            intent.putExtra(GeonetService.EXTRA_SCOPE, mCurrentScope);
+            startService(intent);
+        } else if (id == R.id.action_info) {
             startActivity(new Intent(this, InfoActivity.class));
-            return true;
         } else if (id == R.id.action_about) {
             startActivity(new Intent(this, AboutActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        } else
+            return super.onOptionsItemSelected(item);
+
+        return true;
     }
 
     @Override
@@ -134,5 +165,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SCOPE, mCurrentScope);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putInt(STATE_SCOPE, mCurrentScope).commit();
     }
 }

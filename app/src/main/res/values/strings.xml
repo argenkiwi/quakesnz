@@ -19,5 +19,6 @@
     <string name="before">Before</string>
     <string name="during">During</string>
     <string name="after">After</string>
+    <string name="refresh">Refresh</string>
 
 </resources>
