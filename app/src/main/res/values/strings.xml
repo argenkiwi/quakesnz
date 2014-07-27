@@ -6,15 +6,9 @@
     <string name="depth">Depth: %1$.0f km</string>
     <string name="location">%1$d km away from %2$s</string>
     <string name="about">About</string>
-    <string name="abouttext">Quakes NZ was built in Wellington, New Zealand by Leandro Peralta and Daniel Watts.</string>
-    <string name="leandro">Leandro Peralta - Developer</string>
-    <string name="leandroemail">email@email.com</string>
-    <string name="daniel">Daniel Watts - Designer</string>
-    <string name="danielemail">email@email.com</string>
+    <string name="about_body">Quakes NZ was built in Wellington, New Zealand by Leandro Peralta and Daniel Watts.\n\nLeandro Peralta - Developer\nleandro.peralta@androideas.net\n\nDaniel Watts - Designer\nwatsie@gmail.com</string>
     <string name="acknowledgements">Acknowledgements</string>
-    <string name="acknowledgementstext">We would like to thank the following organisations for providing the awesome data used within this app.</string>
-    <string name="acknowledgementsgeonet">The New Zealand GeoNet project and its sponsors EQC, GNS Science and LINZ.</string>
-    <string name="acknowledgementsgetthru">Getthru.govt.nz text to follow</string>
+    <string name="acknowledgements_body">We would like to thank the following organisations for providing the awesome data used within this app.\n\nThe New Zealand GeoNet project and its sponsors EQC, GNS Science and LINZ.\n\nGetthru.govt.nz text to follow</string>
     <string name="before_title">Before an Earthquake</string>
     <string name="before_body">Getting ready before an earthquake strikes will help reduce damage to your home and business and help you survive.\n\nDevelop a Household Emergency Plan. Assemble and maintain your emergency survival Items for your home and workplace, as well as a portable getaway kit.\n\nPractice Drop, Cover and Hold.\n\nIdentify safe places within your home, school or workplace. See the right-hand panel for more information about safe places.\n\nCheck your household insurance policy for cover and amount.\n\nSeek qualified advice to make sure your house is secured to its foundations and ensure any renovations comply with the New Zealand Building Code.\n\nSecure heavy items of furniture to the floor or wall.\n\nVisit www.eqc.govt.nz to find out how to quake-safe your home.</string>
     <string name="during_title">During an Earthquake</string>

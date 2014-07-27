@@ -53,7 +53,7 @@
         </activity>
         <activity
             android:name="com.androideas.quakesnz.app.ui.InfoActivity"
-            android:label="@string/about"
+            android:label="@string/info"
             android:parentActivityName="com.androideas.quakesnz.app.ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
