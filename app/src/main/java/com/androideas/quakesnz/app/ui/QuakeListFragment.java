@@ -102,7 +102,6 @@ public class QuakeListFragment extends ListFragment
         int padding = (int) getResources().getDimension(R.dimen.padding_medium);
 
         ListView listView = getListView();
-        listView.setBackgroundResource(R.drawable.background_repeat);
         listView.setPadding(padding, padding, padding, padding);
         listView.setClipToPadding(false);
         listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
