@@ -88,7 +88,7 @@ public class QuakeListFragment extends ListFragment
         setRetainInstance(true);
 
         Log.d(TAG, "Creating quake list fragment.");
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             Log.d(TAG, "Loading quake data.");
             getLoaderManager().initLoader(0, getArguments(), this).forceLoad();
         }
@@ -141,6 +141,7 @@ public class QuakeListFragment extends ListFragment
         TextView txtMagnitudeSmall;
         TextView txtIntensity;
         TextView txtLocation;
+        TextView txtDepth;
         TextView txtTime;
         View vTab;
     }
@@ -172,6 +173,7 @@ public class QuakeListFragment extends ListFragment
                         .findViewById(R.id.magnitude_small);
                 viewHolder.txtIntensity = (TextView) convertView.findViewById(R.id.intensity);
                 viewHolder.txtLocation = (TextView) convertView.findViewById(R.id.location);
+                viewHolder.txtDepth = (TextView) convertView.findViewById(R.id.depth);
                 viewHolder.txtTime = (TextView) convertView.findViewById(R.id.time);
                 viewHolder.vTab = convertView.findViewById(R.id.colorTab);
 
@@ -192,6 +194,7 @@ public class QuakeListFragment extends ListFragment
             viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
             viewHolder.txtIntensity.setText(intensity);
             viewHolder.txtLocation.setText(getString(R.string.location, Math.round(LatLngUtils.findDistance(item.getGeometry().getCoordinates(), item.getClosestCity().getCoordinates()) / 1000), item.getClosestCity().getName()));
+            viewHolder.txtDepth.setText(getString(R.string.depth, item.getProperties().getDepth()));
             viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
                     .getOriginTime().getTime()));
             viewHolder.vTab.setBackgroundColor(colorForIntensity);

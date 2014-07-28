@@ -54,7 +54,7 @@
         </activity>
         <activity
             android:name="com.androideas.quakesnz.app.ui.InfoActivity"
-            android:label="@string/info"
+            android:label="@string/emergency_advice"
             android:parentActivityName="com.androideas.quakesnz.app.ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
