@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#ccffffff"
+    android:background="#ffffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp">
@@ -14,7 +14,7 @@
         android:paddingLeft="8dp"
         android:text="8"
         android:textColor="@color/severe"
-        android:textSize="60sp" />
+        android:textSize="76sp" />
 
     <TextView
         android:id="@+id/magnitude_small"
@@ -45,6 +45,18 @@
         android:fontFamily="sans-serif-light"
         android:text="20km south east of Wellington"
         android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/depth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/intensity"
+        android:layout_below="@id/location"
+        android:paddingTop="2dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Depth: 159km"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp" />
 
     <View
         android:id="@+id/colorTab"
