@@ -41,10 +41,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getSupportActionBar()
-                        .getThemedContext(), R.array.filters,
-                android.R.layout.simple_spinner_dropdown_item
-        );
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getSupportActionBar().getThemedContext(), R.array.filters,
+                R.layout.support_simple_spinner_dropdown_item);
 
         getSupportActionBar().setListNavigationCallbacks(adapter, this);
 
