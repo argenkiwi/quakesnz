@@ -42,7 +42,7 @@
             android:parentActivityName="com.androideas.quakesnz.app.ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.androideas.quakesnz.app.ui.MainActivity" />
         </activity>
         <activity
             android:name="com.androideas.quakesnz.app.ui.AboutActivity"
