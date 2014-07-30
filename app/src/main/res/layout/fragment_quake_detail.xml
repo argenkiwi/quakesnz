@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_repeat"
+    android:background="#ffd7d7d7"
     android:orientation="vertical"
     android:padding="4dp">
 
@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:layout_margin="4dp"
         android:layout_weight="1"
-        android:background="#ccffffff"
+        android:background="#ffffffff"
         android:padding="4dp">
         <FrameLayout android:id="@+id/map"
             android:layout_width="match_parent"

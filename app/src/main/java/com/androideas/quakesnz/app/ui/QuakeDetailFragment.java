@@ -37,6 +37,7 @@ public class QuakeDetailFragment extends Fragment {
     private TextView mIntensityView;
     private TextView mTimeView;
     private TextView mLocationView;
+    private TextView mDepthView;
 
     public static Fragment newInstance(Feature feature) {
 
@@ -61,6 +62,7 @@ public class QuakeDetailFragment extends Fragment {
                 .findViewById(R.id.magnitude_small);
         mIntensityView = (TextView) v.findViewById(R.id.intensity);
         mLocationView = (TextView) v.findViewById(R.id.location);
+        mDepthView = (TextView) v.findViewById(R.id.depth);
         mTimeView = (TextView) v.findViewById(R.id.time);
         mTabView = v.findViewById(R.id.colorTab);
         return v;
@@ -85,7 +87,8 @@ public class QuakeDetailFragment extends Fragment {
 
         Properties properties = mFeature.getProperties();
 
-        String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude()).split("\\.");
+        String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
+                .split("\\.");
 
         mMagnitudeBigView.setText(magnitude[0]);
         String intensity = properties.getIntensity();
@@ -94,7 +97,10 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
         mIntensityView.setText(intensity);
-        mLocationView.setText(getString(R.string.location, Math.round(LatLngUtils.findDistance(mFeature.getGeometry().getCoordinates(), mFeature.getClosestCity().getCoordinates())/ 1000), mFeature.getClosestCity().getName()));
+        mLocationView.setText(getString(R.string.location, Math.round(LatLngUtils
+                .findDistance(mFeature.getGeometry().getCoordinates(), mFeature.getClosestCity()
+                        .getCoordinates()) / 1000), mFeature.getClosestCity().getName()));
+        mDepthView.setText(getString(R.string.depth, properties.getDepth()));
         mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getOriginTime()
                 .getTime()));
         mTabView.setBackgroundColor(colorForIntensity);

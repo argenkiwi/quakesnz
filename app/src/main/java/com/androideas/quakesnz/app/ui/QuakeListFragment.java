@@ -3,6 +3,7 @@ package com.androideas.quakesnz.app.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -88,7 +89,7 @@ public class QuakeListFragment extends ListFragment
         setRetainInstance(true);
 
         Log.d(TAG, "Creating quake list fragment.");
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             Log.d(TAG, "Loading quake data.");
             getLoaderManager().initLoader(0, getArguments(), this).forceLoad();
         }
@@ -102,12 +103,13 @@ public class QuakeListFragment extends ListFragment
         int padding = (int) getResources().getDimension(R.dimen.padding_medium);
 
         ListView listView = getListView();
-        listView.setBackgroundResource(R.drawable.background_repeat);
         listView.setPadding(padding, padding, padding, padding);
         listView.setClipToPadding(false);
         listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        listView.setDivider(getResources().getDrawable(android.R.color.transparent));
+        listView.setDivider(null);
         listView.setDividerHeight(padding);
+
+
     }
 
     @Override
@@ -141,6 +143,7 @@ public class QuakeListFragment extends ListFragment
         TextView txtMagnitudeSmall;
         TextView txtIntensity;
         TextView txtLocation;
+        TextView txtDepth;
         TextView txtTime;
         View vTab;
     }
@@ -161,17 +164,14 @@ public class QuakeListFragment extends ListFragment
 
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = View.inflate(getActivity(), R.layout.item_summary,
-                        null);
+                convertView = View.inflate(getActivity(), R.layout.item_summary, null);
 
                 viewHolder = new ViewHolder();
-
-                viewHolder.txtMagnitudeBig = (TextView) convertView
-                        .findViewById(R.id.magnitude_big);
-                viewHolder.txtMagnitudeSmall = (TextView) convertView
-                        .findViewById(R.id.magnitude_small);
+                viewHolder.txtMagnitudeBig = (TextView) convertView.findViewById(R.id.magnitude_big);
+                viewHolder.txtMagnitudeSmall = (TextView) convertView.findViewById(R.id.magnitude_small);
                 viewHolder.txtIntensity = (TextView) convertView.findViewById(R.id.intensity);
                 viewHolder.txtLocation = (TextView) convertView.findViewById(R.id.location);
+                viewHolder.txtDepth = (TextView) convertView.findViewById(R.id.depth);
                 viewHolder.txtTime = (TextView) convertView.findViewById(R.id.time);
                 viewHolder.vTab = convertView.findViewById(R.id.colorTab);
 
@@ -182,7 +182,8 @@ public class QuakeListFragment extends ListFragment
 
             Feature item = getItem(position);
 
-            String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", item.getProperties().getMagnitude()).split("\\.");
+            String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", item.getProperties()
+                    .getMagnitude()).split("\\.");
 
             viewHolder.txtMagnitudeBig.setText(magnitude[0]);
             String intensity = item.getProperties().getIntensity();
@@ -191,7 +192,11 @@ public class QuakeListFragment extends ListFragment
             viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
             viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
             viewHolder.txtIntensity.setText(intensity);
-            viewHolder.txtLocation.setText(getString(R.string.location, Math.round(LatLngUtils.findDistance(item.getGeometry().getCoordinates(), item.getClosestCity().getCoordinates()) / 1000), item.getClosestCity().getName()));
+            viewHolder.txtLocation.setText(getString(R.string.location, Math
+                    .round(LatLngUtils.findDistance(item.getGeometry().getCoordinates(),
+                            item.getClosestCity().getCoordinates()) / 1000), item.getClosestCity()
+                    .getName()));
+            viewHolder.txtDepth.setText(getString(R.string.depth, item.getProperties().getDepth()));
             viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
                     .getOriginTime().getTime()));
             viewHolder.vTab.setBackgroundColor(colorForIntensity);
