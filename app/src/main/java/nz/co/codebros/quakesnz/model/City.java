@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app.model;
+package nz.co.codebros.quakesnz.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

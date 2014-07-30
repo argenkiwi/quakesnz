@@ -1,13 +1,14 @@
-package com.androideas.quakesnz.app.ui;
+package nz.co.codebros.quakesnz.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-import com.androideas.quakesnz.app.QuakesNZApplication;
-import com.androideas.quakesnz.app.R;
 import com.google.android.gms.analytics.GoogleAnalytics;
+
+import nz.co.codebros.quakenz.R;
+import nz.co.codebros.quakesnz.QuakesNZApplication;
 
 public class AboutActivity extends ActionBarActivity {
 

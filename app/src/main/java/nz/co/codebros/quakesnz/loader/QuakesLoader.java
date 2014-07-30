@@ -1,18 +1,10 @@
-package com.androideas.quakesnz.app.loader;
+package nz.co.codebros.quakesnz.loader;
 
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.androideas.quakesnz.app.R;
-import com.androideas.quakesnz.app.model.City;
-import com.androideas.quakesnz.app.model.Feature;
-import com.androideas.quakesnz.app.model.FeatureCollection;
-import com.androideas.quakesnz.app.service.GeonetService;
-import com.androideas.quakesnz.app.utils.DateDeserializer;
-import com.androideas.quakesnz.app.utils.LatLngAdapter;
-import com.androideas.quakesnz.app.utils.LatLngUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +13,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
+
+import nz.co.codebros.quakenz.R;
+import nz.co.codebros.quakesnz.model.City;
+import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.service.GeonetService;
+import nz.co.codebros.quakesnz.utils.DateDeserializer;
+import nz.co.codebros.quakesnz.utils.LatLngAdapter;
+import nz.co.codebros.quakesnz.utils.LatLngUtils;
 
 /**
  * Created by leandro on 24/05/14.

@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app.ui;
+package nz.co.codebros.quakesnz.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.androideas.quakesnz.app.R;
+import nz.co.codebros.quakenz.R;
+
 
 /**
  * Created by Leandro on 24/07/2014.

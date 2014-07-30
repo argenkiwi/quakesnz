@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app.ui;
+package nz.co.codebros.quakesnz.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
-import com.androideas.quakesnz.app.QuakesNZApplication;
-import com.androideas.quakesnz.app.R;
 import com.google.android.gms.analytics.GoogleAnalytics;
+
+import nz.co.codebros.quakenz.R;
+import nz.co.codebros.quakesnz.QuakesNZApplication;
 
 /**
  * Created by Leandro on 24/07/2014.

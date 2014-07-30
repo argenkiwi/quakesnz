@@ -7,16 +7,16 @@
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!-- The screen names that will appear in reports -->
-    <screenName name="com.androideas.quakesnz.app.ui.MainActivity">
+    <screenName name="nz.co.codebros.quakesnz.ui.MainActivity">
         Quakes List
     </screenName>
-    <screenName name="com.androideas.quakesnz.app.ui.DetailActivity">
+    <screenName name="nz.co.codebros.quakesnz.ui.DetailActivity">
         Quake Detail
     </screenName>
-    <screenName name="com.androideas.quakesnz.app.ui.AboutActivity">
+    <screenName name="nz.co.codebros.quakesnz.ui.AboutActivity">
         About
     </screenName>
-    <screenName name="com.androideas.quakesnz.app.ui.InfoActivity">
+    <screenName name="nz.co.codebros.quakesnz.ui.InfoActivity">
         Info
     </screenName>
 

@@ -1,8 +1,8 @@
-package com.androideas.quakesnz.app.ui;
+package nz.co.codebros.quakesnz.ui;
 
 import android.os.Bundle;
 
-import com.androideas.quakesnz.app.model.Geometry;
+import nz.co.codebros.quakesnz.model.Geometry;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;

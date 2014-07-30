@@ -1,14 +1,12 @@
-package com.androideas.quakesnz.app.ui;
+package nz.co.codebros.quakesnz.ui;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 
-import com.androideas.quakesnz.app.QuakesNZApplication;
-import com.androideas.quakesnz.app.R;
-import com.androideas.quakesnz.app.model.Feature;
 import com.google.android.gms.analytics.GoogleAnalytics;
+
+import nz.co.codebros.quakesnz.QuakesNZApplication;
+import nz.co.codebros.quakesnz.model.Feature;
 
 public class DetailActivity extends ActionBarActivity {
 
@@ -21,11 +19,10 @@ public class DetailActivity extends ActionBarActivity {
         ((QuakesNZApplication) getApplication())
                 .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
-        setContentView(R.layout.activity_detail);
-
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             Feature feature = getIntent().getParcelableExtra(EXTRA_FEATURE);
-            getSupportFragmentManager().beginTransaction().add(R.id.content, QuakeDetailFragment.newInstance(feature)).commit();
+            getSupportFragmentManager().beginTransaction().add(android.R.id.content,
+                    QuakeDetailFragment.newInstance(feature)).commit();
         }
     }
 

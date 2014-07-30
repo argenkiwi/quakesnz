@@ -1,4 +1,4 @@
-package com.androideas.quakesnz.app.utils;
+package nz.co.codebros.quakesnz.utils;
 
 import com.google.android.gms.maps.model.LatLng;
 
