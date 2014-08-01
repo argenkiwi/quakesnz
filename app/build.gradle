@@ -12,6 +12,14 @@ android {
         release {
             storeFile file("codebros.jks")
             keyAlias "quakesnz"
+
+            File file = file("secure.properties");
+            if (file.exists()) {
+                Properties props = new Properties()
+                props.load(new FileInputStream(file))
+                storePassword props.getProperty("storePassword")
+                keyPassword props.getProperty("keyPassword")
+            }
         }
     }
 
@@ -25,9 +33,9 @@ android {
 
     buildTypes {
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.release
+            runProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }

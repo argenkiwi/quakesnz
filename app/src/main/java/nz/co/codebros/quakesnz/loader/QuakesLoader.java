@@ -46,7 +46,9 @@ public class QuakesLoader extends AsyncTaskLoader<Feature[]> {
 
         try {
             // Load quakes.
-            InputStream input = getContext().openFileInput(GeonetService.getFileNameForScope(mScope));
+            InputStream input = getContext()
+                    .openFileInput(GeonetService.getFileNameForScope(mScope));
+
             InputStreamReader reader = new InputStreamReader(input);
 
             FeatureCollection featureCollection = gson.fromJson(reader,
