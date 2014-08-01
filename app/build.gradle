@@ -8,9 +8,15 @@ android {
         debug {
             storeFile file("debug.keystore")
         }
+
+        release {
+            storeFile file("codebros.jks")
+            keyAlias "quakesnz"
+        }
     }
 
     defaultConfig {
+        applicationId "nz.co.codebros.quakesnz"
         minSdkVersion 9
         targetSdkVersion 19
         versionCode 1
@@ -21,6 +27,7 @@ android {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
     }
 }

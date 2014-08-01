@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import nz.co.codebros.quakenz.R;
+import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.loader.QuakesLoader;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;

@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-import nz.co.codebros.quakenz.R;
+import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.City;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;

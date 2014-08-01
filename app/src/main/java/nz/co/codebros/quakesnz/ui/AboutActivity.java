@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
-import nz.co.codebros.quakenz.R;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
+import nz.co.codebros.quakesnz.R;
 
 public class AboutActivity extends ActionBarActivity {
 

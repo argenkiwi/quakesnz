@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import nz.co.codebros.quakenz.R;
+import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;

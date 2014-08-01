@@ -10,8 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
-import nz.co.codebros.quakenz.R;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
+import nz.co.codebros.quakesnz.R;
 
 /**
  * Created by Leandro on 24/07/2014.

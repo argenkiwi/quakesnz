@@ -7,8 +7,6 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.HashMap;
 
-import nz.co.codebros.quakenz.R;
-
 /**
  * Created by Leandro on 25/07/2014.
  */

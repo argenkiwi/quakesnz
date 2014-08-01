@@ -15,14 +15,14 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import nz.co.codebros.quakenz.R;
-import nz.co.codebros.quakesnz.QuakesNZApplication;
-
-import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.service.GeonetService;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+
+import nz.co.codebros.quakesnz.QuakesNZApplication;
+import nz.co.codebros.quakesnz.R;
+import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.service.GeonetService;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener,
         QuakeListFragment.Listener {
