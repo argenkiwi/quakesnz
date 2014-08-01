@@ -3,17 +3,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:padding="0dp">
+    android:background="#ffffffff">
 
     <TextView
         android:id="@+id/magnitude_big"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
         android:paddingLeft="8dp"
         android:text="8"
         android:textColor="@color/severe"
-        android:textSize="60sp" />
+        android:textSize="76sp" />
 
     <TextView
         android:id="@+id/magnitude_small"
@@ -41,16 +41,29 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/intensity"
         android:layout_below="@id/intensity"
+        android:fontFamily="sans-serif-light"
         android:text="20km south east of Wellington"
         android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/depth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/intensity"
+        android:layout_below="@id/location"
+        android:fontFamily="sans-serif-light"
+        android:paddingTop="2dp"
+        android:text="Depth: 159km"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp" />
 
     <View
         android:id="@+id/colorTab"
         android:layout_width="4dp"
         android:layout_height="match_parent"
         android:layout_alignBottom="@id/magnitude_big"
-        android:layout_alignTop="@id/magnitude_big"
         android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/magnitude_big"
         android:background="@android:color/black" />
 
     <TextView
@@ -61,6 +74,7 @@
         android:paddingRight="8dp"
         android:paddingTop="8dp"
         android:text="13:37"
+        android:textColor="@android:color/darker_gray"
         android:textSize="12sp" />
 
 </RelativeLayout>
