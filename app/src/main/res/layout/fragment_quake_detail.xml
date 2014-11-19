@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffd7d7d7"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="8dp">
 
-    <FrameLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="4dp"
+        android:layout_marginBottom="8dp"
         android:layout_weight="1"
-        android:background="#ffffffff"
-        android:padding="4dp">
+        app:cardBackgroundColor="@android:color/white"
+        app:cardUseCompatPadding="true">
 
         <FrameLayout
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ccffffff" />
-    </FrameLayout>
+            android:layout_margin="4dp" />
+
+    </android.support.v7.widget.CardView>
 
     <include
         layout="@layout/item_summary"
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
