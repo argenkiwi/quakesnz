@@ -7,5 +7,8 @@
     <color name="moderate">#fee303</color>
     <color name="strong">#f6861f</color>
     <color name="severe">#ec1b23</color>
+    <color name="primary">#008000</color>
+    <color name="primary_dark">#006400</color>
+    <color name="accent">#90EE90</color>
 
 </resources>
