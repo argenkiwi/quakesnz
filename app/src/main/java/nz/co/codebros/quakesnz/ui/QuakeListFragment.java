@@ -97,14 +97,13 @@ public class QuakeListFragment extends ListFragment
 
         super.onActivityCreated(savedInstanceState);
 
-        int padding = (int) getResources().getDimension(R.dimen.padding_medium);
+        int padding = (int) getResources().getDimension(R.dimen.padding_small);
 
         ListView listView = getListView();
         listView.setPadding(padding, padding, padding, padding);
         listView.setClipToPadding(false);
         listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         listView.setDivider(null);
-        listView.setDividerHeight(padding);
 
 
     }
