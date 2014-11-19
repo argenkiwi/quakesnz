@@ -112,7 +112,7 @@ public class QuakeListFragment extends ListFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        mListener.onFeatureSelected((Feature) l.getItemAtPosition(position));
+        mListener.onFeatureSelected((Feature) l.getItemAtPosition(position), v);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class QuakeListFragment extends ListFragment
     }
 
     public interface Listener {
-        void onFeatureSelected(Feature feature);
+        void onFeatureSelected(Feature feature, View view);
     }
 
     private static class ViewHolder {
