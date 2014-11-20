@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         ((QuakesNZApplication) getApplication())
                 .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
@@ -50,8 +56,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
                 R.layout.support_simple_spinner_dropdown_item);
 
         getSupportActionBar().setListNavigationCallbacks(adapter, this);
-
-        setContentView(R.layout.activity_main);
 
         mReceiver = new BroadcastReceiver() {
 
@@ -97,7 +101,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private void showQuakeList() {
         Log.d(TAG, "Show quake list.");
         QuakeListFragment f = QuakeListFragment.newInstance(mCurrentScope);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_layer, f).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, f).commit();
     }
 
     @Override
