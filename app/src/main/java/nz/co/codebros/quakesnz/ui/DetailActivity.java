@@ -20,9 +20,6 @@ public class DetailActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         ((QuakesNZApplication) getApplication())
                 .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 

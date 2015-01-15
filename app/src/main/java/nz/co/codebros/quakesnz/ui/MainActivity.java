@@ -43,9 +43,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         ((QuakesNZApplication) getApplication())
                 .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 

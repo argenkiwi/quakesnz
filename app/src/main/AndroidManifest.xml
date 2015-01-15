@@ -57,7 +57,6 @@
         <activity
             android:name="nz.co.codebros.quakesnz.ui.InfoActivity"
             android:label="@string/emergency_advice"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             android:parentActivityName="nz.co.codebros.quakesnz.ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
