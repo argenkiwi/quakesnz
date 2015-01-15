@@ -6,12 +6,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -37,6 +41,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_main);
+
         ((QuakesNZApplication) getApplication())
                 .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
@@ -47,8 +53,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
                 R.layout.support_simple_spinner_dropdown_item);
 
         getSupportActionBar().setListNavigationCallbacks(adapter, this);
-
-        setContentView(R.layout.activity_main);
 
         mReceiver = new BroadcastReceiver() {
 
@@ -94,7 +98,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private void showQuakeList() {
         Log.d(TAG, "Show quake list.");
         QuakeListFragment f = QuakeListFragment.newInstance(mCurrentScope);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_layer, f).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, f).commit();
     }
 
     @Override
@@ -152,10 +156,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     }
 
     @Override
-    public void onFeatureSelected(Feature feature) {
+    public void onFeatureSelected(Feature feature, View view) {
+
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
-        startActivity(intent);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                view, getString(R.string.transition_name));
+
+        ActivityCompat.startActivity(this, intent, options.toBundle());
     }
 
     @Override

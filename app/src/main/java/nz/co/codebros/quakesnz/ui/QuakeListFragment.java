@@ -97,14 +97,13 @@ public class QuakeListFragment extends ListFragment
 
         super.onActivityCreated(savedInstanceState);
 
-        int padding = (int) getResources().getDimension(R.dimen.padding_medium);
+        int padding = (int) getResources().getDimension(R.dimen.padding_small);
 
         ListView listView = getListView();
         listView.setPadding(padding, padding, padding, padding);
         listView.setClipToPadding(false);
         listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         listView.setDivider(null);
-        listView.setDividerHeight(padding);
 
 
     }
@@ -112,7 +111,7 @@ public class QuakeListFragment extends ListFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        mListener.onFeatureSelected((Feature) l.getItemAtPosition(position));
+        mListener.onFeatureSelected((Feature) l.getItemAtPosition(position), v);
     }
 
     @Override
@@ -132,7 +131,7 @@ public class QuakeListFragment extends ListFragment
     }
 
     public interface Listener {
-        void onFeatureSelected(Feature feature);
+        void onFeatureSelected(Feature feature, View view);
     }
 
     private static class ViewHolder {

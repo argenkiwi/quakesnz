@@ -2,10 +2,12 @@ package nz.co.codebros.quakesnz.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import nz.co.codebros.quakesnz.QuakesNZApplication;
+import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 
 public class DetailActivity extends ActionBarActivity {
@@ -16,12 +18,14 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_detail);
+
         ((QuakesNZApplication) getApplication())
                 .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
         if (savedInstanceState == null) {
             Feature feature = getIntent().getParcelableExtra(EXTRA_FEATURE);
-            getSupportFragmentManager().beginTransaction().add(android.R.id.content,
+            getSupportFragmentManager().beginTransaction().add(R.id.content,
                     QuakeDetailFragment.newInstance(feature)).commit();
         }
     }
