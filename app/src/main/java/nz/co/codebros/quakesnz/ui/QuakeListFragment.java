@@ -105,7 +105,7 @@ public class QuakeListFragment extends SwipeRefreshListFragment
         listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         listView.setDivider(null);
 
-
+        setEmptyText(getString(R.string.no_data_available));
     }
 
     @Override
