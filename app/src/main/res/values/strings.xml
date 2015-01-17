@@ -21,5 +21,6 @@
     <string name="after">After</string>
     <string name="refresh">Refresh</string>
     <string name="transition_name">list_to_detail</string>
+    <string name="no_data_available">No data available</string>
 
 </resources>
