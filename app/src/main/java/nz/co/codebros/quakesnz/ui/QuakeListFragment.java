@@ -106,6 +106,7 @@ public class QuakeListFragment extends SwipeRefreshListFragment
         listView.setDivider(null);
 
         setEmptyText(getString(R.string.no_data_available));
+        setOnRefreshListener(this);
     }
 
     @Override
@@ -124,7 +125,6 @@ public class QuakeListFragment extends SwipeRefreshListFragment
     public void onLoadFinished(Loader<Feature[]> loader, Feature[] features) {
         Log.d(TAG, "Load finished.");
         setListAdapter(new FeatureAdapter(getActivity(), features));
-        setOnRefreshListener(this);
     }
 
     @Override
