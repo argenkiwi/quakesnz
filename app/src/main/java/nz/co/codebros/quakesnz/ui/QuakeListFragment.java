@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,8 +22,8 @@ import nz.co.codebros.quakesnz.loader.QuakesLoader;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
 
-public class QuakeListFragment extends ListFragment
-        implements LoaderManager.LoaderCallbacks<Feature[]> {
+public class QuakeListFragment extends SwipeRefreshListFragment
+        implements LoaderManager.LoaderCallbacks<Feature[]>, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String ARG_SCOPE = "arg_scope";
     private static final String TAG = QuakeListFragment.class.getSimpleName();
@@ -105,7 +105,7 @@ public class QuakeListFragment extends ListFragment
         listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         listView.setDivider(null);
 
-
+        setEmptyText(getString(R.string.no_data_available));
     }
 
     @Override
@@ -124,10 +124,16 @@ public class QuakeListFragment extends ListFragment
     public void onLoadFinished(Loader<Feature[]> loader, Feature[] features) {
         Log.d(TAG, "Load finished.");
         setListAdapter(new FeatureAdapter(getActivity(), features));
+        setOnRefreshListener(this);
     }
 
     @Override
     public void onLoaderReset(Loader<Feature[]> loader) {
+    }
+
+    @Override
+    public void onRefresh() {
+        ((MainActivity) getActivity()).refresh();
     }
 
     public interface Listener {
@@ -200,4 +206,5 @@ public class QuakeListFragment extends ListFragment
         }
 
     }
+
 }

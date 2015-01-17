@@ -113,23 +113,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_refresh) {
-
-            // Get tracker.
-            Tracker t = ((QuakesNZApplication) getApplication())
-                    .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
-
-            // Build and send an Event.
-            t.send(new HitBuilders.EventBuilder()
-                    .setCategory("Interactions")
-                    .setAction("Refresh")
-                    .setLabel("Refresh")
-                    .build());
-
-            Intent intent = new Intent(this, GeonetService.class);
-            intent.putExtra(GeonetService.EXTRA_SCOPE, mCurrentScope);
-            startService(intent);
-        } else if (id == R.id.action_info) {
+        if (id == R.id.action_info) {
             startActivity(new Intent(this, InfoActivity.class));
         } else if (id == R.id.action_about) {
             startActivity(new Intent(this, AboutActivity.class));
@@ -137,6 +121,23 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             return super.onOptionsItemSelected(item);
 
         return true;
+    }
+
+    void refresh() {
+        // Get tracker.
+        Tracker t = ((QuakesNZApplication) getApplication())
+                .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
+
+        // Build and send an Event.
+        t.send(new HitBuilders.EventBuilder()
+                .setCategory("Interactions")
+                .setAction("Refresh")
+                .setLabel("Refresh")
+                .build());
+
+        Intent intent = new Intent(this, GeonetService.class);
+        intent.putExtra(GeonetService.EXTRA_SCOPE, mCurrentScope);
+        startService(intent);
     }
 
     @Override
