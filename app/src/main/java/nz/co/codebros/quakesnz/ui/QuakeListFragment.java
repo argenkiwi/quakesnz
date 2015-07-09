@@ -129,6 +129,8 @@ public class QuakeListFragment extends SwipeRefreshListFragment implements Quake
                 .inject(this);
 
         mPresenter.bindView(this);
+
+        listQuakes();
     }
 
     @Override
