@@ -128,7 +128,13 @@ public class QuakeListFragment extends SwipeRefreshListFragment implements Quake
                 .build()
                 .inject(this);
 
-        setRetainInstance(true);
+        mPresenter.bindView(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.unbindView();
     }
 
     @Override
@@ -249,7 +255,6 @@ public class QuakeListFragment extends SwipeRefreshListFragment implements Quake
             viewHolder.vTab.setBackgroundColor(colorForIntensity);
             return convertView;
         }
-
     }
 
 }

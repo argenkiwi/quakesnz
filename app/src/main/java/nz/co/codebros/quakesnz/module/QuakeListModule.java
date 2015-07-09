@@ -34,8 +34,8 @@ public class QuakeListModule {
     }
 
     @Provides
-    public QuakeListPresenter providePresenter(QuakeListView view, LoadQuakesInteractor interactor) {
-        return new QuakeListPresenterImpl(view, interactor);
+    public QuakeListPresenter providePresenter(LoadQuakesInteractor interactor) {
+        return new QuakeListPresenterImpl(interactor);
     }
 
 }

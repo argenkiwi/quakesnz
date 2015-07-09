@@ -8,11 +8,10 @@ import nz.co.codebros.quakesnz.ui.QuakeListView;
  */
 public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInteractor.Listener {
 
-    private final QuakeListView mView;
     private final LoadQuakesInteractor mInteractor;
+    private QuakeListView mView;
 
-    public QuakeListPresenterImpl(QuakeListView view, LoadQuakesInteractor interactor) {
-        mView = view;
+    public QuakeListPresenterImpl(LoadQuakesInteractor interactor) {
         mInteractor = interactor;
     }
 
@@ -24,7 +23,19 @@ public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInt
 
     @Override
     public void onQuakesLoaded() {
-        mView.hideProgress();
-        mView.listQuakes();
+        if(mView != null) {
+            mView.hideProgress();
+            mView.listQuakes();
+        }
+    }
+
+    @Override
+    public void bindView(QuakeListView view) {
+        mView = view;
+    }
+
+    @Override
+    public void unbindView() {
+        mView = null;
     }
 }
