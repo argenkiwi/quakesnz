@@ -15,19 +15,37 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.Locale;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
+import nz.co.codebros.quakesnz.component.DaggerQuakeListComponent;
 import nz.co.codebros.quakesnz.loader.QuakesLoader;
 import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.module.QuakeListModule;
+import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
 
-public class QuakeListFragment extends SwipeRefreshListFragment
-        implements LoaderManager.LoaderCallbacks<Feature[]>, SwipeRefreshLayout.OnRefreshListener {
+public class QuakeListFragment extends SwipeRefreshListFragment implements QuakeListView,
+        SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Feature[]> {
 
     public static final String ARG_SCOPE = "arg_scope";
     private static final String TAG = QuakeListFragment.class.getSimpleName();
     private Listener mListener;
+    private FeatureAdapter mAdapter;
+
+    @Inject
+    QuakeListPresenter mPresenter;
+
+    @Inject
+    @Named("app")
+    Tracker mTracker;
 
     public static QuakeListFragment newInstance(int scope) {
 
@@ -69,26 +87,7 @@ public class QuakeListFragment extends SwipeRefreshListFragment
             mListener = (Listener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
-
-        Log.d(TAG, "Creating quake list fragment.");
-        if (savedInstanceState == null) {
-            Log.d(TAG, "Loading quake data.");
-            getLoaderManager().initLoader(0, getArguments(), this).forceLoad();
+                    + " must implement QuakeListFragment.Listener");
         }
     }
 
@@ -96,6 +95,10 @@ public class QuakeListFragment extends SwipeRefreshListFragment
     public void onActivityCreated(Bundle savedInstanceState) {
 
         super.onActivityCreated(savedInstanceState);
+
+        mAdapter = new FeatureAdapter(getActivity());
+
+        setListAdapter(mAdapter);
 
         int padding = (int) getResources().getDimension(R.dimen.padding_small);
 
@@ -107,6 +110,25 @@ public class QuakeListFragment extends SwipeRefreshListFragment
 
         setEmptyText(getString(R.string.no_data_available));
         setOnRefreshListener(this);
+
+        Log.d(TAG, "Creating quake list fragment.");
+        if (savedInstanceState == null) {
+            Log.d(TAG, "Loading quake data.");
+            mPresenter.onLoadQuakes(getArguments().getInt(ARG_SCOPE, 0));
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        DaggerQuakeListComponent.builder()
+                .applicationComponent(((QuakesNZApplication) getActivity().getApplication()).getApplicationComponent())
+                .quakeListModule(new QuakeListModule(this))
+                .build()
+                .inject(this);
+
+        setRetainInstance(true);
     }
 
     @Override
@@ -116,24 +138,47 @@ public class QuakeListFragment extends SwipeRefreshListFragment
     }
 
     @Override
+    public void onRefresh() {
+
+        // Build and send an Event.
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Interactions")
+                .setAction("Refresh")
+                .setLabel("Refresh")
+                .build());
+
+        mPresenter.onLoadQuakes(getArguments().getInt(ARG_SCOPE, 0));
+    }
+
+    @Override
+    public void showProgress() {
+        setRefreshing(true);
+    }
+
+    @Override
+    public void hideProgress() {
+        setRefreshing(false);
+    }
+
+    @Override
+    public void listQuakes() {
+        getLoaderManager().initLoader(0, getArguments(), this).forceLoad();
+    }
+
+    @Override
     public Loader<Feature[]> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "Creating loader.");
         return new QuakesLoader(getActivity(), args.getInt(ARG_SCOPE));
     }
 
     @Override
-    public void onLoadFinished(Loader<Feature[]> loader, Feature[] features) {
-        Log.d(TAG, "Load finished.");
-        setListAdapter(new FeatureAdapter(getActivity(), features));
+    public void onLoadFinished(Loader<Feature[]> loader, Feature[] data) {
+        mAdapter.clear();
+        mAdapter.addAll(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Feature[]> loader) {
-    }
 
-    @Override
-    public void onRefresh() {
-        ((MainActivity) getActivity()).refresh();
     }
 
     public interface Listener {
@@ -152,8 +197,8 @@ public class QuakeListFragment extends SwipeRefreshListFragment
 
     private class FeatureAdapter extends ArrayAdapter<Feature> {
 
-        public FeatureAdapter(Context context, Feature[] objects) {
-            super(context, 0, objects);
+        public FeatureAdapter(Context context) {
+            super(context, 0);
         }
 
         @Override

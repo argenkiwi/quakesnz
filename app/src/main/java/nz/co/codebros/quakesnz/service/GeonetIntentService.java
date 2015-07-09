@@ -10,9 +10,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 
-public class GeonetService extends IntentService {
+import javax.inject.Inject;
+
+import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.QuakesNZApplication;
+import retrofit.client.Response;
+
+public class GeonetIntentService extends IntentService {
 
     public static final String EXTRA_SCOPE = "extra_scope";
     public static final int SCOPE_ALL = 0;
@@ -22,11 +27,19 @@ public class GeonetService extends IntentService {
     public static final String ACTION_DOWNLOAD_SUCCESS = "action_download_success";
     public static final String QUAKES_FILE = "%s.json";
 
-    private static final String TAG = GeonetService.class.getSimpleName();
-    private static final String GEONET_URL = "http://www.geonet.org.nz/quakes/services/%s.json";
+    private static final String TAG = GeonetIntentService.class.getSimpleName();
 
-    public GeonetService() {
+    @Inject
+    GeonetService mGeonetService;
+
+    public GeonetIntentService() {
         super(TAG);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((QuakesNZApplication) getApplication()).getApplicationComponent().inject(this);
     }
 
     @Override
@@ -34,22 +47,17 @@ public class GeonetService extends IntentService {
 
         final int scope = intent.getIntExtra(EXTRA_SCOPE, SCOPE_ALL);
 
+        Response response = mGeonetService.listAllQuakes(getFilterName(scope));
+
+        if (response.getStatus() != HttpURLConnection.HTTP_OK) {
+            Log.d(TAG, "HTTP response code: " + response.getStatus());
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
+            return;
+        }
+
         try {
 
-            URL url = new URL(getURLForScope(scope));
-
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.d(TAG, "HTTP response code: " + conn.getResponseCode());
-                LocalBroadcastManager.getInstance(this).sendBroadcast(
-                        new Intent(ACTION_DOWNLOAD_FAILURE));
-                return;
-            }
-
-            BufferedInputStream input = new BufferedInputStream(
-                    conn.getInputStream());
-
+            BufferedInputStream input = new BufferedInputStream(response.getBody().in());
             FileOutputStream output = openFileOutput(getFileNameForScope(scope), MODE_PRIVATE);
 
             byte[] data = new byte[1024];
@@ -61,31 +69,22 @@ public class GeonetService extends IntentService {
             output.close();
             input.close();
 
-            LocalBroadcastManager.getInstance(this).sendBroadcast(
-                    new Intent(ACTION_DOWNLOAD_SUCCESS));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_SUCCESS));
         } catch (MalformedURLException e) {
             Log.e(TAG, "Malformend URL.", e);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(
-                    new Intent(ACTION_DOWNLOAD_FAILURE));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
         } catch (IOException e) {
             Log.e(TAG, "Input/Output exception.", e);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(
-                    new Intent(ACTION_DOWNLOAD_FAILURE));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
         }
-
-    }
-
-    private static String getURLForScope(int scope) {
-        return String.format(GEONET_URL, getPrefixForScope(scope));
     }
 
     public static String getFileNameForScope(int scope) {
-        return String.format(QUAKES_FILE, getPrefixForScope(scope));
+        return String.format(QUAKES_FILE, getFilterName(scope));
     }
 
-    private static String getPrefixForScope(int scope) {
+    private static String getFilterName(int scope) {
         String prefix;
-
         switch (scope) {
             case SCOPE_FELT:
                 prefix = "felt";

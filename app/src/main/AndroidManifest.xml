@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="nz.co.codebros.quakesnz.service.GeonetService" />
+        <service android:name=".service.GeonetIntentService" />
 
         <activity
             android:label="@string/quake_details"

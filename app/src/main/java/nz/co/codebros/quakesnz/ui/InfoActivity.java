@@ -6,26 +6,21 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-
-import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 
 /**
  * Created by Leandro on 24/07/2014.
  */
-public class InfoActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+public class InfoActivity extends AppCompatActivity implements ActionBar.TabListener,
+        ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ((QuakesNZApplication) getApplication())
-                .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
 
         setContentView(R.layout.activity_info);
 
@@ -98,17 +93,5 @@ public class InfoActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public void onPageScrollStateChanged(int i) {
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 }

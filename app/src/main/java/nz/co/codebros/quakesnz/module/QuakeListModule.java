@@ -1,0 +1,41 @@
+package nz.co.codebros.quakesnz.module;
+
+import android.content.Context;
+
+import dagger.Module;
+import dagger.Provides;
+import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
+import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractorImpl;
+import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
+import nz.co.codebros.quakesnz.presenter.QuakeListPresenterImpl;
+import nz.co.codebros.quakesnz.ui.QuakeListView;
+
+/**
+ * Created by leandro on 9/07/15.
+ */
+@Module
+public class QuakeListModule {
+
+    private QuakeListView mView;
+
+    public QuakeListModule(QuakeListView view) {
+        mView = view;
+    }
+
+    @Provides
+    public QuakeListView provideView() {
+        return mView;
+    }
+
+    @Provides
+    public LoadQuakesInteractor provideInteractor(Context context) {
+        return new LoadQuakesInteractorImpl(context);
+    }
+
+    @Provides
+    public QuakeListPresenter providePresenter(QuakeListView view, LoadQuakesInteractor interactor) {
+        return new QuakeListPresenterImpl(view, interactor);
+    }
+
+}

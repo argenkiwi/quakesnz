@@ -18,7 +18,7 @@ import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.City;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.service.GeonetService;
+import nz.co.codebros.quakesnz.service.GeonetIntentService;
 import nz.co.codebros.quakesnz.utils.DateDeserializer;
 import nz.co.codebros.quakesnz.utils.LatLngAdapter;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
@@ -47,7 +47,7 @@ public class QuakesLoader extends AsyncTaskLoader<Feature[]> {
         try {
             // Load quakes.
             InputStream input = getContext()
-                    .openFileInput(GeonetService.getFileNameForScope(mScope));
+                    .openFileInput(GeonetIntentService.getFileNameForScope(mScope));
 
             InputStreamReader reader = new InputStreamReader(input);
 
