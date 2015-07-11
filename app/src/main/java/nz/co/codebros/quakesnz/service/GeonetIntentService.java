@@ -15,6 +15,9 @@ import javax.inject.Inject;
 
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
+import retrofit.Callback;
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class GeonetIntentService extends IntentService {
@@ -45,38 +48,45 @@ public class GeonetIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        final int scope = intent.getIntExtra(EXTRA_SCOPE, SCOPE_ALL);
+        final int scope = intent.getIntExtra(EXTRA_SCOPE, SCOPE_FELT);
 
-        Response response = mGeonetService.listAllQuakes(getFilterName(scope));
+        mGeonetService.listAllQuakes(getFilterName(scope), new Callback<FeatureCollection>() {
 
-        if (response.getStatus() != HttpURLConnection.HTTP_OK) {
-            Log.d(TAG, "HTTP response code: " + response.getStatus());
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
-            return;
-        }
+            @Override
+            public void success(FeatureCollection featureCollection, Response response) {
+                try {
 
-        try {
+                    BufferedInputStream input = new BufferedInputStream(response.getBody().in());
+                    FileOutputStream output = openFileOutput(getFileNameForScope(scope), MODE_PRIVATE);
 
-            BufferedInputStream input = new BufferedInputStream(response.getBody().in());
-            FileOutputStream output = openFileOutput(getFileNameForScope(scope), MODE_PRIVATE);
+                    byte[] data = new byte[1024];
+                    int count;
+                    while ((count = input.read(data)) != -1) {
+                        output.write(data, 0, count);
+                    }
 
-            byte[] data = new byte[1024];
-            int count;
-            while ((count = input.read(data)) != -1) {
-                output.write(data, 0, count);
+                    output.close();
+                    input.close();
+
+                    LocalBroadcastManager.getInstance(GeonetIntentService.this)
+                            .sendBroadcast(new Intent(ACTION_DOWNLOAD_SUCCESS));
+                } catch (IOException e) {
+                    Log.e(TAG, "Input/Output exception.", e);
+                    LocalBroadcastManager.getInstance(GeonetIntentService.this)
+                            .sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
+                }
             }
 
-            output.close();
-            input.close();
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Retrofit error.", error);
+                LocalBroadcastManager.getInstance(GeonetIntentService.this)
+                        .sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
+            }
+        });
 
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_SUCCESS));
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Malformend URL.", e);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
-        } catch (IOException e) {
-            Log.e(TAG, "Input/Output exception.", e);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_DOWNLOAD_FAILURE));
-        }
+
+
     }
 
     public static String getFileNameForScope(int scope) {

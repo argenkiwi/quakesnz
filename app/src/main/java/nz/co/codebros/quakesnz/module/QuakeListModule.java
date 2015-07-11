@@ -17,20 +17,9 @@ import nz.co.codebros.quakesnz.ui.QuakeListView;
 @Module
 public class QuakeListModule {
 
-    private QuakeListView mView;
-
-    public QuakeListModule(QuakeListView view) {
-        mView = view;
-    }
-
     @Provides
-    public QuakeListView provideView() {
-        return mView;
-    }
-
-    @Provides
-    public LoadQuakesInteractor provideInteractor(Context context) {
-        return new LoadQuakesInteractorImpl(context);
+    public LoadQuakesInteractor provideInteractor(Context context, GeonetService service) {
+        return new LoadQuakesInteractorImpl(context, service);
     }
 
     @Provides
