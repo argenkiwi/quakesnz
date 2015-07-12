@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.presenter;
 
 import android.util.Log;
+import android.view.View;
 
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;

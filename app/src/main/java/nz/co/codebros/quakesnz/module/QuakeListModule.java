@@ -26,9 +26,4 @@ public class QuakeListModule {
     public QuakeListPresenter providePresenter(LoadQuakesInteractor interactor) {
         return new QuakeListPresenterImpl(interactor);
     }
-
-    @Provides
-    public FeatureAdapter provideAdapter() {
-        return new FeatureAdapter();
-    }
 }

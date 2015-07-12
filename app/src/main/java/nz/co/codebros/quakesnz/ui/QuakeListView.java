@@ -1,5 +1,7 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.view.View;
+
 import nz.co.codebros.quakesnz.model.Feature;
 
 /**
@@ -12,4 +14,6 @@ public interface QuakeListView {
     void hideProgress();
 
     void listQuakes(Feature[] features);
+
+    void showQuakeDetail(View view, Feature feature);
 }

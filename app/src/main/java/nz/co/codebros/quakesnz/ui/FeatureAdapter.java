@@ -22,7 +22,12 @@ import nz.co.codebros.quakesnz.utils.LatLngUtils;
  */
 public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHolder> {
 
+    private final Listener mListener;
     private ArrayList<Feature> mFeatures = new ArrayList<>();
+
+    public FeatureAdapter(Listener listener) {
+        mListener = listener;
+    }
 
     private static int getColorForIntensity(Resources resources, String intensity) {
         int color;
@@ -52,7 +57,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
         Resources resources = viewHolder.itemView.getResources();
 
@@ -74,6 +79,13 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
                 .getOriginTime().getTime()));
         viewHolder.vTab.setBackgroundColor(colorForIntensity);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onFeatureClicked(view, mFeatures.get(i));
+            }
+        });
     }
 
     @Override
@@ -89,6 +101,10 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     public void addAll(Feature[] features) {
         mFeatures.addAll(Arrays.asList(features));
         notifyDataSetChanged();
+    }
+
+    public interface Listener {
+        void onFeatureClicked(View view, Feature feature);
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {

@@ -10,8 +10,6 @@ import javax.inject.Singleton;
 import dagger.Component;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
-import nz.co.codebros.quakesnz.service.GeonetIntentService;
-import nz.co.codebros.quakesnz.ui.MainActivity;
 
 /**
  * Created by leandro on 9/07/15.
@@ -19,9 +17,6 @@ import nz.co.codebros.quakesnz.ui.MainActivity;
 @Singleton
 @Component(modules = {ApplicationModule.class})
 public interface ApplicationComponent {
-    void inject(MainActivity mainActivity);
-
-    void inject(GeonetIntentService geonetIntentService);
 
     Context getApplicationContext();
 

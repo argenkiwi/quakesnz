@@ -2,20 +2,16 @@ package nz.co.codebros.quakesnz.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.service.GeonetIntentService;
 
 public class MainActivity extends AppCompatActivity implements QuakeListFragment.Listener {
 

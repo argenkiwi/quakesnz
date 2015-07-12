@@ -1,8 +1,11 @@
 package nz.co.codebros.quakesnz.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,13 +30,11 @@ import nz.co.codebros.quakesnz.module.QuakeListModule;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {
 
     private static final String TAG = QuakeListFragment.class.getSimpleName();
 
-
-    @Inject
-    FeatureAdapter mAdapter;
+    private FeatureAdapter mAdapter;
 
     @Inject
     QuakeListPresenter mPresenter;
@@ -78,6 +79,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .inject(this);
 
         mPresenter.bindView(this);
+        mAdapter = new FeatureAdapter(this);
     }
 
     @Nullable
@@ -104,12 +106,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         recyclerView.setAdapter(mAdapter);
     }
 
-    //    @Override
-//    public void onListItemClick(ListView l, View v, int position, long id) {
-//        super.onListItemClick(l, v, position, id);
-//        mListener.onFeatureSelected((Feature) l.getItemAtPosition(position), v);
-//    }
-
     @Override
     public void onRefresh() {
 
@@ -121,12 +117,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .build());
 
         mPresenter.onRefresh();
-    }
-
-    @Override
-    public void showProgress() {
-        Log.d(TAG, "Show progress.");
-        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -142,6 +132,30 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
             mAdapter.clear();
             mAdapter.addAll(features);
         } else Toast.makeText(getActivity(), R.string.no_data_available, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showQuakeDetail(View view, Feature feature) {
+        mListener.onFeatureSelected(feature, view);
+    }
+
+    @Override
+    public void showProgress() {
+        Log.d(TAG, "Show progress.");
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void onFeatureClicked(View view, Feature feature) {
+        Log.d(TAG, "Feature selected.");
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(getActivity(), view,
+                        getString(R.string.transition_name));
+
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     public interface Listener {
