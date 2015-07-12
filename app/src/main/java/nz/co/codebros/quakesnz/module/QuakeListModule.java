@@ -9,7 +9,7 @@ import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractorImpl;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenterImpl;
-import nz.co.codebros.quakesnz.ui.QuakeListView;
+import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 /**
  * Created by leandro on 9/07/15.
@@ -27,4 +27,8 @@ public class QuakeListModule {
         return new QuakeListPresenterImpl(interactor);
     }
 
+    @Provides
+    public FeatureAdapter provideAdapter() {
+        return new FeatureAdapter();
+    }
 }
