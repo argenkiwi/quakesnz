@@ -1,7 +1,6 @@
 package nz.co.codebros.quakesnz.presenter;
 
 import android.util.Log;
-import android.view.View;
 
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
@@ -13,9 +12,7 @@ import nz.co.codebros.quakesnz.ui.QuakeListView;
 public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInteractor.Listener {
 
     private static final String TAG = QuakeListPresenterImpl.class.getSimpleName();
-
     private final LoadQuakesInteractor mInteractor;
-    private Feature[] mFeatures;
     private QuakeListView mView;
 
     public QuakeListPresenterImpl(LoadQuakesInteractor interactor) {
@@ -25,24 +22,20 @@ public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInt
     @Override
     public void onLoadQuakes() {
         Log.d(TAG, "Load quakes.");
-        if(mFeatures == null) {
-            onRefresh();
-        } else {
-            mView.listQuakes(mFeatures);
-        }
+        mView.showProgress();
+        mInteractor.loadQuakes(this);
     }
 
     @Override
     public void onQuakesDownloaded() {
-        Log.d(TAG, "Quakes download.");
+        Log.d(TAG, "Quakes downloaded.");
         mInteractor.loadQuakes(this);
     }
 
     @Override
     public void onQuakesLoaded(Feature[] features) {
         Log.d(TAG, "Quakes loaded.");
-        mFeatures = features;
-        if(mView != null) {
+        if (mView != null) {
             mView.hideProgress();
             mView.listQuakes(features);
         }
@@ -51,7 +44,7 @@ public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInt
     @Override
     public void onQuakesLoadFailed() {
         Log.d(TAG, "Load failed.");
-        if(mView != null) {
+        if (mView != null) {
             mView.hideProgress();
         }
     }

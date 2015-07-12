@@ -25,8 +25,9 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     private final Listener mListener;
     private ArrayList<Feature> mFeatures = new ArrayList<>();
 
-    public FeatureAdapter(Listener listener) {
+    public FeatureAdapter(Listener listener, Feature[] features) {
         mListener = listener;
+        mFeatures.addAll(Arrays.asList(features));
     }
 
     private static int getColorForIntensity(Resources resources, String intensity) {
@@ -91,16 +92,6 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mFeatures.size();
-    }
-
-    public void clear() {
-        mFeatures.clear();
-        notifyDataSetChanged();
-    }
-
-    public void addAll(Feature[] features) {
-        mFeatures.addAll(Arrays.asList(features));
-        notifyDataSetChanged();
     }
 
     public interface Listener {

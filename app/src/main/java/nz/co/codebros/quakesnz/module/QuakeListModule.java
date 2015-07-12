@@ -2,6 +2,8 @@ package nz.co.codebros.quakesnz.module;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+
 import dagger.Module;
 import dagger.Provides;
 import nz.co.codebros.quakesnz.GeonetService;
@@ -9,7 +11,6 @@ import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractorImpl;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenterImpl;
-import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 /**
  * Created by leandro on 9/07/15.
@@ -18,8 +19,9 @@ import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 public class QuakeListModule {
 
     @Provides
-    public LoadQuakesInteractor provideInteractor(Context context, GeonetService service) {
-        return new LoadQuakesInteractorImpl(context, service);
+    public LoadQuakesInteractor provideInteractor(Context context, GeonetService service,
+                                                  Gson gson) {
+        return new LoadQuakesInteractorImpl(context, service, gson);
     }
 
     @Provides

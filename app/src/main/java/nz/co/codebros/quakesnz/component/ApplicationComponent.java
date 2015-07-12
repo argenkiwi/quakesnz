@@ -3,6 +3,7 @@ package nz.co.codebros.quakesnz.component;
 import android.content.Context;
 
 import com.google.android.gms.analytics.Tracker;
+import com.google.gson.Gson;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -21,6 +22,8 @@ public interface ApplicationComponent {
     Context getApplicationContext();
 
     GeonetService getGeonetService();
+
+    Gson getGson();
 
     @Named("app")
     Tracker getTracker();
