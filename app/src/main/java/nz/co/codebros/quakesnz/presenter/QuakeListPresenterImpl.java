@@ -46,6 +46,7 @@ public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInt
         Log.d(TAG, "Load failed.");
         if (mView != null) {
             mView.hideProgress();
+            mView.showLoadFailedMessage();
         }
     }
 

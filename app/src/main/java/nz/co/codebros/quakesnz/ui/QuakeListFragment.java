@@ -134,9 +134,13 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
+    public void showLoadFailedMessage() {
+        Toast.makeText(getActivity(), R.string.no_data_available, Toast.LENGTH_SHORT);
+    }
+
+    @Override
     public void showProgress() {
         Log.d(TAG, "Show progress.");
         mSwipeRefreshLayout.setRefreshing(true);
     }
-
 }
