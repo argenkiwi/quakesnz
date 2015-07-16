@@ -94,14 +94,14 @@ public class LoadQuakesInteractorImpl implements LoadQuakesInteractor {
                     listener.onQuakesDownloaded();
                 } catch (IOException e) {
                     Log.d(TAG, "I/O Exception.", e);
-                    listener.onQuakesDownloaded();
+                    listener.onQuakesDownloadFailed();
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d(TAG, "Retrofit Error.", error);
-                listener.onQuakesDownloaded();
+                listener.onQuakesDownloadFailed();
             }
         });
     }

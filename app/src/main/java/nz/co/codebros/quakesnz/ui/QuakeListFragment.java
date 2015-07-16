@@ -29,7 +29,7 @@ import nz.co.codebros.quakesnz.module.QuakeListModule;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
-        SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = QuakeListFragment.class.getSimpleName();
 
@@ -46,6 +46,19 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
 
     public static QuakeListFragment newInstance() {
         return new QuakeListFragment();
+    }
+
+    @Override
+    public void hideProgress() {
+        Log.d(TAG, "Hide progress.");
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void listQuakes(Feature[] features) {
+        Log.d(TAG, "List quakes.");
+        mAdapter = new FeatureAdapter(features, mPresenter);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -72,28 +85,15 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_quakes, container, false);
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_quakes, container, false);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.unbindView();
-    }
-
-    @Override
-    public void onFeatureClicked(View view, Feature feature) {
-        Log.d(TAG, "Feature selected.");
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(getActivity(), view,
-                        getString(R.string.transition_name));
-
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     @Override
@@ -119,23 +119,28 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void hideProgress() {
-        Log.d(TAG, "Hide progress.");
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
-    public void listQuakes(Feature[] features) {
-        Log.d(TAG, "List quakes.");
-        if (features != null) {
-            mAdapter = new FeatureAdapter(this, features);
-            mRecyclerView.setAdapter(mAdapter);
-        } else Toast.makeText(getActivity(), R.string.no_data_available, Toast.LENGTH_SHORT);
+    public void showDownloadFailedMessage() {
+        Log.d(TAG, "Show download failed message.");
+        Toast.makeText(getActivity(), R.string.failed_to_update, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showLoadFailedMessage() {
-        Toast.makeText(getActivity(), R.string.no_data_available, Toast.LENGTH_SHORT);
+        Log.d(TAG, "Show load failed message.");
+        Toast.makeText(getActivity(), R.string.failed_to_load, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showQuakeDetail(View view, Feature feature) {
+        Log.d(TAG, "Feature selected.");
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(getActivity(), view,
+                        getString(R.string.transition_name));
+
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     @Override

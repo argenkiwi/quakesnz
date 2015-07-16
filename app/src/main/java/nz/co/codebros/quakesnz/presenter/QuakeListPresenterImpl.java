@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.presenter;
 
 import android.util.Log;
+import android.view.View;
 
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
@@ -20,15 +21,21 @@ public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInt
     }
 
     @Override
-    public void onLoadQuakes() {
-        Log.d(TAG, "Load quakes.");
-        mView.showProgress();
-        mInteractor.loadQuakes(this);
+    public void onFeatureClicked(View view, Feature feature) {
+        Log.d(TAG, "Feature clicked.");
+        mView.showQuakeDetail(view, feature);
     }
 
     @Override
     public void onQuakesDownloaded() {
         Log.d(TAG, "Quakes downloaded.");
+        mInteractor.loadQuakes(this);
+    }
+
+    @Override
+    public void onQuakesDownloadFailed() {
+        Log.d(TAG, "Download failed.");
+        mView.showDownloadFailedMessage();
         mInteractor.loadQuakes(this);
     }
 
@@ -48,6 +55,13 @@ public class QuakeListPresenterImpl implements QuakeListPresenter, LoadQuakesInt
             mView.hideProgress();
             mView.showLoadFailedMessage();
         }
+    }
+
+    @Override
+    public void onLoadQuakes() {
+        Log.d(TAG, "Load quakes.");
+        mView.showProgress();
+        mInteractor.loadQuakes(this);
     }
 
     @Override

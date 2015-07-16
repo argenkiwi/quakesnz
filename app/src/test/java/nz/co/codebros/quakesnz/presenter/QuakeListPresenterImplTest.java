@@ -43,6 +43,11 @@ public class QuakeListPresenterImplTest extends TestCase {
         verify(mockLoadQuakesInteractor).loadQuakes(any(LoadQuakesInteractor.Listener.class));
     }
 
+    public void testOnQuakesDownloadFailed() throws Exception {
+        quakeListPresenter.onQuakesDownloadFailed();
+        verify(mockQuakesListView).showDownloadFailedMessage();
+    }
+
     public void testOnQuakesLoaded() throws Exception {
         Feature[] features = new Feature[]{};
         quakeListPresenter.onQuakesLoaded(features);

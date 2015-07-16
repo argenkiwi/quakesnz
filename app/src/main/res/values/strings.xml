@@ -23,5 +23,7 @@
     <string name="transition_name">list_to_detail</string>
     <string name="no_data_available">No data available</string>
     <string name="quake_details">Quake Details</string>
+    <string name="failed_to_update">Failed to update quakes data.</string>
+    <string name="failed_to_load">Failed to load quakes data.</string>
 
 </resources>

@@ -1,5 +1,8 @@
 package nz.co.codebros.quakesnz.presenter;
 
+import android.view.View;
+
+import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.ui.QuakeListView;
 
 /**
@@ -9,4 +12,6 @@ public interface QuakeListPresenter extends Presenter<QuakeListView> {
     void onLoadQuakes();
 
     void onRefresh();
+
+    void onFeatureClicked(View view, Feature feature);
 }

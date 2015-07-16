@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
 
 /**
@@ -22,12 +23,12 @@ import nz.co.codebros.quakesnz.utils.LatLngUtils;
  */
 public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHolder> {
 
-    private final Listener mListener;
+    private final QuakeListPresenter mPresenter;
     private ArrayList<Feature> mFeatures = new ArrayList<>();
 
-    public FeatureAdapter(Listener listener, Feature[] features) {
-        mListener = listener;
+    public FeatureAdapter(Feature[] features, QuakeListPresenter presenter) {
         mFeatures.addAll(Arrays.asList(features));
+        mPresenter = presenter;
     }
 
     private static int getColorForIntensity(Resources resources, String intensity) {
@@ -63,18 +64,22 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         Resources resources = viewHolder.itemView.getResources();
 
         Feature item = mFeatures.get(i);
+
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", item.getProperties()
                 .getMagnitude()).split("\\.");
         viewHolder.txtMagnitudeBig.setText(magnitude[0]);
+
         String intensity = item.getProperties().getIntensity();
         final int colorForIntensity = getColorForIntensity(resources, intensity);
         viewHolder.txtMagnitudeBig.setTextColor(colorForIntensity);
         viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
         viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
         viewHolder.txtIntensity.setText(intensity);
-        viewHolder.txtLocation.setText(resources.getString(R.string.location, Math.round(
-                LatLngUtils.findDistance(item.getGeometry().getCoordinates(), item.getClosestCity()
-                        .getCoordinates()) / 1000), item.getClosestCity().getName()));
+
+        final long distance = Math.round(LatLngUtils.findDistance(item.getGeometry()
+                        .getCoordinates(), item.getClosestCity().getCoordinates()) / 1000);
+        viewHolder.txtLocation.setText(resources.getString(R.string.location, distance,
+                item.getClosestCity().getName()));
         viewHolder.txtDepth.setText(resources.getString(R.string.depth, item.getProperties()
                 .getDepth()));
         viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
@@ -84,7 +89,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFeatureClicked(view, mFeatures.get(i));
+                mPresenter.onFeatureClicked(view, mFeatures.get(i));
             }
         });
     }
@@ -92,10 +97,6 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mFeatures.size();
-    }
-
-    public interface Listener {
-        void onFeatureClicked(View view, Feature feature);
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {

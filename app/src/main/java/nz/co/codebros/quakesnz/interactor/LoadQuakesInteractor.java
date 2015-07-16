@@ -12,9 +12,11 @@ public interface LoadQuakesInteractor {
     void downloadQuakes(Listener listener);
 
     interface Listener {
-        void onQuakesLoaded(Feature[] features);
-
         void onQuakesDownloaded();
+
+        void onQuakesDownloadFailed();
+
+        void onQuakesLoaded(Feature[] features);
 
         void onQuakesLoadFailed();
     }
