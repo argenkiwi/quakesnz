@@ -1,17 +1,98 @@
 package nz.co.codebros.quakesnz.presenter;
 
+import android.util.Log;
 import android.view.View;
 
+import de.greenrobot.event.EventBus;
+import nz.co.codebros.quakesnz.event.GetQuakesFailureEvent;
+import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
+import nz.co.codebros.quakesnz.event.GetQuakesSuccessEvent;
+import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.ui.QuakeListView;
 
 /**
  * Created by leandro on 9/07/15.
  */
-public interface QuakeListPresenter extends Presenter<QuakeListView> {
-    void onLoadQuakes();
+public class QuakeListPresenter extends BasePresenter<QuakeListView>
+        implements LoadQuakesInteractor.OnQuakesSavedListener,
+        LoadQuakesInteractor.OnQuakesLoadedListener {
+    private static final String TAG = QuakeListPresenter.class.getSimpleName();
+    private EventBus mBus;
+    private LoadQuakesInteractor mInteractor;
 
-    void onRefresh();
+    public QuakeListPresenter(EventBus bus, LoadQuakesInteractor interactor) {
+        mBus = bus;
+        mInteractor = interactor;
+    }
 
-    void onFeatureClicked(View view, Feature feature);
+    public void onEvent(GetQuakesFailureEvent event) {
+        Log.d(TAG, "Get quakes failure.");
+        if (getView() != null) {
+            getView().hideProgress();
+            getView().showDownloadFailedMessage();
+        }
+    }
+
+    public void onEvent(GetQuakesSuccessEvent event) {
+        Log.d(TAG, "Get quakes success.");
+        mInteractor.saveQuakes(event.getResponse(), this);
+    }
+
+    public void onLoad() {
+        mInteractor.loadQuakes(this);
+    }
+
+    public void onFeatureClicked(View view, Feature feature) {
+        Log.d(TAG, "Feature clicked.");
+        getView().showQuakeDetail(view, feature);
+    }
+
+    public void onRefresh() {
+        Log.d(TAG, "Refresh.");
+        getView().showProgress();
+        mBus.post(new GetQuakesRequestEvent());
+    }
+
+    @Override
+    public void onSaveQuakesFailure() {
+        if (getView() != null) {
+            getView().hideProgress();
+            getView().showDownloadFailedMessage();
+        }
+    }
+
+    @Override
+    public void onSaveQuakesSuccess() {
+        onLoad();
+    }
+
+    @Override
+    public void onLoadQuakesFailure() {
+        if (getView() != null) {
+            getView().hideProgress();
+            getView().showLoadFailedMessage();
+        }
+    }
+
+    @Override
+    public void onLoadQuakesSuccess(Feature[] features) {
+        if (getView() != null) {
+            getView().hideProgress();
+            getView().listQuakes(features);
+        }
+    }
+
+    @Override
+    protected void onBindView() {
+        super.onBindView();
+        mBus.register(this);
+        onRefresh();
+    }
+
+    @Override
+    protected void onUnbindView() {
+        super.onUnbindView();
+        mBus.unregister(this);
+    }
 }

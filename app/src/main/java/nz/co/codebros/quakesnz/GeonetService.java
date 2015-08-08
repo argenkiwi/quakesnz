@@ -10,7 +10,6 @@ import retrofit.http.Path;
  * Created by leandro on 9/07/15.
  */
 public interface GeonetService {
-
     @GET("/quakes/services/{filter}.json")
     void listAllQuakes(@Path("filter") String filter, Callback<FeatureCollection> callback);
 }

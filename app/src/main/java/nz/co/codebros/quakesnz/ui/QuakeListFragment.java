@@ -62,25 +62,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null) {
-            mPresenter.onRefresh();
-        } else mPresenter.onLoadQuakes();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         DaggerQuakeListComponent.builder()
-                .applicationComponent(((QuakesNZApplication) getActivity().getApplication())
+                .applicationComponent(QuakesNZApplication.get(getActivity())
                         .getApplicationComponent())
-                .quakeListModule(new QuakeListModule())
-                .build()
-                .inject(this);
-
-        mPresenter.bindView(this);
+                .quakeListModule(new QuakeListModule()).build().inject(this);
     }
 
     @Nullable
@@ -147,5 +134,17 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void showProgress() {
         Log.d(TAG, "Show progress.");
         mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.bindView(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPresenter.unbindView();
     }
 }

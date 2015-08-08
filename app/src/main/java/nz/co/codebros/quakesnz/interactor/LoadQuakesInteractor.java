@@ -1,23 +1,24 @@
 package nz.co.codebros.quakesnz.interactor;
 
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.presenter.QuakeListPresenterImpl;
+import retrofit.client.Response;
 
 /**
  * Created by leandro on 9/07/15.
  */
 public interface LoadQuakesInteractor {
-    void loadQuakes(Listener listener);
+    void loadQuakes(OnQuakesLoadedListener listener);
 
-    void downloadQuakes(Listener listener);
+    void saveQuakes(Response response, OnQuakesSavedListener listener);
 
-    interface Listener {
-        void onQuakesDownloaded();
-
-        void onQuakesDownloadFailed();
-
-        void onQuakesLoaded(Feature[] features);
-
-        void onQuakesLoadFailed();
+    interface OnQuakesLoadedListener{
+        void onLoadQuakesFailure();
+        void onLoadQuakesSuccess(Feature[] features);
     }
+
+    interface OnQuakesSavedListener{
+        void onSaveQuakesFailure();
+        void onSaveQuakesSuccess();
+    }
+
 }

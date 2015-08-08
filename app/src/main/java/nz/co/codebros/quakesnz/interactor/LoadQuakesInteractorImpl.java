@@ -74,41 +74,7 @@ public class LoadQuakesInteractorImpl implements LoadQuakesInteractor {
     }
 
     @Override
-    public void downloadQuakes(final Listener listener) {
-
-        mService.listAllQuakes(getFilterName(SCOPE_FELT), new Callback<FeatureCollection>() {
-
-            @Override
-            public void success(FeatureCollection featureCollection, Response response) {
-                try {
-                    BufferedInputStream input = new BufferedInputStream(response.getBody().in());
-                    FileOutputStream output = mContext.openFileOutput(String.format(QUAKES_FILE,
-                            getFilterName(SCOPE_FELT)), Context.MODE_PRIVATE);
-                    byte[] data = new byte[1024];
-                    int count;
-                    while ((count = input.read(data)) != -1) {
-                        output.write(data, 0, count);
-                    }
-                    output.close();
-                    input.close();
-                    listener.onQuakesDownloaded();
-                } catch (IOException e) {
-                    Log.d(TAG, "I/O Exception.", e);
-                    listener.onQuakesDownloadFailed();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "Retrofit Error.", error);
-                listener.onQuakesDownloadFailed();
-            }
-        });
-    }
-
-    @Override
-    public void loadQuakes(final Listener listener) {
-
+    public void loadQuakes(OnQuakesLoadedListener listener) {
         InputStream input;
         InputStreamReader reader;
         try {
@@ -132,13 +98,33 @@ public class LoadQuakesInteractorImpl implements LoadQuakesInteractor {
                         cities));
             }
 
-            listener.onQuakesLoaded(features);
+            listener.onLoadQuakesSuccess(features);
         } catch (FileNotFoundException e) {
             Log.e(TAG, "I/O Exception.", e);
-            listener.onQuakesLoadFailed();
+            listener.onLoadQuakesFailure();
         } catch (IOException e) {
             Log.e(TAG, "I/O Exception.", e);
-            listener.onQuakesLoadFailed();
+            listener.onLoadQuakesFailure();
+        }
+    }
+
+    @Override
+    public void saveQuakes(Response response, OnQuakesSavedListener listener) {
+        try {
+            BufferedInputStream input = new BufferedInputStream(response.getBody().in());
+            FileOutputStream output = mContext.openFileOutput(String.format(QUAKES_FILE,
+                    getFilterName(SCOPE_FELT)), Context.MODE_PRIVATE);
+            byte[] data = new byte[1024];
+            int count;
+            while ((count = input.read(data)) != -1) {
+                output.write(data, 0, count);
+            }
+            output.close();
+            input.close();
+            listener.onSaveQuakesSuccess();
+        } catch (IOException e) {
+            Log.d(TAG, "I/O Exception.", e);
+            listener.onSaveQuakesFailure();
         }
     }
 }

@@ -6,11 +6,11 @@ import com.google.gson.Gson;
 
 import dagger.Module;
 import dagger.Provides;
+import de.greenrobot.event.EventBus;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractorImpl;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
-import nz.co.codebros.quakesnz.presenter.QuakeListPresenterImpl;
 
 /**
  * Created by leandro on 9/07/15.
@@ -19,13 +19,12 @@ import nz.co.codebros.quakesnz.presenter.QuakeListPresenterImpl;
 public class QuakeListModule {
 
     @Provides
-    public LoadQuakesInteractor provideInteractor(Context context, GeonetService service,
-                                                  Gson gson) {
+    public LoadQuakesInteractor provideInteractor(Context context, GeonetService service, Gson gson) {
         return new LoadQuakesInteractorImpl(context, service, gson);
     }
 
     @Provides
-    public QuakeListPresenter providePresenter(LoadQuakesInteractor interactor) {
-        return new QuakeListPresenterImpl(interactor);
+    public QuakeListPresenter providePresenter(EventBus bus, LoadQuakesInteractor interactor) {
+        return new QuakeListPresenter(bus, interactor);
     }
 }

@@ -11,12 +11,15 @@ import com.google.gson.GsonBuilder;
 import java.util.Date;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.greenrobot.event.EventBus;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
+import nz.co.codebros.quakesnz.RequestHandler;
 import nz.co.codebros.quakesnz.utils.DateDeserializer;
 import nz.co.codebros.quakesnz.utils.LatLngAdapter;
 import retrofit.RestAdapter;
@@ -40,6 +43,11 @@ public class ApplicationModule {
     }
 
     @Provides
+    EventBus provideEventBus(){
+        return EventBus.getDefault();
+    }
+
+    @Provides
     Gson providesGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(LatLng.class, new LatLngAdapter())
@@ -48,6 +56,7 @@ public class ApplicationModule {
     }
 
     @Provides
+    @Singleton
     GeonetService provideGeonetService(RestAdapter restAdapter) {
         return restAdapter.create(GeonetService.class);
     }
@@ -59,6 +68,14 @@ public class ApplicationModule {
                 .setConverter(new GsonConverter(gson))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    RequestHandler provideRequestHandler(EventBus bus, GeonetService service){
+        RequestHandler requestHandler = new RequestHandler(bus,service);
+        bus.register(requestHandler);
+        return requestHandler;
     }
 
     @Provides
