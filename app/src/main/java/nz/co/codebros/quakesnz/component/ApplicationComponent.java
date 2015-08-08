@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.component;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
@@ -25,9 +26,9 @@ public interface ApplicationComponent {
 
     EventBus getEventBus();
 
-    GeonetService getGeonetService();
-
     Gson getGson();
+
+    SharedPreferences getSharedPreferences();
 
     @Named("app")
     Tracker getTracker();

@@ -25,5 +25,10 @@
     <string name="quake_details">Quake Details</string>
     <string name="failed_to_update">Failed to update quakes data.</string>
     <string name="failed_to_load">Failed to load quakes data.</string>
+    <string name="filter">Filter</string>
+    <string name="select_filter">Select Filter</string>
+    <string name="filter_values_default">felt</string>
+    <string name="settings">Settings</string>
+    <string name="filter_pref_summary">%s quakes will be listed.</string>
 
 </resources>

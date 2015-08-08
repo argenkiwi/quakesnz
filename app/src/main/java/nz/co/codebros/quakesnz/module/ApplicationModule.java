@@ -1,6 +1,8 @@
 package nz.co.codebros.quakesnz.module;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -72,10 +74,17 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    RequestHandler provideRequestHandler(EventBus bus, GeonetService service){
-        RequestHandler requestHandler = new RequestHandler(bus,service);
+    RequestHandler provideRequestHandler(EventBus bus, SharedPreferences sharedPreferences,
+                                         GeonetService service){
+        RequestHandler requestHandler = new RequestHandler(bus, sharedPreferences,service);
         bus.register(requestHandler);
         return requestHandler;
+    }
+
+    @Provides
+    @Singleton
+    SharedPreferences provideSharedPreferences(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     @Provides

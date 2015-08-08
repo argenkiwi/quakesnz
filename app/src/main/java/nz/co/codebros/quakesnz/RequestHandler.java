@@ -1,5 +1,7 @@
 package nz.co.codebros.quakesnz;
 
+import android.content.SharedPreferences;
+
 import de.greenrobot.event.EventBus;
 import nz.co.codebros.quakesnz.dispatcher.GetQuakesDispatcher;
 import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
@@ -9,14 +11,17 @@ import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
  */
 public class RequestHandler {
     private EventBus mBus;
+    private SharedPreferences mSharedPreferences;
     private GeonetService mService;
 
-    public RequestHandler(EventBus bus, GeonetService service) {
+    public RequestHandler(EventBus bus, SharedPreferences sharedPreferences, GeonetService service) {
         mBus = bus;
+        mSharedPreferences = sharedPreferences;
         mService = service;
     }
 
     public void onEvent(GetQuakesRequestEvent event){
-        mService.listAllQuakes("felt", new GetQuakesDispatcher(mBus));
+        String filter = mSharedPreferences.getString("pref_filter", "felt");
+        mService.listAllQuakes(filter, new GetQuakesDispatcher(mBus));
     }
 }

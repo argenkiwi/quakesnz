@@ -37,6 +37,7 @@ public class QuakeListPresenter extends BasePresenter<QuakeListView>
     public void onEvent(GetQuakesSuccessEvent event) {
         Log.d(TAG, "Get quakes success.");
         mInteractor.saveQuakes(event.getResponse(), this);
+        mInteractor.loadQuakes(event.getData().getFeatures(), this);
     }
 
     public void onLoad() {
@@ -56,15 +57,12 @@ public class QuakeListPresenter extends BasePresenter<QuakeListView>
 
     @Override
     public void onSaveQuakesFailure() {
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().showDownloadFailedMessage();
-        }
+        Log.w(TAG, "Save quakes failure.");
     }
 
     @Override
     public void onSaveQuakesSuccess() {
-        onLoad();
+        Log.d(TAG, "Save quakes success.");
     }
 
     @Override
@@ -87,7 +85,6 @@ public class QuakeListPresenter extends BasePresenter<QuakeListView>
     protected void onBindView() {
         super.onBindView();
         mBus.register(this);
-        onRefresh();
     }
 
     @Override
