@@ -1,210 +1,147 @@
 package nz.co.codebros.quakesnz.ui;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.format.DateUtils;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.Locale;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.loader.QuakesLoader;
+import nz.co.codebros.quakesnz.component.DaggerQuakeListComponent;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.utils.LatLngUtils;
+import nz.co.codebros.quakesnz.module.QuakeListModule;
+import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 
-public class QuakeListFragment extends SwipeRefreshListFragment
-        implements LoaderManager.LoaderCallbacks<Feature[]>, SwipeRefreshLayout.OnRefreshListener {
+public class QuakeListFragment extends Fragment implements QuakeListView,
+        SwipeRefreshLayout.OnRefreshListener {
 
-    public static final String ARG_SCOPE = "arg_scope";
     private static final String TAG = QuakeListFragment.class.getSimpleName();
-    private Listener mListener;
 
-    public static QuakeListFragment newInstance(int scope) {
+    @Inject
+    QuakeListPresenter mPresenter;
 
-        Log.d(TAG, "Create new instance.");
+    @Inject
+    @Named("app")
+    Tracker mTracker;
 
-        QuakeListFragment f = new QuakeListFragment();
+    private FeatureAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView mRecyclerView;
 
-        Bundle args = new Bundle();
-        args.putInt(ARG_SCOPE, scope);
-        f.setArguments(args);
-
-        return f;
-    }
-
-    public int getColorForIntensity(String intensity) {
-        int color;
-        if (intensity.equals("unnoticeable")) {
-            color = getResources().getColor(R.color.unnoticeable);
-        } else if (intensity.equals("weak")) {
-            color = getResources().getColor(R.color.weak);
-        } else if (intensity.equals("light")) {
-            color = getResources().getColor(R.color.light);
-        } else if (intensity.equals("moderate")) {
-            color = getResources().getColor(R.color.moderate);
-        } else if (intensity.equals("strong")) {
-            color = getResources().getColor(R.color.strong);
-        } else if (intensity.equals("severe")) {
-            color = getResources().getColor(R.color.severe);
-        } else
-            color = Color.LTGRAY;
-
-        return color;
+    public static QuakeListFragment newInstance() {
+        return new QuakeListFragment();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (Listener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void hideProgress() {
+        Log.d(TAG, "Hide progress.");
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void listQuakes(Feature[] features) {
+        Log.d(TAG, "List quakes.");
+        mAdapter = new FeatureAdapter(features, mPresenter);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPresenter.onLoad();
+        } else mPresenter.onRefresh();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerQuakeListComponent.builder()
+                .applicationComponent(QuakesNZApplication.get(getActivity())
+                        .getApplicationComponent())
+                .quakeListModule(new QuakeListModule()).build().inject(this);
+    }
 
-        setRetainInstance(true);
-
-        Log.d(TAG, "Creating quake list fragment.");
-        if (savedInstanceState == null) {
-            Log.d(TAG, "Loading quake data.");
-            getLoaderManager().initLoader(0, getArguments(), this).forceLoad();
-        }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mPresenter.bindView(this);
+        return inflater.inflate(R.layout.fragment_quakes, container, false);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-        super.onActivityCreated(savedInstanceState);
-
-        int padding = (int) getResources().getDimension(R.dimen.padding_small);
-
-        ListView listView = getListView();
-        listView.setPadding(padding, padding, padding, padding);
-        listView.setClipToPadding(false);
-        listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-        listView.setDivider(null);
-
-        setEmptyText(getString(R.string.no_data_available));
-        setOnRefreshListener(this);
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        mListener.onFeatureSelected((Feature) l.getItemAtPosition(position), v);
-    }
-
-    @Override
-    public Loader<Feature[]> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "Creating loader.");
-        return new QuakesLoader(getActivity(), args.getInt(ARG_SCOPE));
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Feature[]> loader, Feature[] features) {
-        Log.d(TAG, "Load finished.");
-        setListAdapter(new FeatureAdapter(getActivity(), features));
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Feature[]> loader) {
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.unbindView();
     }
 
     @Override
     public void onRefresh() {
-        ((MainActivity) getActivity()).refresh();
+
+        // Build and send an Event.
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Interactions")
+                .setAction("Refresh")
+                .setLabel("Refresh")
+                .build());
+
+        mPresenter.onRefresh();
     }
 
-    public interface Listener {
-        void onFeatureSelected(Feature feature, View view);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mSwipeRefreshLayout = ((SwipeRefreshLayout) view);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    private static class ViewHolder {
-        TextView txtMagnitudeBig;
-        TextView txtMagnitudeSmall;
-        TextView txtIntensity;
-        TextView txtLocation;
-        TextView txtDepth;
-        TextView txtTime;
-        View vTab;
+    @Override
+    public void showDownloadFailedMessage() {
+        Log.d(TAG, "Show download failed message.");
+        Toast.makeText(getActivity(), R.string.failed_to_update, Toast.LENGTH_SHORT).show();
     }
 
-    private class FeatureAdapter extends ArrayAdapter<Feature> {
-
-        public FeatureAdapter(Context context, Feature[] objects) {
-            super(context, 0, objects);
-        }
-
-        @Override
-        public Feature getItem(int position) {
-            return super.getItem(super.getCount() - position - 1);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = View.inflate(getActivity(), R.layout.item_summary, null);
-
-                viewHolder = new ViewHolder();
-                viewHolder.txtMagnitudeBig = (TextView) convertView.findViewById(R.id.magnitude_big);
-                viewHolder.txtMagnitudeSmall = (TextView) convertView.findViewById(R.id.magnitude_small);
-                viewHolder.txtIntensity = (TextView) convertView.findViewById(R.id.intensity);
-                viewHolder.txtLocation = (TextView) convertView.findViewById(R.id.location);
-                viewHolder.txtDepth = (TextView) convertView.findViewById(R.id.depth);
-                viewHolder.txtTime = (TextView) convertView.findViewById(R.id.time);
-                viewHolder.vTab = convertView.findViewById(R.id.colorTab);
-
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            Feature item = getItem(position);
-
-            String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", item.getProperties()
-                    .getMagnitude()).split("\\.");
-
-            viewHolder.txtMagnitudeBig.setText(magnitude[0]);
-            String intensity = item.getProperties().getIntensity();
-            final int colorForIntensity = getColorForIntensity(intensity);
-            viewHolder.txtMagnitudeBig.setTextColor(colorForIntensity);
-            viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
-            viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
-            viewHolder.txtIntensity.setText(intensity);
-            viewHolder.txtLocation.setText(getString(R.string.location, Math
-                    .round(LatLngUtils.findDistance(item.getGeometry().getCoordinates(),
-                            item.getClosestCity().getCoordinates()) / 1000), item.getClosestCity()
-                    .getName()));
-            viewHolder.txtDepth.setText(getString(R.string.depth, item.getProperties().getDepth()));
-            viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
-                    .getOriginTime().getTime()));
-            viewHolder.vTab.setBackgroundColor(colorForIntensity);
-            return convertView;
-        }
-
+    @Override
+    public void showLoadFailedMessage() {
+        Log.d(TAG, "Show load failed message.");
+        Toast.makeText(getActivity(), R.string.failed_to_load, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showQuakeDetail(View view, Feature feature) {
+        Log.d(TAG, "Feature selected.");
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(getActivity(), view,
+                        getString(R.string.transition_name));
+
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
+    @Override
+    public void showProgress() {
+        Log.d(TAG, "Show progress.");
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
 }

@@ -11,9 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.SupportMapFragment;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
@@ -23,13 +21,6 @@ import nz.co.codebros.quakesnz.utils.LatLngUtils;
 public class QuakeDetailFragment extends Fragment {
 
     private static final String ARG_FEATURE = "arg_feature";
-    private static final SimpleDateFormat sDateFormat;
-
-    static {
-        sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",
-                Locale.ENGLISH);
-        sDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
 
     private Feature mFeature;
     private TextView mMagnitudeBigView;
@@ -41,7 +32,6 @@ public class QuakeDetailFragment extends Fragment {
     private TextView mDepthView;
 
     public static Fragment newInstance(Feature feature) {
-
         QuakeDetailFragment f = new QuakeDetailFragment();
 
         Bundle args = new Bundle();
@@ -51,48 +41,36 @@ public class QuakeDetailFragment extends Fragment {
         return f;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_quake_detail, container, false);
-
-        mMagnitudeBigView = (TextView) v
-                .findViewById(R.id.magnitude_big);
-        mMagnitudeSmallView = (TextView) v
-                .findViewById(R.id.magnitude_small);
-        mIntensityView = (TextView) v.findViewById(R.id.intensity);
-        mLocationView = (TextView) v.findViewById(R.id.location);
-        mDepthView = (TextView) v.findViewById(R.id.depth);
-        mTimeView = (TextView) v.findViewById(R.id.time);
-        mTabView = v.findViewById(R.id.colorTab);
-        return v;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mFeature = getArguments().getParcelable(ARG_FEATURE);
-
-        if (savedInstanceState == null) {
-            SupportMapFragment fragment = MyMapFragment.newInstance(mFeature.getGeometry());
-            getChildFragmentManager().beginTransaction().add(R.id.map, fragment).commit();
+    public int getColorForIntensity(String intensity) {
+        switch (intensity) {
+            case "unnoticeable":
+                return getResources().getColor(R.color.unnoticeable);
+            case "weak":
+                return getResources().getColor(R.color.weak);
+            case "light":
+                return getResources().getColor(R.color.light);
+            case "moderate":
+                return getResources().getColor(R.color.moderate);
+            case "strong":
+                return getResources().getColor(R.color.strong);
+            case "severe":
+                return getResources().getColor(R.color.severe);
+            default:
+                return Color.LTGRAY;
         }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
         super.onActivityCreated(savedInstanceState);
 
         Properties properties = mFeature.getProperties();
-
+        final String intensity = properties.getIntensity();
+        final int colorForIntensity = getColorForIntensity(intensity);
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
                 .split("\\.");
 
         mMagnitudeBigView.setText(magnitude[0]);
-        String intensity = properties.getIntensity();
-        final int colorForIntensity = getColorForIntensity(intensity);
         mMagnitudeBigView.setTextColor(colorForIntensity);
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
@@ -101,28 +79,35 @@ public class QuakeDetailFragment extends Fragment {
                 .findDistance(mFeature.getGeometry().getCoordinates(), mFeature.getClosestCity()
                         .getCoordinates()) / 1000), mFeature.getClosestCity().getName()));
         mDepthView.setText(getString(R.string.depth, properties.getDepth()));
-        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getOriginTime()
-                .getTime()));
+        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getOriginTime().getTime()));
         mTabView.setBackgroundColor(colorForIntensity);
     }
 
-    public int getColorForIntensity(String intensity) {
-        int color;
-        if (intensity.equals("unnoticeable")) {
-            color = getResources().getColor(R.color.unnoticeable);
-        } else if (intensity.equals("weak")) {
-            color = getResources().getColor(R.color.weak);
-        } else if (intensity.equals("light")) {
-            color = getResources().getColor(R.color.light);
-        } else if (intensity.equals("moderate")) {
-            color = getResources().getColor(R.color.moderate);
-        } else if (intensity.equals("strong")) {
-            color = getResources().getColor(R.color.strong);
-        } else if (intensity.equals("severe")) {
-            color = getResources().getColor(R.color.severe);
-        } else
-            color = Color.LTGRAY;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFeature = getArguments().getParcelable(ARG_FEATURE);
+        if (savedInstanceState == null) {
+            SupportMapFragment fragment = MyMapFragment.newInstance(mFeature.getGeometry());
+            getChildFragmentManager().beginTransaction().add(R.id.map, fragment).commit();
+        }
+    }
 
-        return color;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_quake_detail, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mMagnitudeBigView = (TextView) view.findViewById(R.id.magnitude_big);
+        mMagnitudeSmallView = (TextView) view.findViewById(R.id.magnitude_small);
+        mIntensityView = (TextView) view.findViewById(R.id.intensity);
+        mLocationView = (TextView) view.findViewById(R.id.location);
+        mDepthView = (TextView) view.findViewById(R.id.depth);
+        mTimeView = (TextView) view.findViewById(R.id.time);
+        mTabView = view.findViewById(R.id.colorTab);
     }
 }
