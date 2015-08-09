@@ -32,6 +32,7 @@ public class QuakeListPresenter extends BasePresenter<QuakeListView>
             getView().hideProgress();
             getView().showDownloadFailedMessage();
         }
+        mInteractor.loadQuakes(this);
     }
 
     public void onEvent(GetQuakesSuccessEvent event) {
