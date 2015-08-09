@@ -57,8 +57,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void listQuakes(Feature[] features) {
         Log.d(TAG, "List quakes.");
-        mAdapter = new FeatureAdapter(features, mPresenter);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setFeatures(features);
     }
 
     @Override
@@ -76,6 +75,8 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .applicationComponent(QuakesNZApplication.get(getActivity())
                         .getApplicationComponent())
                 .quakeListModule(new QuakeListModule()).build().inject(this);
+
+        mAdapter = new FeatureAdapter(mPresenter);
     }
 
     @Nullable
@@ -112,6 +113,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override

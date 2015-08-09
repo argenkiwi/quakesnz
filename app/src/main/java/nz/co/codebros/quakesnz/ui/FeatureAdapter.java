@@ -26,8 +26,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     private final QuakeListPresenter mPresenter;
     private ArrayList<Feature> mFeatures = new ArrayList<>();
 
-    public FeatureAdapter(Feature[] features, QuakeListPresenter presenter) {
-        mFeatures.addAll(Arrays.asList(features));
+    public FeatureAdapter(QuakeListPresenter presenter) {
         mPresenter = presenter;
     }
 
@@ -97,6 +96,12 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mFeatures.size();
+    }
+
+    public void setFeatures(Feature[] features) {
+        mFeatures.clear();
+        mFeatures.addAll(Arrays.asList(features));
+        notifyDataSetChanged();
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {
