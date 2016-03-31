@@ -19,7 +19,7 @@ import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
 import nz.co.codebros.quakesnz.utils.AsyncTaskResult;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
-import retrofit.client.Response;
+import retrofit2.Response;
 
 /**
  * Created by leandro on 9/07/15.
@@ -85,7 +85,7 @@ public class LoadQuakesInteractor {
 
     public void loadQuakes(Feature[] features, final OnQuakesLoadedListener listener) {
 
-        new AsyncTask<Feature, Void, AsyncTaskResult<Feature[]>>(){
+        new AsyncTask<Feature, Void, AsyncTaskResult<Feature[]>>() {
 
             @Override
             protected AsyncTaskResult<Feature[]> doInBackground(Feature... features) {
@@ -99,7 +99,7 @@ public class LoadQuakesInteractor {
                     final int count = features.length;
                     for (int i = 0; i < count; i++) {
                         features[i].setClosestCity(findClosest(features[i].getGeometry()
-                                        .getCoordinates(),                                cities));
+                                .getCoordinates(), cities));
                     }
 
                     return new AsyncTaskResult<>(features);
@@ -110,7 +110,7 @@ public class LoadQuakesInteractor {
 
             @Override
             protected void onPostExecute(AsyncTaskResult<Feature[]> result) {
-                if(result.isError()){
+                if (result.isError()) {
                     Log.e(TAG, "I/O Exception.", result.getError());
                     listener.onLoadQuakesFailure();
                 } else listener.onLoadQuakesSuccess(result.getResult());
@@ -125,7 +125,7 @@ public class LoadQuakesInteractor {
             @Override
             protected AsyncTaskResult doInBackground(Response... responses) {
                 try {
-                    BufferedInputStream input = new BufferedInputStream(responses[0].getBody().in());
+                    BufferedInputStream input = new BufferedInputStream(responses[0].raw().body().byteStream());
                     FileOutputStream output = mContext.openFileOutput(QUAKES_FILE, Context.MODE_PRIVATE);
                     byte[] data = new byte[1024];
                     int count;

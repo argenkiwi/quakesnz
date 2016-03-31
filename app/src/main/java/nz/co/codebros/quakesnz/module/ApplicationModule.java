@@ -10,6 +10,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Date;
 
 import javax.inject.Named;
@@ -17,15 +19,15 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import de.greenrobot.event.EventBus;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.RequestHandler;
 import nz.co.codebros.quakesnz.utils.DateDeserializer;
 import nz.co.codebros.quakesnz.utils.LatLngAdapter;
-import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * Created by leandro on 9/07/15.
@@ -59,16 +61,15 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    GeonetService provideGeonetService(RestAdapter restAdapter) {
-        return restAdapter.create(GeonetService.class);
+    GeonetService provideGeonetService(Retrofit retrofit) {
+        return retrofit.create(GeonetService.class);
     }
 
     @Provides
-    RestAdapter provideRestAdapter(Gson gson) {
-        return new RestAdapter.Builder()
-                .setEndpoint("http://www.geonet.org.nz")
-                .setConverter(new GsonConverter(gson))
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+    Retrofit provideRestAdapter(Gson gson) {
+        return new Retrofit.Builder()
+                .baseUrl("http://www.geonet.org.nz")
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 

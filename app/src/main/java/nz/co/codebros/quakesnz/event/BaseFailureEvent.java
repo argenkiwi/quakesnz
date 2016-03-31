@@ -1,18 +1,17 @@
 package nz.co.codebros.quakesnz.event;
 
-import retrofit.RetrofitError;
 
 /**
  * Created by leandro on 8/08/15.
  */
 public abstract class BaseFailureEvent {
-    private RetrofitError error;
+    private Throwable error;
 
-    public BaseFailureEvent(RetrofitError error){
+    public BaseFailureEvent(Throwable error) {
         this.error = error;
     }
 
-    public RetrofitError getError() {
+    public Throwable getError() {
         return error;
     }
 }

@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+
 import dagger.Module;
 import dagger.Provides;
-import de.greenrobot.event.EventBus;
-import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 
@@ -16,7 +16,6 @@ import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
  */
 @Module
 public class QuakeListModule {
-
     @Provides
     public LoadQuakesInteractor provideInteractor(Context context, Gson gson) {
         return new LoadQuakesInteractor(context, gson);

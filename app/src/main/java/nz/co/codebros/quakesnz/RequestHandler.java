@@ -2,9 +2,13 @@ package nz.co.codebros.quakesnz;
 
 import android.content.SharedPreferences;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import nz.co.codebros.quakesnz.dispatcher.GetQuakesDispatcher;
 import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
+import retrofit2.Call;
 
 /**
  * Created by leandro on 8/08/15.
@@ -20,8 +24,10 @@ public class RequestHandler {
         mService = service;
     }
 
-    public void onEvent(GetQuakesRequestEvent event){
+    @Subscribe
+    public void onEvent(GetQuakesRequestEvent event) {
         String filter = mSharedPreferences.getString("pref_filter", "felt");
-        mService.listAllQuakes(filter, new GetQuakesDispatcher(mBus));
+        Call<FeatureCollection> call = mService.listAllQuakes(filter);
+        call.enqueue(new GetQuakesDispatcher(mBus));
     }
 }

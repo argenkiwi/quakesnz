@@ -4,10 +4,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+import org.greenrobot.eventbus.EventBus;
+
 import javax.inject.Inject;
 
 import dagger.Component;
-import de.greenrobot.event.EventBus;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.component.ApplicationComponent;

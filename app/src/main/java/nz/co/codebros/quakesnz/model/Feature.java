@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+
 public class Feature implements Parcelable {
 
     public static final Parcelable.Creator<Feature> CREATOR = new Creator<Feature>() {

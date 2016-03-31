@@ -1,21 +1,20 @@
 package nz.co.codebros.quakesnz.event;
 
-import retrofit.client.Response;
+
+import retrofit2.Response;
 
 /**
  * Created by leandro on 8/08/15.
  */
 public abstract class BaseSuccessEvent<T> {
-    private T data;
-    private Response response;
+    private final Response<T> response;
 
-    public BaseSuccessEvent(T data, Response response) {
-        this.data = data;
+    public BaseSuccessEvent(Response<T> response) {
         this.response = response;
     }
 
     public T getData() {
-        return data;
+        return response.body();
     }
 
     public Response getResponse() {

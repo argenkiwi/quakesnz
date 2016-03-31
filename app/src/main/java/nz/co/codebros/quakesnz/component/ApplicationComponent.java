@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import de.greenrobot.event.EventBus;
-import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
 

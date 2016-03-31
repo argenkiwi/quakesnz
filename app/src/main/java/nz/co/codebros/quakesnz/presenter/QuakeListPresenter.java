@@ -3,7 +3,9 @@ package nz.co.codebros.quakesnz.presenter;
 import android.util.Log;
 import android.view.View;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import nz.co.codebros.quakesnz.event.GetQuakesFailureEvent;
 import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
 import nz.co.codebros.quakesnz.event.GetQuakesSuccessEvent;
@@ -26,6 +28,7 @@ public class QuakeListPresenter extends BasePresenter<QuakeListView>
         mInteractor = interactor;
     }
 
+    @Subscribe
     public void onEvent(GetQuakesFailureEvent event) {
         Log.d(TAG, "Get quakes failure.");
         if (getView() != null) {
@@ -35,9 +38,10 @@ public class QuakeListPresenter extends BasePresenter<QuakeListView>
         mInteractor.loadQuakes(this);
     }
 
+    @Subscribe
     public void onEvent(GetQuakesSuccessEvent event) {
         Log.d(TAG, "Get quakes success.");
-        mInteractor.saveQuakes(event.getResponse(), this);
+//        mInteractor.saveQuakes(event.getResponse(), this);
         mInteractor.loadQuakes(event.getData().getFeatures(), this);
     }
 
