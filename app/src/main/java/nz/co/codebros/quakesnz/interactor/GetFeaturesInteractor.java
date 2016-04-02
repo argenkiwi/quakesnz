@@ -29,7 +29,6 @@ public class GetFeaturesInteractor {
     public void execute(String filter, Observer<? super Feature[]> subscriber) {
         subscription = service.listAllQuakes(filter)
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
                 .map(new Func1<FeatureCollection, Feature[]>() {
                     @Override
                     public Feature[] call(FeatureCollection featureCollection) {
