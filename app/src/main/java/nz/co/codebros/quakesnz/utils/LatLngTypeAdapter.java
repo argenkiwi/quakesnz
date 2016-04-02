@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by Leandro on 02/04/2014.
  */
-public class LatLngAdapter extends TypeAdapter<LatLng>{
+public class LatLngTypeAdapter extends TypeAdapter<LatLng>{
 
     @Override
     public void write(JsonWriter out, LatLng value) throws IOException {

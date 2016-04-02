@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import dagger.Module;
 import dagger.Provides;
 import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 import nz.co.codebros.quakesnz.utils.LoadCitiesHelper;
 import nz.co.codebros.quakesnz.view.QuakeListView;
@@ -28,7 +29,12 @@ public class QuakeListModule {
     }
 
     @Provides
-    public QuakeListPresenter providePresenter(GeonetService service, LoadCitiesHelper helper) {
-        return new QuakeListPresenter(view, service, helper);
+    public GetFeaturesInteractor provideInteractor(GeonetService service, LoadCitiesHelper helper){
+        return new GetFeaturesInteractor(service, helper);
+    }
+
+    @Provides
+    public QuakeListPresenter providePresenter(GetFeaturesInteractor interactor) {
+        return new QuakeListPresenter(view, interactor);
     }
 }

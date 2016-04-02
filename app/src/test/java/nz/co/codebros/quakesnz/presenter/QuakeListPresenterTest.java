@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.IOException;
 
 import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
 import nz.co.codebros.quakesnz.utils.LoadCitiesHelper;
@@ -32,26 +33,25 @@ public class QuakeListPresenterTest {
     private QuakeListView view;
 
     @Mock
-    private GeonetService service;
-
-    @Mock
-    private Call<FeatureCollection> call;
-
-    @Mock
-    private LoadCitiesHelper helper;
-    private Feature feature;
+    private GetFeaturesInteractor interactor;
 
     @Before
     public void setUp() throws Exception {
-        presenter = new QuakeListPresenter(view, service, helper);
-        when(service.listAllQuakes(anyString())).thenReturn(call);
+        presenter = new QuakeListPresenter(view, interactor);
     }
 
     @Test
     public void shouldCancelCall() {
         presenter.onViewCreated("");
         presenter.onDestroyView();
-        call.cancel();
+        interactor.cancel();
+    }
+
+    @Test
+    public void shouldListQuakes() throws IOException {
+        Feature[] features = {};
+        presenter.onNext(features);
+        verify(view).listQuakes(features);
     }
 
     @Test
@@ -59,17 +59,7 @@ public class QuakeListPresenterTest {
         String filter = "filter";
         presenter.onViewCreated(filter);
         verify(view).showProgress();
-        verify(service).listAllQuakes(filter);
-        verify(call).enqueue(Matchers.<Callback<FeatureCollection>>any());
-    }
-
-    @Test
-    public void shouldListQuakes() throws IOException {
-        Feature[] features = {};
-        presenter.onFeaturesLoaded(features);
-        verify(helper).execute(features);
-        verify(view).listQuakes(features);
-        verify(view).hideProgress();
+        verify(interactor).execute(filter, presenter);
     }
 
     @Test
@@ -77,13 +67,12 @@ public class QuakeListPresenterTest {
         String filter = "felt";
         presenter.onRefresh(filter);
         verify(view).showProgress();
-        verify(call).enqueue(Matchers.<Callback<FeatureCollection>>any());
+        verify(interactor).execute(filter, presenter);
     }
 
     @Test
     public void shouldShowError() {
         presenter.onFeaturesFailedToLoad();
-        verify(view).hideProgress();
         verify(view).showDownloadFailedMessage();
     }
 }

@@ -42,32 +42,40 @@ public class Feature implements Parcelable {
         return 0;
     }
 
+    public City getClosestCity() {
+        return closestCity;
+    }
+
+    public void setClosestCity(City closestCity) {
+        this.closestCity = closestCity;
+    }
+
     public Geometry getGeometry() {
         return geometry;
-    }
-
-    public String getGeometryName() {
-        return geometryName;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Properties getProperties() {
-        return properties;
     }
 
     public void setGeometry(Geometry geometry) {
         this.geometry = geometry;
     }
 
+    public String getGeometryName() {
+        return geometryName;
+    }
+
     public void setGeometryName(String geometryName) {
         this.geometryName = geometryName;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 
     public void setProperties(Properties properties) {
@@ -81,14 +89,5 @@ public class Feature implements Parcelable {
         dest.writeString(id);
         dest.writeParcelable(properties, flags);
         dest.writeParcelable(closestCity, flags);
-    }
-
-
-    public City getClosestCity() {
-        return closestCity;
-    }
-
-    public void setClosestCity(City closestCity) {
-        this.closestCity = closestCity;
     }
 }

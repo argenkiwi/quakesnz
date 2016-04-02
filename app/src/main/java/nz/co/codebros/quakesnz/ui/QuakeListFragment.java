@@ -47,7 +47,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
 
     private FeatureAdapter featureAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
 
     public static QuakeListFragment newInstance() {
         return new QuakeListFragment();
@@ -69,7 +68,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerQuakeListComponent.builder()
-                .applicationComponent(QuakesNZApplication.get(getActivity())
+                .applicationComponent(QuakesNZApplication.get(getContext())
                         .getApplicationComponent())
                 .quakeListModule(new QuakeListModule(this)).build().inject(this);
 
@@ -120,7 +119,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         swipeRefreshLayout = ((SwipeRefreshLayout) view);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
 
@@ -131,13 +130,13 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void showDownloadFailedMessage() {
         Log.d(TAG, "Show download failed message.");
-        Toast.makeText(getActivity(), R.string.failed_to_update, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.failed_to_update, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showLoadFailedMessage() {
         Log.d(TAG, "Show load failed message.");
-        Toast.makeText(getActivity(), R.string.failed_to_load, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.failed_to_load, Toast.LENGTH_SHORT).show();
     }
 
     @Override

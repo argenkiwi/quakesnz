@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
-import org.greenrobot.eventbus.EventBus;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -20,21 +18,16 @@ import nz.co.codebros.quakesnz.module.ApplicationModule;
  * Created by leandro on 9/07/15.
  */
 @Singleton
-@Component(modules = {ApplicationModule.class})
+@Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
-
-    Context getApplicationContext();
-
-    EventBus getEventBus();
+    Context getContext();
 
     Gson getGson();
+
+    GeonetService getService();
 
     SharedPreferences getSharedPreferences();
 
     @Named("app")
     Tracker getTracker();
-
-    GeonetService getService();
-
-    void inject(QuakesNZApplication application);
 }

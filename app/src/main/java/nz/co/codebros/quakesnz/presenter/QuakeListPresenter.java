@@ -6,6 +6,7 @@ import android.view.View;
 import java.io.IOException;
 
 import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
 import nz.co.codebros.quakesnz.utils.LoadCitiesHelper;
@@ -13,68 +14,55 @@ import nz.co.codebros.quakesnz.view.QuakeListView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observer;
 
 /**
  * Created by leandro on 9/07/15.
  */
-public class QuakeListPresenter {
+public class QuakeListPresenter implements Observer<Feature[]> {
 
     private static final String TAG = QuakeListPresenter.class.getSimpleName();
 
     private final QuakeListView view;
-    private final GeonetService service;
-    private final LoadCitiesHelper helper;
+    private final GetFeaturesInteractor interactor;
 
-    private Call<FeatureCollection> call;
-
-    public QuakeListPresenter(QuakeListView view, GeonetService service, LoadCitiesHelper helper) {
+    public QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor) {
         this.view = view;
-        this.service = service;
-        this.helper = helper;
+        this.interactor = interactor;
+    }
+
+    @Override
+    public void onCompleted() {
+        view.hideProgress();
     }
 
     public void onDestroyView() {
-        call.cancel();
+        interactor.cancel();
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "Failed to load cities", e);
+        view.hideProgress();
+        view.showLoadFailedMessage();
     }
 
     public void onFeaturesFailedToLoad() {
-        view.hideProgress();
         view.showDownloadFailedMessage();
     }
 
-    public void onFeaturesLoaded(Feature[] features) {
-        try {
-            helper.execute(features);
-            view.listQuakes(features);
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to load cities", e);
-            view.showLoadFailedMessage();
-        }
-        view.hideProgress();
+    @Override
+    public void onNext(Feature[] features) {
+        view.listQuakes(features);
     }
 
     public void onRefresh(String filter) {
         view.showProgress();
-        this.call = service.listAllQuakes(filter);
-        call.enqueue(new Callback());
+        interactor.execute(filter, this);
     }
 
     public void onViewCreated(String filter) {
         view.showProgress();
-        this.call = service.listAllQuakes(filter);
-        call.enqueue(new Callback());
-    }
-
-    private class Callback implements retrofit2.Callback<FeatureCollection> {
-
-        @Override
-        public void onFailure(Call<FeatureCollection> call, Throwable t) {
-            onFeaturesFailedToLoad();
-        }
-
-        @Override
-        public void onResponse(Call<FeatureCollection> call, Response<FeatureCollection> response) {
-            onFeaturesLoaded(response.body().getFeatures());
-        }
+        interactor.execute(filter, this);
     }
 }

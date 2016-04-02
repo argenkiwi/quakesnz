@@ -39,9 +39,9 @@ public class LoadCitiesHelper {
         return result;
     }
 
-    public void execute(Feature[] features) throws IOException {
+    public Feature[] execute(Feature[] features) throws IOException {
         InputStream input = context.getResources().openRawResource(R.raw.cities);
-        InputStreamReader reader = new InputStreamReader(input);// Load cities.
+        InputStreamReader reader = new InputStreamReader(input);
         City[] cities = gson.fromJson(reader, City[].class);
         reader.close();
         input.close();
@@ -50,5 +50,7 @@ public class LoadCitiesHelper {
             feature.setClosestCity(findClosest(feature.getGeometry().getCoordinates(),
                     cities));
         }
+
+        return features;
     }
 }

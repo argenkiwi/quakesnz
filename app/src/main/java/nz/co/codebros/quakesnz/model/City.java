@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Leandro on 02/04/2014.
  */
-public class City  implements Parcelable{
+public class City implements Parcelable {
 
     public static final Creator<City> CREATOR = new Creator<City>() {
         @Override
@@ -32,12 +32,9 @@ public class City  implements Parcelable{
         coordinates = source.readParcelable(LatLng.class.getClassLoader());
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public LatLng getCoordinates() {
@@ -48,9 +45,12 @@ public class City  implements Parcelable{
         this.coordinates = coordinates;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
