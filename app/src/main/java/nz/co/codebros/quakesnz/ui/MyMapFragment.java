@@ -31,7 +31,7 @@ public class MyMapFragment extends SupportMapFragment implements OnMapReadyCallb
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null) getMapAsync(this);
+        getMapAsync(this);
     }
 
     @Override
