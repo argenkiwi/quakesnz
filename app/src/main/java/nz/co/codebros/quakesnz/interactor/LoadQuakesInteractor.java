@@ -96,10 +96,9 @@ public class LoadQuakesInteractor {
                     reader.close();
                     input.close();
 
-                    final int count = features.length;
-                    for (int i = 0; i < count; i++) {
-                        features[i].setClosestCity(findClosest(features[i].getGeometry()
-                                .getCoordinates(), cities));
+                    for (Feature feature : features) {
+                        feature.setClosestCity(findClosest(feature.getGeometry().getCoordinates(),
+                                cities));
                     }
 
                     return new AsyncTaskResult<>(features);

@@ -5,11 +5,12 @@ import android.os.Bundle;
 import nz.co.codebros.quakesnz.model.Geometry;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MyMapFragment extends SupportMapFragment {
+public class MyMapFragment extends SupportMapFragment implements OnMapReadyCallback {
 
     public static final String ARG_LATITUDE = "arg_latitude";
     public static final String ARG_LONGITUDE = "arg_longitude";
@@ -29,18 +30,16 @@ public class MyMapFragment extends SupportMapFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) getMapAsync(this);
+    }
 
-        GoogleMap map = getMap();
-
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
         LatLng location = new LatLng(getArguments().getDouble(ARG_LATITUDE),
                 getArguments().getDouble(ARG_LONGITUDE));
 
-        map.addMarker(new MarkerOptions().position(location));
-
-        if (savedInstanceState == null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 6));
-        }
+        googleMap.addMarker(new MarkerOptions().position(location));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 6));
     }
 }

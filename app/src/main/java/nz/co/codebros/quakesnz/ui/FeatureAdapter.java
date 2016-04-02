@@ -23,42 +23,39 @@ import nz.co.codebros.quakesnz.utils.LatLngUtils;
  */
 public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHolder> {
 
-    private final QuakeListPresenter mPresenter;
+    private final Listener listener;
     private ArrayList<Feature> mFeatures = new ArrayList<>();
 
-    public FeatureAdapter(QuakeListPresenter presenter) {
-        mPresenter = presenter;
+    public FeatureAdapter(Listener listener) {
+        this.listener = listener;
     }
 
     private static int getColorForIntensity(Resources resources, String intensity) {
-        int color;
-        if (intensity.equals("unnoticeable")) {
-            color = resources.getColor(R.color.unnoticeable);
-        } else if (intensity.equals("weak")) {
-            color = resources.getColor(R.color.weak);
-        } else if (intensity.equals("light")) {
-            color = resources.getColor(R.color.light);
-        } else if (intensity.equals("moderate")) {
-            color = resources.getColor(R.color.moderate);
-        } else if (intensity.equals("strong")) {
-            color = resources.getColor(R.color.strong);
-        } else if (intensity.equals("severe")) {
-            color = resources.getColor(R.color.severe);
-        } else
-            color = Color.LTGRAY;
-
-        return color;
+        switch (intensity) {
+            case "unnoticeable":
+                return resources.getColor(R.color.unnoticeable);
+            case "weak":
+                return resources.getColor(R.color.weak);
+            case "light":
+                return resources.getColor(R.color.light);
+            case "moderate":
+                return resources.getColor(R.color.moderate);
+            case "strong":
+                return resources.getColor(R.color.strong);
+            case "severe":
+                return resources.getColor(R.color.severe);
+            default:
+                return Color.LTGRAY;
+        }
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_summary, viewGroup, false);
-        return new ViewHolder(view);
+    public int getItemCount() {
+        return mFeatures.size();
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
 
         Resources resources = viewHolder.itemView.getResources();
 
@@ -88,14 +85,16 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.onFeatureClicked(view, mFeatures.get(i));
+                listener.onFeatureClicked(view, mFeatures.get(viewHolder.getAdapterPosition()));
             }
         });
     }
 
     @Override
-    public int getItemCount() {
-        return mFeatures.size();
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.item_summary, viewGroup, false);
+        return new ViewHolder(view);
     }
 
     public void setFeatures(Feature[] features) {
@@ -124,5 +123,9 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
             this.txtTime = (TextView) itemView.findViewById(R.id.time);
             this.vTab = itemView.findViewById(R.id.colorTab);
         }
+    }
+
+    public interface Listener {
+        void onFeatureClicked(View view, Feature feature);
     }
 }

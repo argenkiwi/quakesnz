@@ -12,6 +12,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
 
@@ -32,6 +33,8 @@ public interface ApplicationComponent {
 
     @Named("app")
     Tracker getTracker();
+
+    GeonetService getService();
 
     void inject(QuakesNZApplication application);
 }

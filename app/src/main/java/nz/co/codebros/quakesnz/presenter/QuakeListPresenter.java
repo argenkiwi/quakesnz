@@ -3,98 +3,78 @@ package nz.co.codebros.quakesnz.presenter;
 import android.util.Log;
 import android.view.View;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import java.io.IOException;
 
-import nz.co.codebros.quakesnz.event.GetQuakesFailureEvent;
-import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
-import nz.co.codebros.quakesnz.event.GetQuakesSuccessEvent;
-import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
+import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.ui.QuakeListView;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.utils.LoadCitiesHelper;
+import nz.co.codebros.quakesnz.view.QuakeListView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by leandro on 9/07/15.
  */
-public class QuakeListPresenter extends BasePresenter<QuakeListView>
-        implements LoadQuakesInteractor.OnQuakesSavedListener,
-        LoadQuakesInteractor.OnQuakesLoadedListener {
+public class QuakeListPresenter {
+
     private static final String TAG = QuakeListPresenter.class.getSimpleName();
-    private EventBus mBus;
-    private LoadQuakesInteractor mInteractor;
 
-    public QuakeListPresenter(EventBus bus, LoadQuakesInteractor interactor) {
-        mBus = bus;
-        mInteractor = interactor;
+    private final QuakeListView view;
+    private final GeonetService service;
+    private final LoadCitiesHelper helper;
+
+    private Call<FeatureCollection> call;
+
+    public QuakeListPresenter(QuakeListView view, GeonetService service, LoadCitiesHelper helper) {
+        this.view = view;
+        this.service = service;
+        this.helper = helper;
     }
 
-    @Subscribe
-    public void onEvent(GetQuakesFailureEvent event) {
-        Log.d(TAG, "Get quakes failure.");
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().showDownloadFailedMessage();
+    public void onDestroyView() {
+        call.cancel();
+    }
+
+    public void onFeaturesFailedToLoad() {
+        view.hideProgress();
+        view.showDownloadFailedMessage();
+    }
+
+    public void onFeaturesLoaded(Feature[] features) {
+        try {
+            helper.execute(features);
+            view.listQuakes(features);
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to load cities", e);
+            view.showLoadFailedMessage();
         }
-        mInteractor.loadQuakes(this);
+        view.hideProgress();
     }
 
-    @Subscribe
-    public void onEvent(GetQuakesSuccessEvent event) {
-        Log.d(TAG, "Get quakes success.");
-//        mInteractor.saveQuakes(event.getResponse(), this);
-        mInteractor.loadQuakes(event.getData().getFeatures(), this);
+    public void onRefresh(String filter) {
+        view.showProgress();
+        this.call = service.listAllQuakes(filter);
+        call.enqueue(new Callback());
     }
 
-    public void onLoad() {
-        mInteractor.loadQuakes(this);
+    public void onViewCreated(String filter) {
+        view.showProgress();
+        this.call = service.listAllQuakes(filter);
+        call.enqueue(new Callback());
     }
 
-    public void onFeatureClicked(View view, Feature feature) {
-        Log.d(TAG, "Feature clicked.");
-        getView().showQuakeDetail(view, feature);
-    }
+    private class Callback implements retrofit2.Callback<FeatureCollection> {
 
-    public void onRefresh() {
-        Log.d(TAG, "Refresh.");
-        getView().showProgress();
-        mBus.post(new GetQuakesRequestEvent());
-    }
-
-    @Override
-    public void onSaveQuakesFailure() {
-        Log.w(TAG, "Save quakes failure.");
-    }
-
-    @Override
-    public void onSaveQuakesSuccess() {
-        Log.d(TAG, "Save quakes success.");
-    }
-
-    @Override
-    public void onLoadQuakesFailure() {
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().showLoadFailedMessage();
+        @Override
+        public void onFailure(Call<FeatureCollection> call, Throwable t) {
+            onFeaturesFailedToLoad();
         }
-    }
 
-    @Override
-    public void onLoadQuakesSuccess(Feature[] features) {
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().listQuakes(features);
+        @Override
+        public void onResponse(Call<FeatureCollection> call, Response<FeatureCollection> response) {
+            onFeaturesLoaded(response.body().getFeatures());
         }
-    }
-
-    @Override
-    protected void onBindView() {
-        super.onBindView();
-        mBus.register(this);
-    }
-
-    @Override
-    protected void onUnbindView() {
-        super.onUnbindView();
-        mBus.unregister(this);
     }
 }

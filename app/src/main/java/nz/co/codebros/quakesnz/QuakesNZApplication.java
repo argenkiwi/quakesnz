@@ -17,21 +17,22 @@ public class QuakesNZApplication extends Application {
     @Inject
     RequestHandler requestHandler;
 
-    private ApplicationComponent mApplicationComponent;
+    private ApplicationComponent component;
+
+    public static QuakesNZApplication get(Context context) {
+        return ((QuakesNZApplication) context.getApplicationContext());
+    }
+
+    public ApplicationComponent getApplicationComponent() {
+        return component;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mApplicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this)).build();
-        mApplicationComponent.inject(this);
-    }
-
-    public ApplicationComponent getApplicationComponent() {
-        return mApplicationComponent;
-    }
-
-    public static QuakesNZApplication get(Context context) {
-        return ((QuakesNZApplication) context.getApplicationContext());
+        component = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+        component.inject(this);
     }
 }
