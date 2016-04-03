@@ -88,8 +88,9 @@ public class QuakeDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mFeature = getArguments().getParcelable(ARG_FEATURE);
         if (savedInstanceState == null) {
-            SupportMapFragment fragment = MyMapFragment.newInstance(mFeature.getGeometry());
-            getChildFragmentManager().beginTransaction().add(R.id.map, fragment).commit();
+            getChildFragmentManager().beginTransaction()
+                    .add(R.id.map, MyMapFragment.newInstance(mFeature.getGeometry()))
+                    .commit();
         }
     }
 

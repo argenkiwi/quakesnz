@@ -15,7 +15,6 @@ import java.util.Locale;
 
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
 
 /**
@@ -24,7 +23,7 @@ import nz.co.codebros.quakesnz.utils.LatLngUtils;
 public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHolder> {
 
     private final Listener listener;
-    private ArrayList<Feature> mFeatures = new ArrayList<>();
+    private ArrayList<Feature> features = new ArrayList<>();
 
     public FeatureAdapter(Listener listener) {
         this.listener = listener;
@@ -51,15 +50,13 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return mFeatures.size();
+        return features.size();
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-
         Resources resources = viewHolder.itemView.getResources();
-
-        Feature item = mFeatures.get(i);
+        Feature item = features.get(i);
 
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", item.getProperties()
                 .getMagnitude()).split("\\.");
@@ -73,7 +70,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         viewHolder.txtIntensity.setText(intensity);
 
         final long distance = Math.round(LatLngUtils.findDistance(item.getGeometry()
-                        .getCoordinates(), item.getClosestCity().getCoordinates()) / 1000);
+                .getCoordinates(), item.getClosestCity().getCoordinates()) / 1000);
         viewHolder.txtLocation.setText(resources.getString(R.string.location, distance,
                 item.getClosestCity().getName()));
         viewHolder.txtDepth.setText(resources.getString(R.string.depth, item.getProperties()
@@ -85,7 +82,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onFeatureClicked(view, mFeatures.get(viewHolder.getAdapterPosition()));
+                listener.onFeatureClicked(view, features.get(viewHolder.getAdapterPosition()));
             }
         });
     }
@@ -98,13 +95,16 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
     }
 
     public void setFeatures(Feature[] features) {
-        mFeatures.clear();
-        mFeatures.addAll(Arrays.asList(features));
+        this.features.clear();
+        this.features.addAll(Arrays.asList(features));
         notifyDataSetChanged();
     }
 
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    public interface Listener {
+        void onFeatureClicked(View view, Feature feature);
+    }
 
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtMagnitudeBig;
         private final TextView txtMagnitudeSmall;
         private final TextView txtIntensity;
@@ -123,9 +123,5 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
             this.txtTime = (TextView) itemView.findViewById(R.id.time);
             this.vTab = itemView.findViewById(R.id.colorTab);
         }
-    }
-
-    public interface Listener {
-        void onFeatureClicked(View view, Feature feature);
     }
 }
