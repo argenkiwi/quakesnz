@@ -3,94 +3,66 @@ package nz.co.codebros.quakesnz.presenter;
 import android.util.Log;
 import android.view.View;
 
-import de.greenrobot.event.EventBus;
-import nz.co.codebros.quakesnz.event.GetQuakesFailureEvent;
-import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
-import nz.co.codebros.quakesnz.event.GetQuakesSuccessEvent;
-import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
+import java.io.IOException;
+
+import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.ui.QuakeListView;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.utils.LoadCitiesHelper;
+import nz.co.codebros.quakesnz.view.QuakeListView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import rx.Observer;
 
 /**
  * Created by leandro on 9/07/15.
  */
-public class QuakeListPresenter extends BasePresenter<QuakeListView>
-        implements LoadQuakesInteractor.OnQuakesSavedListener,
-        LoadQuakesInteractor.OnQuakesLoadedListener {
+public class QuakeListPresenter implements Observer<Feature[]> {
+
     private static final String TAG = QuakeListPresenter.class.getSimpleName();
-    private EventBus mBus;
-    private LoadQuakesInteractor mInteractor;
 
-    public QuakeListPresenter(EventBus bus, LoadQuakesInteractor interactor) {
-        mBus = bus;
-        mInteractor = interactor;
-    }
+    private final QuakeListView view;
+    private final GetFeaturesInteractor interactor;
 
-    public void onEvent(GetQuakesFailureEvent event) {
-        Log.d(TAG, "Get quakes failure.");
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().showDownloadFailedMessage();
-        }
-        mInteractor.loadQuakes(this);
-    }
-
-    public void onEvent(GetQuakesSuccessEvent event) {
-        Log.d(TAG, "Get quakes success.");
-        mInteractor.saveQuakes(event.getResponse(), this);
-        mInteractor.loadQuakes(event.getData().getFeatures(), this);
-    }
-
-    public void onLoad() {
-        mInteractor.loadQuakes(this);
-    }
-
-    public void onFeatureClicked(View view, Feature feature) {
-        Log.d(TAG, "Feature clicked.");
-        getView().showQuakeDetail(view, feature);
-    }
-
-    public void onRefresh() {
-        Log.d(TAG, "Refresh.");
-        getView().showProgress();
-        mBus.post(new GetQuakesRequestEvent());
+    public QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor) {
+        this.view = view;
+        this.interactor = interactor;
     }
 
     @Override
-    public void onSaveQuakesFailure() {
-        Log.w(TAG, "Save quakes failure.");
+    public void onCompleted() {
+        view.hideProgress();
+    }
+
+    public void onDestroyView() {
+        interactor.cancel();
     }
 
     @Override
-    public void onSaveQuakesSuccess() {
-        Log.d(TAG, "Save quakes success.");
+    public void onError(Throwable e) {
+        Log.e(TAG, "Failed to load cities", e);
+        view.hideProgress();
+        view.showLoadFailedMessage();
+    }
+
+    public void onFeaturesFailedToLoad() {
+        view.showDownloadFailedMessage();
     }
 
     @Override
-    public void onLoadQuakesFailure() {
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().showLoadFailedMessage();
-        }
+    public void onNext(Feature[] features) {
+        view.listQuakes(features);
     }
 
-    @Override
-    public void onLoadQuakesSuccess(Feature[] features) {
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().listQuakes(features);
-        }
+    public void onRefresh(String filter) {
+        view.showProgress();
+        interactor.execute(filter, this);
     }
 
-    @Override
-    protected void onBindView() {
-        super.onBindView();
-        mBus.register(this);
-    }
-
-    @Override
-    protected void onUnbindView() {
-        super.onUnbindView();
-        mBus.unregister(this);
+    public void onViewCreated(String filter) {
+        view.showProgress();
+        interactor.execute(filter, this);
     }
 }

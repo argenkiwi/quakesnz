@@ -1,6 +1,4 @@
-package nz.co.codebros.quakesnz.ui;
-
-import android.view.View;
+package nz.co.codebros.quakesnz.view;
 
 import nz.co.codebros.quakesnz.model.Feature;
 
@@ -13,14 +11,6 @@ public interface QuakeListView {
     void listQuakes(Feature[] features);
 
     void showDownloadFailedMessage();
-
-    /**
-     * Launches quake detail screen.
-     *
-     * @param view    View to animate from.
-     * @param feature Quake data.
-     */
-    void showQuakeDetail(View view, Feature feature);
 
     void showLoadFailedMessage();
 
