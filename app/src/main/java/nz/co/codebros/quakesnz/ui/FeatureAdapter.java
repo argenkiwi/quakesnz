@@ -1,7 +1,9 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -29,20 +31,20 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         this.listener = listener;
     }
 
-    private static int getColorForIntensity(Resources resources, String intensity) {
+    private static int getColorForIntensity(Context context, String intensity) {
         switch (intensity) {
             case "unnoticeable":
-                return resources.getColor(R.color.unnoticeable);
+                return ContextCompat.getColor(context, R.color.unnoticeable);
             case "weak":
-                return resources.getColor(R.color.weak);
+                return ContextCompat.getColor(context, R.color.weak);
             case "light":
-                return resources.getColor(R.color.light);
+                return ContextCompat.getColor(context, R.color.light);
             case "moderate":
-                return resources.getColor(R.color.moderate);
+                return ContextCompat.getColor(context, R.color.moderate);
             case "strong":
-                return resources.getColor(R.color.strong);
+                return ContextCompat.getColor(context, R.color.strong);
             case "severe":
-                return resources.getColor(R.color.severe);
+                return ContextCompat.getColor(context, R.color.severe);
             default:
                 return Color.LTGRAY;
         }
@@ -55,7 +57,6 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        Resources resources = viewHolder.itemView.getResources();
         Feature item = features.get(i);
 
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", item.getProperties()
@@ -63,7 +64,8 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         viewHolder.txtMagnitudeBig.setText(magnitude[0]);
 
         String intensity = item.getProperties().getIntensity();
-        final int colorForIntensity = getColorForIntensity(resources, intensity);
+        final Context context = viewHolder.itemView.getContext();
+        final int colorForIntensity = getColorForIntensity(context, intensity);
         viewHolder.txtMagnitudeBig.setTextColor(colorForIntensity);
         viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
         viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
@@ -71,9 +73,9 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
 
         final long distance = Math.round(LatLngUtils.findDistance(item.getGeometry()
                 .getCoordinates(), item.getClosestCity().getCoordinates()) / 1000);
-        viewHolder.txtLocation.setText(resources.getString(R.string.location, distance,
+        viewHolder.txtLocation.setText(context.getString(R.string.location, distance,
                 item.getClosestCity().getName()));
-        viewHolder.txtDepth.setText(resources.getString(R.string.depth, item.getProperties()
+        viewHolder.txtDepth.setText(context.getString(R.string.depth, item.getProperties()
                 .getDepth()));
         viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
                 .getOriginTime().getTime()));

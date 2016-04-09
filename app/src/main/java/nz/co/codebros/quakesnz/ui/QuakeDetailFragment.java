@@ -3,13 +3,12 @@ package nz.co.codebros.quakesnz.ui;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.Locale;
 
@@ -44,17 +43,17 @@ public class QuakeDetailFragment extends Fragment {
     public int getColorForIntensity(String intensity) {
         switch (intensity) {
             case "unnoticeable":
-                return getResources().getColor(R.color.unnoticeable);
+                return ContextCompat.getColor(getContext(), R.color.unnoticeable);
             case "weak":
-                return getResources().getColor(R.color.weak);
+                return ContextCompat.getColor(getContext(), R.color.weak);
             case "light":
-                return getResources().getColor(R.color.light);
+                return ContextCompat.getColor(getContext(), R.color.light);
             case "moderate":
-                return getResources().getColor(R.color.moderate);
+                return ContextCompat.getColor(getContext(), R.color.moderate);
             case "strong":
-                return getResources().getColor(R.color.strong);
+                return ContextCompat.getColor(getContext(), R.color.strong);
             case "severe":
-                return getResources().getColor(R.color.severe);
+                return ContextCompat.getColor(getContext(), R.color.severe);
             default:
                 return Color.LTGRAY;
         }

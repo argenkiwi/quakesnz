@@ -17,7 +17,7 @@ public class QuakesNZApplication extends Application {
         return ((QuakesNZApplication) context.getApplicationContext());
     }
 
-    public ApplicationComponent getApplicationComponent() {
+    public ApplicationComponent getComponent() {
         return component;
     }
 

@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -65,13 +66,18 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerQuakeListComponent.builder()
+                .applicationComponent(QuakesNZApplication.get(context).getComponent())
+                .quakeListModule(new QuakeListModule(this))
+                .build().inject(this);
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerQuakeListComponent.builder()
-                .applicationComponent(QuakesNZApplication.get(getContext())
-                        .getApplicationComponent())
-                .quakeListModule(new QuakeListModule(this)).build().inject(this);
-
         featureAdapter = new FeatureAdapter(this);
     }
 
