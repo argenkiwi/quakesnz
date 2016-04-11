@@ -116,7 +116,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .build());
 
         // FIXME Use constants, IntDef or StringDef.
-        presenter.onRefresh(preferences.getString("pref_filter", "felt"));
+        presenter.onRefresh();
     }
 
     @Override
@@ -130,7 +130,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         recyclerView.setAdapter(featureAdapter);
 
         // FIXME Use constants, IntDef or StringDef.
-        presenter.onViewCreated(preferences.getString("pref_filter", "felt"));
+        presenter.onViewCreated();
     }
 
     @Override

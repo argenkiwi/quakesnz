@@ -30,5 +30,11 @@
     <string name="filter_values_default">felt</string>
     <string name="settings">Settings</string>
     <string name="filter_pref_summary">%s quakes will be listed.</string>
+    <string name="unnoticeable">unnoticeable</string>
+    <string name="weak">weak</string>
+    <string name="light">light</string>
+    <string name="moderate">moderate</string>
+    <string name="strong">strong</string>
+    <string name="severe">severe</string>
 
 </resources>

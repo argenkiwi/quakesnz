@@ -18,6 +18,7 @@ import java.util.Locale;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
+import nz.co.codebros.quakesnz.utils.QuakesUtils;
 
 /**
  * Created by leandro on 12/07/15.
@@ -29,25 +30,6 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
 
     public FeatureAdapter(Listener listener) {
         this.listener = listener;
-    }
-
-    private static int getColorForIntensity(Context context, String intensity) {
-        switch (intensity) {
-            case "unnoticeable":
-                return ContextCompat.getColor(context, R.color.unnoticeable);
-            case "weak":
-                return ContextCompat.getColor(context, R.color.weak);
-            case "light":
-                return ContextCompat.getColor(context, R.color.light);
-            case "moderate":
-                return ContextCompat.getColor(context, R.color.moderate);
-            case "strong":
-                return ContextCompat.getColor(context, R.color.strong);
-            case "severe":
-                return ContextCompat.getColor(context, R.color.severe);
-            default:
-                return Color.LTGRAY;
-        }
     }
 
     @Override
@@ -63,22 +45,18 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
                 .getMagnitude()).split("\\.");
         viewHolder.txtMagnitudeBig.setText(magnitude[0]);
 
-        String intensity = item.getProperties().getIntensity();
         final Context context = viewHolder.itemView.getContext();
-        final int colorForIntensity = getColorForIntensity(context, intensity);
+        final int colorForIntensity = QuakesUtils.getColor(context, item.getProperties().getMmi());
         viewHolder.txtMagnitudeBig.setTextColor(colorForIntensity);
         viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
         viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
-        viewHolder.txtIntensity.setText(intensity);
+        viewHolder.txtIntensity.setText(QuakesUtils.getIntensity(context, item.getProperties().getMmi()));
 
-        final long distance = Math.round(LatLngUtils.findDistance(item.getGeometry()
-                .getCoordinates(), item.getClosestCity().getCoordinates()) / 1000);
-        viewHolder.txtLocation.setText(context.getString(R.string.location, distance,
-                item.getClosestCity().getName()));
+        viewHolder.txtLocation.setText(item.getProperties().getLocality());
         viewHolder.txtDepth.setText(context.getString(R.string.depth, item.getProperties()
                 .getDepth()));
         viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
-                .getOriginTime().getTime()));
+                .getTime().getTime()));
         viewHolder.vTab.setBackgroundColor(colorForIntensity);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
