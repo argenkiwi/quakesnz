@@ -1,6 +1,5 @@
 package nz.co.codebros.quakesnz.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -9,14 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.SupportMapFragment;
-
 import java.util.Locale;
 
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
+import nz.co.codebros.quakesnz.utils.QuakesUtils;
 
 public class QuakeDetailFragment extends Fragment {
 
@@ -41,32 +39,13 @@ public class QuakeDetailFragment extends Fragment {
         return f;
     }
 
-    public int getColorForIntensity(String intensity) {
-        switch (intensity) {
-            case "unnoticeable":
-                return getResources().getColor(R.color.unnoticeable);
-            case "weak":
-                return getResources().getColor(R.color.weak);
-            case "light":
-                return getResources().getColor(R.color.light);
-            case "moderate":
-                return getResources().getColor(R.color.moderate);
-            case "strong":
-                return getResources().getColor(R.color.strong);
-            case "severe":
-                return getResources().getColor(R.color.severe);
-            default:
-                return Color.LTGRAY;
-        }
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         Properties properties = mFeature.getProperties();
-        final String intensity = properties.getIntensity();
-        final int colorForIntensity = getColorForIntensity(intensity);
+        final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
                 .split("\\.");
 
@@ -74,12 +53,10 @@ public class QuakeDetailFragment extends Fragment {
         mMagnitudeBigView.setTextColor(colorForIntensity);
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
-        mIntensityView.setText(intensity);
-        mLocationView.setText(getString(R.string.location, Math.round(LatLngUtils
-                .findDistance(mFeature.getGeometry().getCoordinates(), mFeature.getClosestCity()
-                        .getCoordinates()) / 1000), mFeature.getClosestCity().getName()));
+        mIntensityView.setText(QuakesUtils.getIntensity(getContext(), properties.getMmi()));
+        mLocationView.setText(properties.getLocality());
         mDepthView.setText(getString(R.string.depth, properties.getDepth()));
-        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getOriginTime().getTime()));
+        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getTime().getTime()));
         mTabView.setBackgroundColor(colorForIntensity);
     }
 

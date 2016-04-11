@@ -14,10 +14,10 @@ public class QuakesNZApplication extends Application {
     private ApplicationComponent component;
 
     public static QuakesNZApplication get(Context context) {
-        return ((QuakesNZApplication) context.getApplicationContext());
+        return (QuakesNZApplication) context.getApplicationContext();
     }
 
-    public ApplicationComponent getApplicationComponent() {
+    public ApplicationComponent getComponent() {
         return component;
     }
 

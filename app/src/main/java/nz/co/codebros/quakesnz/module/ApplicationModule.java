@@ -1,6 +1,5 @@
 package nz.co.codebros.quakesnz.module;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -10,8 +9,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.Date;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -20,7 +17,6 @@ import dagger.Provides;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.utils.DateDeserializer;
 import nz.co.codebros.quakesnz.utils.LatLngTypeAdapter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -40,11 +36,6 @@ public class ApplicationModule {
     }
 
     @Provides
-    Context provideContext() {
-        return mApplication;
-    }
-
-    @Provides
     @Singleton
     GeonetService provideGeonetService(Retrofit retrofit) {
         return retrofit.create(GeonetService.class);
@@ -53,7 +44,7 @@ public class ApplicationModule {
     @Provides
     Retrofit provideRestAdapter(Gson gson) {
         return new Retrofit.Builder()
-                .baseUrl("http://www.geonet.org.nz")
+                .baseUrl("http://api.geonet.org.nz/")
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -61,8 +52,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    SharedPreferences provideSharedPreferences(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences provideSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(mApplication);
     }
 
     @Provides
@@ -74,8 +65,8 @@ public class ApplicationModule {
     @Provides
     Gson providesGson() {
         return new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
                 .registerTypeAdapter(LatLng.class, new LatLngTypeAdapter())
-                .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();
     }
 }

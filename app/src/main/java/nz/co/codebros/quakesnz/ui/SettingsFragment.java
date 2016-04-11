@@ -19,7 +19,7 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         DaggerSettingsFragment_FragmentComponent.builder()
                 .applicationComponent(QuakesNZApplication.get(getActivity())
-                        .getApplicationComponent())
+                        .getComponent())
                 .build().inject(this);
         addPreferencesFromResource(R.xml.preferences);
     }

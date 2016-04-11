@@ -1,7 +1,9 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import java.util.Locale;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.utils.LatLngUtils;
+import nz.co.codebros.quakesnz.utils.QuakesUtils;
 
 /**
  * Created by leandro on 12/07/15.
@@ -29,25 +32,6 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         this.listener = listener;
     }
 
-    private static int getColorForIntensity(Resources resources, String intensity) {
-        switch (intensity) {
-            case "unnoticeable":
-                return resources.getColor(R.color.unnoticeable);
-            case "weak":
-                return resources.getColor(R.color.weak);
-            case "light":
-                return resources.getColor(R.color.light);
-            case "moderate":
-                return resources.getColor(R.color.moderate);
-            case "strong":
-                return resources.getColor(R.color.strong);
-            case "severe":
-                return resources.getColor(R.color.severe);
-            default:
-                return Color.LTGRAY;
-        }
-    }
-
     @Override
     public int getItemCount() {
         return features.size();
@@ -55,28 +39,24 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        Resources resources = viewHolder.itemView.getResources();
         Feature item = features.get(i);
 
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", item.getProperties()
                 .getMagnitude()).split("\\.");
         viewHolder.txtMagnitudeBig.setText(magnitude[0]);
 
-        String intensity = item.getProperties().getIntensity();
-        final int colorForIntensity = getColorForIntensity(resources, intensity);
+        final Context context = viewHolder.itemView.getContext();
+        final int colorForIntensity = QuakesUtils.getColor(context, item.getProperties().getMmi());
         viewHolder.txtMagnitudeBig.setTextColor(colorForIntensity);
         viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
         viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
-        viewHolder.txtIntensity.setText(intensity);
+        viewHolder.txtIntensity.setText(QuakesUtils.getIntensity(context, item.getProperties().getMmi()));
 
-        final long distance = Math.round(LatLngUtils.findDistance(item.getGeometry()
-                .getCoordinates(), item.getClosestCity().getCoordinates()) / 1000);
-        viewHolder.txtLocation.setText(resources.getString(R.string.location, distance,
-                item.getClosestCity().getName()));
-        viewHolder.txtDepth.setText(resources.getString(R.string.depth, item.getProperties()
+        viewHolder.txtLocation.setText(item.getProperties().getLocality());
+        viewHolder.txtDepth.setText(context.getString(R.string.depth, item.getProperties()
                 .getDepth()));
         viewHolder.txtTime.setText(DateUtils.getRelativeTimeSpanString(item.getProperties()
-                .getOriginTime().getTime()));
+                .getTime().getTime()));
         viewHolder.vTab.setBackgroundColor(colorForIntensity);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -20,7 +20,6 @@ import nz.co.codebros.quakesnz.module.ApplicationModule;
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
-    Context getContext();
 
     Gson getGson();
 

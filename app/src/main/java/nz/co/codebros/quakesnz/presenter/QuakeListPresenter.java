@@ -1,25 +1,17 @@
 package nz.co.codebros.quakesnz.presenter;
 
 import android.util.Log;
-import android.view.View;
 
-import java.io.IOException;
-
-import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.utils.LoadCitiesHelper;
 import nz.co.codebros.quakesnz.view.QuakeListView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rx.Observer;
 
 /**
  * Created by leandro on 9/07/15.
  */
-public class QuakeListPresenter implements Observer<Feature[]> {
+public class QuakeListPresenter implements Observer<FeatureCollection> {
 
     private static final String TAG = QuakeListPresenter.class.getSimpleName();
 
@@ -52,17 +44,17 @@ public class QuakeListPresenter implements Observer<Feature[]> {
     }
 
     @Override
-    public void onNext(Feature[] features) {
-        view.listQuakes(features);
+    public void onNext(FeatureCollection featureCollection) {
+        view.listQuakes(featureCollection.getFeatures());
     }
 
-    public void onRefresh(String filter) {
+    public void onRefresh() {
         view.showProgress();
-        interactor.execute(filter, this);
+        interactor.execute(this);
     }
 
-    public void onViewCreated(String filter) {
+    public void onViewCreated() {
         view.showProgress();
-        interactor.execute(filter, this);
+        interactor.execute(this);
     }
 }
