@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:dialogTitle="@string/select_filter"
-        android:key="pref_filter"
-        android:title="@string/filter"
-        android:summary="@string/filter_pref_summary"
-        android:entries="@array/filters"
-        android:entryValues="@array/filter_values"
-        android:defaultValue="@string/filter_values_default"/>
+        android:defaultValue="4"
+        android:dialogTitle="@string/select_intensity"
+        android:entries="@array/intensity"
+        android:entryValues="@array/intensity_values"
+        android:key="pref_intensity"
+        android:summary="@string/intensity_pref_summary"
+        android:title="@string/intensity"/>
 </PreferenceScreen>

@@ -1,5 +1,7 @@
 package nz.co.codebros.quakesnz.module;
 
+import android.content.SharedPreferences;
+
 import dagger.Module;
 import dagger.Provides;
 import nz.co.codebros.quakesnz.GeonetService;
@@ -19,8 +21,9 @@ public class QuakeListModule {
     }
 
     @Provides
-    public GetFeaturesInteractor provideInteractor(GeonetService service) {
-        return new GetFeaturesInteractor(service);
+    public GetFeaturesInteractor provideInteractor(GeonetService service,
+                                                   SharedPreferences preferences) {
+        return new GetFeaturesInteractor(service, preferences);
     }
 
     @Provides
