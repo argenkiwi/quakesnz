@@ -39,7 +39,6 @@ public class QuakeDetailFragment extends Fragment {
         return f;
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

@@ -1,15 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:qnz="http://schemas.android.com/apk/res-auto">
+      xmlns:qnz="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_settings"
         android:title="@string/settings"
-        qnz:showAsAction="never" />
+        qnz:showAsAction="never"/>
     <item
         android:id="@+id/action_info"
         android:title="@string/emergency_advice"
-        qnz:showAsAction="never" />
+        qnz:showAsAction="never"/>
     <item
         android:id="@+id/action_about"
         android:title="@string/about"
-        qnz:showAsAction="never" />
+        qnz:showAsAction="never"/>
 </menu>

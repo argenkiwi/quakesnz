@@ -31,7 +31,7 @@ public class GetFeaturesInteractor {
     }
 
     public void execute(Observer<FeatureCollection> subscriber) {
-        final int mmi = Integer.parseInt(preferences.getString("pref_intensity", "4"));
+        final int mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"));
         subscription = service.listAllQuakes(mmi)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
