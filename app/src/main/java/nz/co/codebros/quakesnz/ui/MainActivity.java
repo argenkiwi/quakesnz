@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,13 +12,17 @@ import nz.co.codebros.quakesnz.R;
 public class MainActivity extends AppCompatActivity {
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) getSupportFragmentManager().beginTransaction()
+                .replace(android.R.id.content, QuakeListFragment.newInstance()).commit();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content, QuakeListFragment.newInstance())
-                    .commit();
-        }
+        if (savedInstanceState == null) getSupportFragmentManager().beginTransaction()
+                .add(android.R.id.content, QuakeListFragment.newInstance()).commit();
     }
 
     @Override
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivityForResult(new Intent(this, SettingsActivity.class), 0);
                 return true;
             case R.id.action_info:
                 startActivity(new Intent(this, InfoActivity.class));
