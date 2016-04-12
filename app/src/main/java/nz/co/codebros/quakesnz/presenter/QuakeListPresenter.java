@@ -1,9 +1,6 @@
 package nz.co.codebros.quakesnz.presenter;
 
-import android.util.Log;
-
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
-import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
 import nz.co.codebros.quakesnz.view.QuakeListView;
 import rx.Observer;
@@ -12,8 +9,6 @@ import rx.Observer;
  * Created by leandro on 9/07/15.
  */
 public class QuakeListPresenter implements Observer<FeatureCollection> {
-
-    private static final String TAG = QuakeListPresenter.class.getSimpleName();
 
     private final QuakeListView view;
     private final GetFeaturesInteractor interactor;
@@ -34,7 +29,6 @@ public class QuakeListPresenter implements Observer<FeatureCollection> {
 
     @Override
     public void onError(Throwable e) {
-        Log.e(TAG, "Failed to load cities", e);
         view.hideProgress();
         view.showLoadFailedMessage();
     }
