@@ -60,10 +60,11 @@ public class ApplicationModule {
                 ConnectivityManager connectivityManager = (ConnectivityManager) mApplication
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
                 final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                final CacheControl.Builder builder = new CacheControl.Builder();
                 return chain.proceed(chain.request().newBuilder().cacheControl(
                         activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting()
-                                ? new CacheControl.Builder().maxAge(1, TimeUnit.DAYS).build()
-                                : CacheControl.FORCE_CACHE
+                                ? builder.maxAge(1, TimeUnit.MINUTES).build()
+                                : builder.onlyIfCached().maxStale(1, TimeUnit.DAYS).build()
                 ).build());
             }
         };
