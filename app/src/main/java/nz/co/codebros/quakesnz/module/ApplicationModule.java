@@ -1,6 +1,9 @@
 package nz.co.codebros.quakesnz.module;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -8,6 +11,9 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -18,6 +24,11 @@ import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.utils.LatLngTypeAdapter;
+import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -42,9 +53,34 @@ public class ApplicationModule {
     }
 
     @Provides
-    Retrofit provideRestAdapter(Gson gson) {
+    Interceptor provideInterceptor() {
+        return new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                ConnectivityManager connectivityManager = (ConnectivityManager) mApplication
+                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+                final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                return chain.proceed(chain.request().newBuilder().cacheControl(
+                        activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting()
+                                ? new CacheControl.Builder().maxAge(1, TimeUnit.DAYS).build()
+                                : CacheControl.FORCE_CACHE
+                ).build());
+            }
+        };
+    }
+
+    @Provides
+    OkHttpClient provideOkHttpClient(Interceptor interceptor) {
+        return new OkHttpClient().newBuilder()
+                .cache(new Cache(mApplication.getCacheDir(), 2 * 1024 * 1024)) // 2Mb
+                .addInterceptor(interceptor).build();
+    }
+
+    @Provides
+    Retrofit provideRestAdapter(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl("http://api.geonet.org.nz/")
+                .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
