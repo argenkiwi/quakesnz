@@ -1,96 +1,54 @@
 package nz.co.codebros.quakesnz.presenter;
 
-import android.util.Log;
-import android.view.View;
-
-import de.greenrobot.event.EventBus;
-import nz.co.codebros.quakesnz.event.GetQuakesFailureEvent;
-import nz.co.codebros.quakesnz.event.GetQuakesRequestEvent;
-import nz.co.codebros.quakesnz.event.GetQuakesSuccessEvent;
-import nz.co.codebros.quakesnz.interactor.LoadQuakesInteractor;
-import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.ui.QuakeListView;
+import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.view.QuakeListView;
+import rx.Observer;
 
 /**
  * Created by leandro on 9/07/15.
  */
-public class QuakeListPresenter extends BasePresenter<QuakeListView>
-        implements LoadQuakesInteractor.OnQuakesSavedListener,
-        LoadQuakesInteractor.OnQuakesLoadedListener {
-    private static final String TAG = QuakeListPresenter.class.getSimpleName();
-    private EventBus mBus;
-    private LoadQuakesInteractor mInteractor;
+public class QuakeListPresenter implements Observer<FeatureCollection> {
 
-    public QuakeListPresenter(EventBus bus, LoadQuakesInteractor interactor) {
-        mBus = bus;
-        mInteractor = interactor;
+    private final QuakeListView view;
+    private final GetFeaturesInteractor interactor;
+
+    public QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor) {
+        this.view = view;
+        this.interactor = interactor;
     }
 
-    public void onEvent(GetQuakesFailureEvent event) {
-        Log.d(TAG, "Get quakes failure.");
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().showDownloadFailedMessage();
-        }
-        mInteractor.loadQuakes(this);
+    @Override
+    public void onCompleted() {
+        view.hideProgress();
     }
 
-    public void onEvent(GetQuakesSuccessEvent event) {
-        Log.d(TAG, "Get quakes success.");
-        mInteractor.saveQuakes(event.getResponse(), this);
-        mInteractor.loadQuakes(event.getData().getFeatures(), this);
+    public void onDestroyView() {
+        interactor.cancel();
     }
 
-    public void onLoad() {
-        mInteractor.loadQuakes(this);
+    @Override
+    public void onError(Throwable e) {
+        view.hideProgress();
+        view.showLoadFailedMessage();
     }
 
-    public void onFeatureClicked(View view, Feature feature) {
-        Log.d(TAG, "Feature clicked.");
-        getView().showQuakeDetail(view, feature);
+    public void onFeaturesFailedToLoad() {
+        view.showDownloadFailedMessage();
+    }
+
+    @Override
+    public void onNext(FeatureCollection featureCollection) {
+        view.listQuakes(featureCollection.getFeatures());
     }
 
     public void onRefresh() {
-        Log.d(TAG, "Refresh.");
-        getView().showProgress();
-        mBus.post(new GetQuakesRequestEvent());
+        view.showProgress();
+        interactor.execute(this);
     }
 
-    @Override
-    public void onSaveQuakesFailure() {
-        Log.w(TAG, "Save quakes failure.");
-    }
-
-    @Override
-    public void onSaveQuakesSuccess() {
-        Log.d(TAG, "Save quakes success.");
-    }
-
-    @Override
-    public void onLoadQuakesFailure() {
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().showLoadFailedMessage();
-        }
-    }
-
-    @Override
-    public void onLoadQuakesSuccess(Feature[] features) {
-        if (getView() != null) {
-            getView().hideProgress();
-            getView().listQuakes(features);
-        }
-    }
-
-    @Override
-    protected void onBindView() {
-        super.onBindView();
-        mBus.register(this);
-    }
-
-    @Override
-    protected void onUnbindView() {
-        super.onUnbindView();
-        mBus.unregister(this);
+    public void onViewCreated() {
+        view.showProgress();
+        interactor.execute(this);
     }
 }

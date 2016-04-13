@@ -10,7 +10,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import de.greenrobot.event.EventBus;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
@@ -19,19 +18,15 @@ import nz.co.codebros.quakesnz.module.ApplicationModule;
  * Created by leandro on 9/07/15.
  */
 @Singleton
-@Component(modules = {ApplicationModule.class})
+@Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
-    Context getApplicationContext();
-
-    EventBus getEventBus();
-
     Gson getGson();
+
+    GeonetService getService();
 
     SharedPreferences getSharedPreferences();
 
     @Named("app")
     Tracker getTracker();
-
-    void inject(QuakesNZApplication application);
 }

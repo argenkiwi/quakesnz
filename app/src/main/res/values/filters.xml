@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="filters">
-        <item>All</item>
-        <item>Felt</item>
+    <string-array name="intensity">
+        <item>@string/unnoticeable</item>
+        <item>@string/weak</item>
+        <item>@string/light</item>
+        <item>@string/moderate</item>
+        <item>@string/strong</item>
+        <item>@string/severe</item>
     </string-array>
-    <string-array name="filter_values">
-        <item>all</item>
-        <item>felt</item>
+    <string-array name="intensity_values">
+        <item>1</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
     </string-array>
 </resources>

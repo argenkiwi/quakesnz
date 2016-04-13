@@ -9,11 +9,10 @@ import java.util.Date;
 
 public class Properties implements Parcelable {
 
-    public static final Parcelable.Creator<Properties> CREATOR = new Creator<Properties>() {
-
+    public static final Creator<Properties> CREATOR = new Creator<Properties>() {
         @Override
-        public Properties createFromParcel(Parcel source) {
-            return new Properties(source);
+        public Properties createFromParcel(Parcel in) {
+            return new Properties(in);
         }
 
         @Override
@@ -22,112 +21,78 @@ public class Properties implements Parcelable {
         }
     };
 
-    private String agency;
-    private float depth;
-    private String intensity;
-    private float magnitude;
-
-    @SerializedName("origintime")
-    private Date originTime;
-
-    @SerializedName("publicid")
+    @SerializedName("publicID")
     private String publicId;
 
-    private String status;
+    @SerializedName("time")
+    private Date time;
 
-    @SerializedName("updatetime")
-    private Date updateTime;
+    @SerializedName("depth")
+    private double depth;
 
-    public Properties(Parcel source) {
-        agency = source.readString();
-        depth = source.readFloat();
-        intensity = source.readString();
-        magnitude = source.readFloat();
-        originTime = new Date(source.readLong());
-        publicId = source.readString();
-        status = source.readString();
-        updateTime = new Date(source.readLong());
+    @SerializedName("magnitude")
+    private double magnitude;
+
+    @SerializedName("locality")
+    private String locality;
+
+    @SerializedName("mmi")
+    private int mmi;
+
+    @SerializedName("quality")
+    private String quality;
+
+    protected Properties(Parcel in) {
+        publicId = in.readString();
+        time = (Date) in.readSerializable();
+        depth = in.readDouble();
+        magnitude = in.readDouble();
+        locality = in.readString();
+        mmi = in.readInt();
+        quality = in.readString();
     }
 
     @Override
     public int describeContents() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
-    public String getAgency() {
-        return agency;
-    }
-
-    public float getDepth() {
+    public double getDepth() {
         return depth;
     }
 
-    public String getIntensity() {
-        return intensity;
+    public String getLocality() {
+        return locality;
     }
 
-    public float getMagnitude() {
+    public double getMagnitude() {
         return magnitude;
     }
 
-    public Date getOriginTime() {
-        return originTime;
+    public int getMmi() {
+        return mmi;
     }
 
     public String getPublicId() {
         return publicId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getQuality() {
+        return quality;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setAgency(String agency) {
-        this.agency = agency;
-    }
-
-    public void setDepth(float depth) {
-        this.depth = depth;
-    }
-
-    public void setIntensity(String intensity) {
-        this.intensity = intensity;
-    }
-
-    public void setMagnitude(float magnitude) {
-        this.magnitude = magnitude;
-    }
-
-    public void setOriginTime(Date originTime) {
-        this.originTime = originTime;
-    }
-
-    public void setPublicId(String publicId) {
-        this.publicId = publicId;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public Date getTime() {
+        return time;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(agency);
-        dest.writeFloat(depth);
-        dest.writeString(intensity);
-        dest.writeFloat(magnitude);
-        dest.writeLong(originTime.getTime());
         dest.writeString(publicId);
-        dest.writeString(status);
-        dest.writeLong(updateTime.getTime());
+        dest.writeSerializable(time);
+        dest.writeDouble(depth);
+        dest.writeDouble(magnitude);
+        dest.writeString(locality);
+        dest.writeInt(mmi);
+        dest.writeString(quality);
     }
 }

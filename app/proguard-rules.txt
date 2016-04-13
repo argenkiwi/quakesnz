@@ -16,43 +16,26 @@
 #   public *;
 #}
 
--keep class * extends java.util.ListResourceBundle {
-    protected Object[][] getContents();
-}
-
--keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
-    public static final *** NULL;
-}
-
--keepnames @com.google.android.gms.common.annotation.KeepName class *
--keepclassmembernames class * {
-    @com.google.android.gms.common.annotation.KeepName *;
-}
-
--keepnames class * implements android.os.Parcelable {
-    public static final ** CREATOR;
-}
-
--keep class nz.co.codebros.quakesnz.model.** { *; }
-
--dontwarn rx.**
-
 -dontwarn okio.**
-
--dontwarn com.squareup.okhttp.**
--keep class com.squareup.okhttp.** { *; }
--keep interface com.squareup.okhttp.** { *; }
-
--dontwarn retrofit.**
--dontwarn retrofit.appengine.UrlFetchClient
--keep class retrofit.** { *; }
--keepclasseswithmembers class * {
-    @retrofit.http.* <methods>;
-}
-
+-dontwarn retrofit2.**
+-dontwarn sun.misc.Unsafe
+-keep class retrofit2.** { *; }
 -keepattributes Signature
+-keepattributes Exceptions
 -keepattributes *Annotation*
 
--keepclassmembers class ** {
-    public void onEvent*(**);
+
+-dontwarn sun.misc.**
+
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
