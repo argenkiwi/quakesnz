@@ -1,6 +1,5 @@
 package nz.co.codebros.quakesnz.component;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.android.gms.analytics.Tracker;
@@ -11,7 +10,6 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import nz.co.codebros.quakesnz.GeonetService;
-import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
 
 /**
