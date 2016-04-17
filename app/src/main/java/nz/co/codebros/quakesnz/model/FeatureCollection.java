@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class FeatureCollection {
 
     @SerializedName("features")
-    private Feature[] features;
+    private Feature[] features = new Feature[]{};
 
     public Feature[] getFeatures() {
         return features;
