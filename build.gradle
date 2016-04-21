@@ -4,12 +4,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.android.tools.build:gradle:2.1.0-beta3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 allprojects {
     repositories {
-        mavenCentral()
+        jcenter()
     }
 }
