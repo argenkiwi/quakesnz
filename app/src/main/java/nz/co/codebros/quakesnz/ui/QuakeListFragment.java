@@ -40,9 +40,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     QuakeListPresenter presenter;
 
     @Inject
-    SharedPreferences preferences;
-
-    @Inject
     @Named("app")
     Tracker tracker;
 
@@ -114,7 +111,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .setLabel("Refresh")
                 .build());
 
-        // FIXME Use constants, IntDef or StringDef.
         presenter.onRefresh();
     }
 
@@ -128,7 +124,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
 
-        // FIXME Use constants, IntDef or StringDef.
         presenter.onViewCreated();
     }
 

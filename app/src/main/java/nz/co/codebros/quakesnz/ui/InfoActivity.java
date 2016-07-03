@@ -55,7 +55,7 @@ public class InfoActivity extends AppCompatActivity implements ActionBar.TabList
             }
         });
 
-        mViewPager.setOnPageChangeListener(this);
+        mViewPager.addOnPageChangeListener(this);
 
         final ActionBar actionBar = getSupportActionBar();
 
