@@ -54,7 +54,6 @@ public class QuakeListPresenterTest {
 
     @Test
     public void shouldLoadQuakes() {
-        String filter = "filter";
         presenter.onViewCreated();
         verify(view).showProgress();
         verify(interactor).execute(presenter);
@@ -62,7 +61,6 @@ public class QuakeListPresenterTest {
 
     @Test
     public void shouldRefreshQuakes() {
-        String filter = "felt";
         presenter.onRefresh();
         verify(view).showProgress();
         verify(interactor).execute(presenter);

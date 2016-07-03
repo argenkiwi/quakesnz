@@ -16,7 +16,6 @@ import rx.subscriptions.Subscriptions;
  * Created by leandro on 2/04/16.
  */
 public class GetFeaturesInteractor {
-
     private final GeonetService service;
     private final SharedPreferences preferences;
 

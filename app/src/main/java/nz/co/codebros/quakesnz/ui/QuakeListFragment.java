@@ -72,7 +72,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .applicationComponent(QuakesNZApplication.get(context).getComponent())
                 .quakeListModule(new QuakeListModule(this))
                 .build().inject(this);
-
     }
 
     @Override
