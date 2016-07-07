@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -106,6 +107,11 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     }
 
     @Override
+    public void showLoadingError() {
+        Toast.makeText(getContext(), R.string.error_loading_feature, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
@@ -147,7 +153,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.share_button:
                 presenter.onShare();
                 break;

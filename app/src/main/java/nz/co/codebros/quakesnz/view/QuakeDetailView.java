@@ -9,4 +9,6 @@ public interface QuakeDetailView {
     void showDetails(Feature feature);
 
     void share(Feature publicId);
+
+    void showLoadingError();
 }

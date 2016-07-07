@@ -34,7 +34,7 @@ public class QuakeDetailPresenter implements Observer<Feature> {
 
     @Override
     public void onError(Throwable e) {
-        // TODO Display loading error.
+        view.showLoadingError();
     }
 
     @Override
