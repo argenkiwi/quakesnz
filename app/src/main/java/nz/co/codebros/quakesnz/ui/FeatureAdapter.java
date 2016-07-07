@@ -1,9 +1,6 @@
 package nz.co.codebros.quakesnz.ui;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -17,7 +14,6 @@ import java.util.Locale;
 
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.utils.LatLngUtils;
 import nz.co.codebros.quakesnz.utils.QuakesUtils;
 
 /**

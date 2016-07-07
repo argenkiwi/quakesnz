@@ -9,7 +9,6 @@ import nz.co.codebros.quakesnz.R;
  * Created by leandro on 9/08/15.
  */
 public class SettingsActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

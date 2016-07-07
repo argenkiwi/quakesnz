@@ -6,9 +6,9 @@ import nz.co.codebros.quakesnz.model.Feature;
  * Created by leandro on 7/07/16.
  */
 public interface QuakeDetailView {
-    void showDetails(Feature feature);
-
     void share(Feature publicId);
+
+    void showDetails(Feature feature);
 
     void showLoadingError();
 }

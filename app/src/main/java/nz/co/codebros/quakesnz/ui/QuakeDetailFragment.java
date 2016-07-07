@@ -12,9 +12,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
@@ -33,6 +37,10 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
 
     @Inject
     QuakeDetailPresenter presenter;
+
+    @Inject
+    @Named("app")
+    Tracker tracker;
 
     private TextView mMagnitudeBigView;
     private View mTabView;
@@ -61,57 +69,6 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        DaggerQuakeDetailComponent.builder()
-                .applicationComponent(QuakesNZApplication.get(context).getComponent())
-                .quakeDetailModule(new QuakeDetailModule(this))
-                .build().inject(this);
-    }
-
-    @Override
-    public void showDetails(Feature feature) {
-        getChildFragmentManager().beginTransaction()
-                .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
-                .commit();
-
-        Properties properties = feature.getProperties();
-        final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());
-        String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
-                .split("\\.");
-
-        mMagnitudeBigView.setText(magnitude[0]);
-        mMagnitudeBigView.setTextColor(colorForIntensity);
-        mMagnitudeSmallView.setText("." + magnitude[1]);
-        mMagnitudeSmallView.setTextColor(colorForIntensity);
-        mIntensityView.setText(QuakesUtils.getIntensity(getContext(), properties.getMmi()));
-        mLocationView.setText(properties.getLocality());
-        mDepthView.setText(getString(R.string.depth, properties.getDepth()));
-        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getTime().getTime()));
-        mTabView.setBackgroundColor(colorForIntensity);
-    }
-
-    @Override
-    public void share(Feature feature) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
-                QuakesUtils.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
-                feature.getProperties().getMagnitude(),
-                feature.getProperties().getDepth(),
-                feature.getProperties().getLocality(),
-                feature.getProperties().getPublicId()
-        ));
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
-    }
-
-    @Override
-    public void showLoadingError() {
-        Toast.makeText(getContext(), R.string.error_loading_feature, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
@@ -122,6 +79,30 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
                 final String publicID = getArguments().getString(ARG_PUBLIC_ID);
                 presenter.onInit(publicID);
             }
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerQuakeDetailComponent.builder()
+                .applicationComponent(QuakesNZApplication.get(context).getComponent())
+                .quakeDetailModule(new QuakeDetailModule(this))
+                .build().inject(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.share_button:
+                tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Interactions")
+                        .setAction("Share")
+                        .setLabel("Share")
+                        .build());
+
+                presenter.onShare();
+                break;
         }
     }
 
@@ -152,11 +133,44 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.share_button:
-                presenter.onShare();
-                break;
-        }
+    public void share(Feature feature) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
+                QuakesUtils.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
+                feature.getProperties().getMagnitude(),
+                feature.getProperties().getDepth(),
+                feature.getProperties().getLocality(),
+                feature.getProperties().getPublicId()
+        ));
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    @Override
+    public void showDetails(Feature feature) {
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
+                .commit();
+
+        Properties properties = feature.getProperties();
+        final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());
+        String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
+                .split("\\.");
+
+        mMagnitudeBigView.setText(magnitude[0]);
+        mMagnitudeBigView.setTextColor(colorForIntensity);
+        mMagnitudeSmallView.setText("." + magnitude[1]);
+        mMagnitudeSmallView.setTextColor(colorForIntensity);
+        mIntensityView.setText(QuakesUtils.getIntensity(getContext(), properties.getMmi()));
+        mLocationView.setText(properties.getLocality());
+        mDepthView.setText(getString(R.string.depth, properties.getDepth()));
+        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getTime().getTime()));
+        mTabView.setBackgroundColor(colorForIntensity);
+    }
+
+    @Override
+    public void showLoadingError() {
+        Toast.makeText(getContext(), R.string.error_loading_feature, Toast.LENGTH_SHORT).show();
     }
 }

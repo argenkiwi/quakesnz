@@ -18,15 +18,6 @@ public class QuakeDetailPresenter implements Observer<Feature> {
         this.interactor = interactor;
     }
 
-    public void onInit(Feature feature) {
-        this.feature = feature;
-        view.showDetails(feature);
-    }
-
-    public void onInit(String publicID) {
-        interactor.execute(this, publicID);
-    }
-
     @Override
     public void onCompleted() {
 
@@ -37,17 +28,26 @@ public class QuakeDetailPresenter implements Observer<Feature> {
         view.showLoadingError();
     }
 
+    public void onInit(Feature feature) {
+        this.feature = feature;
+        view.showDetails(feature);
+    }
+
+    public void onInit(String publicID) {
+        interactor.execute(this, publicID);
+    }
+
     @Override
     public void onNext(Feature feature) {
         this.feature = feature;
         view.showDetails(feature);
     }
 
-    public void onStop() {
-        interactor.cancel();
-    }
-
     public void onShare() {
         if (feature != null) view.share(feature);
+    }
+
+    public void onStop() {
+        interactor.cancel();
     }
 }
