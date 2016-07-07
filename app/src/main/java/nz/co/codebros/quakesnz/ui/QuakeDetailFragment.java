@@ -3,6 +3,7 @@ package nz.co.codebros.quakesnz.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -49,6 +50,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     private TextView mTimeView;
     private TextView mLocationView;
     private TextView mDepthView;
+    private Feature feature;
 
     public static Fragment newInstance(Feature feature) {
         Bundle args = new Bundle();
@@ -79,6 +81,9 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
                 final String publicID = getArguments().getString(ARG_PUBLIC_ID);
                 presenter.onInit(publicID);
             }
+        } else if (savedInstanceState.containsKey(ARG_FEATURE)) {
+            final Feature feature = savedInstanceState.getParcelable(ARG_FEATURE);
+            presenter.onInit(feature);
         }
     }
 
@@ -101,7 +106,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
                         .setLabel("Share")
                         .build());
 
-                presenter.onShare();
+                presenter.onShare(feature);
                 break;
         }
     }
@@ -110,6 +115,12 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_quake_detail, container, false);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (feature != null) outState.putParcelable(ARG_FEATURE, feature);
     }
 
     @Override
@@ -148,6 +159,8 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
 
     @Override
     public void showDetails(Feature feature) {
+        this.feature = feature;
+
         getChildFragmentManager().beginTransaction()
                 .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
                 .commit();
