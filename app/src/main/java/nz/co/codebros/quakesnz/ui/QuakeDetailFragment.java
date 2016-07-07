@@ -1,6 +1,9 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -10,15 +13,25 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
+import nz.co.codebros.quakesnz.component.DaggerQuakeDetailComponent;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
-import nz.co.codebros.quakesnz.utils.LatLngUtils;
+import nz.co.codebros.quakesnz.module.QuakeDetailModule;
+import nz.co.codebros.quakesnz.presenter.QuakeDetailPresenter;
 import nz.co.codebros.quakesnz.utils.QuakesUtils;
+import nz.co.codebros.quakesnz.view.QuakeDetailView;
 
-public class QuakeDetailFragment extends Fragment {
+public class QuakeDetailFragment extends Fragment implements QuakeDetailView {
 
     private static final String ARG_FEATURE = "arg_feature";
+    private static final String ARG_PUBLIC_ID = "arg_public_id";
+
+    @Inject
+    QuakeDetailPresenter presenter;
 
     private Feature mFeature;
     private TextView mMagnitudeBigView;
@@ -30,20 +43,39 @@ public class QuakeDetailFragment extends Fragment {
     private TextView mDepthView;
 
     public static Fragment newInstance(Feature feature) {
-        QuakeDetailFragment f = new QuakeDetailFragment();
-
         Bundle args = new Bundle();
         args.putParcelable(ARG_FEATURE, feature);
-        f.setArguments(args);
 
-        return f;
+        QuakeDetailFragment fragment = new QuakeDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Fragment newInstance(String publicID) {
+        Bundle args = new Bundle();
+        args.putString(ARG_PUBLIC_ID, publicID);
+
+        QuakeDetailFragment fragment = new QuakeDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerQuakeDetailComponent.builder()
+                .applicationComponent(QuakesNZApplication.get(context).getComponent())
+                .quakeDetailModule(new QuakeDetailModule(this))
+                .build().inject(this);
+    }
 
-        Properties properties = mFeature.getProperties();
+    @Override
+    public void showDetails(Feature feature) {
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
+                .commit();
+
+        Properties properties = feature.getProperties();
         final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
                 .split("\\.");
@@ -60,13 +92,16 @@ public class QuakeDetailFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mFeature = getArguments().getParcelable(ARG_FEATURE);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
-            getChildFragmentManager().beginTransaction()
-                    .add(R.id.map, MyMapFragment.newInstance(mFeature.getGeometry()))
-                    .commit();
+            if (getArguments().containsKey(ARG_FEATURE)) {
+                final Feature feature = getArguments().getParcelable(ARG_FEATURE);
+                presenter.onInit(feature);
+            } else if (getArguments().containsKey(ARG_PUBLIC_ID)) {
+                final String publicID = getArguments().getString(ARG_PUBLIC_ID);
+                presenter.onInit(publicID);
+            }
         }
     }
 
@@ -74,6 +109,12 @@ public class QuakeDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_quake_detail, container, false);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @Override

@@ -12,6 +12,10 @@ import rx.Observable;
  * Created by leandro on 9/07/15.
  */
 public interface GeonetService {
+
+    @GET("quake/{publicID}")
+    Observable<FeatureCollection> getQuake(@Path("publicID") String publicID);
+
     @GET("quake")
     Observable<FeatureCollection> getQuakes(@Query("MMI") int mmi);
 

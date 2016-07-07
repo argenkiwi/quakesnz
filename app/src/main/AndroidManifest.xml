@@ -43,7 +43,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nz.co.codebros.quakesnz.ui.MainActivity" />
-            <intent-filter android:label="@string/filter_view_quake_details">
+            <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -83,5 +83,4 @@
                 android:value="nz.co.codebros.quakesnz.ui.MainActivity" />
         </activity>
     </application>
-
 </manifest>
