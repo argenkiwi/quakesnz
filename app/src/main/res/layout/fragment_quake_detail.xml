@@ -17,8 +17,7 @@
             android:layout_weight="1"
             app:cardBackgroundColor="@android:color/white"
             app:cardUseCompatPadding="true"
-            app:contentPadding="4dp"
-            app:cardElevation="4dp">
+            app:contentPadding="4dp">
 
             <FrameLayout
                 android:id="@+id/map"

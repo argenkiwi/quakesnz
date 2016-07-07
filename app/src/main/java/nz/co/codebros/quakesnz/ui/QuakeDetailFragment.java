@@ -3,7 +3,6 @@ package nz.co.codebros.quakesnz.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -161,9 +160,11 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     public void showDetails(Feature feature) {
         this.feature = feature;
 
-        getChildFragmentManager().beginTransaction()
-                .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
-                .commit();
+        if (getChildFragmentManager().findFragmentById(R.id.map) == null) {
+            getChildFragmentManager().beginTransaction()
+                    .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
+                    .commit();
+        }
 
         Properties properties = feature.getProperties();
         final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());

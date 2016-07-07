@@ -10,8 +10,7 @@
                                     android:foreground="?android:attr/selectableItemBackground"
                                     android:transitionName="@string/transition_name"
                                     app:cardBackgroundColor="@android:color/white"
-                                    app:cardUseCompatPadding="true"
-                                    app:cardElevation="4dp">
+                                    app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
