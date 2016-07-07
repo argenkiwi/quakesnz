@@ -36,6 +36,6 @@
     <string name="strong">Strong</string>
     <string name="severe">Severe</string>
     <string name="filter_view_quake_details">View Quake Details</string>
-    <string name="default_share_content">A %1$s earthquake with a magnitude of %2$.1f and a depth of %3$.0f km occurred %4$s. https://www.geonet.org.nz/quakes/region/newzealand/%5$s #QuakesNZ</string>
+    <string name="default_share_content">A %1$s earthquake of magnitude %2$.1f occurred %3$s. #QuakesNZ http://www.geonet.org.nz/quakes/region/newzealand/%4$s</string>
     <string name="error_loading_feature">Failed to load quake details.</string>
 </resources>

@@ -139,7 +139,6 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
         sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
                 QuakesUtils.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
                 feature.getProperties().getMagnitude(),
-                feature.getProperties().getDepth(),
                 feature.getProperties().getLocality(),
                 feature.getProperties().getPublicId()
         ));
