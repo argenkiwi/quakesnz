@@ -1,37 +1,47 @@
 package nz.co.codebros.quakesnz.ui;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.TimeZone;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
+import nz.co.codebros.quakesnz.component.DaggerQuakeDetailComponent;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
-import nz.co.codebros.quakesnz.utils.LatLngUtils;
+import nz.co.codebros.quakesnz.module.QuakeDetailModule;
+import nz.co.codebros.quakesnz.presenter.QuakeDetailPresenter;
+import nz.co.codebros.quakesnz.utils.QuakesUtils;
+import nz.co.codebros.quakesnz.view.QuakeDetailView;
 
-public class QuakeDetailFragment extends Fragment {
+public class QuakeDetailFragment extends Fragment implements QuakeDetailView, View.OnClickListener {
 
     private static final String ARG_FEATURE = "arg_feature";
-    private static final SimpleDateFormat sDateFormat;
+    private static final String ARG_PUBLIC_ID = "arg_public_id";
 
-    static {
-        sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S",
-                Locale.ENGLISH);
-        sDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
+    @Inject
+    QuakeDetailPresenter presenter;
 
-    private Feature mFeature;
+    @Inject
+    @Named("app")
+    Tracker tracker;
+
     private TextView mMagnitudeBigView;
     private View mTabView;
     private TextView mMagnitudeSmallView;
@@ -39,90 +49,141 @@ public class QuakeDetailFragment extends Fragment {
     private TextView mTimeView;
     private TextView mLocationView;
     private TextView mDepthView;
+    private Feature feature;
 
     public static Fragment newInstance(Feature feature) {
-
-        QuakeDetailFragment f = new QuakeDetailFragment();
-
         Bundle args = new Bundle();
         args.putParcelable(ARG_FEATURE, feature);
-        f.setArguments(args);
 
-        return f;
+        QuakeDetailFragment fragment = new QuakeDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Fragment newInstance(String publicID) {
+        Bundle args = new Bundle();
+        args.putString(ARG_PUBLIC_ID, publicID);
+
+        QuakeDetailFragment fragment = new QuakeDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            if (getArguments().containsKey(ARG_FEATURE)) {
+                final Feature feature = getArguments().getParcelable(ARG_FEATURE);
+                presenter.onInit(feature);
+            } else if (getArguments().containsKey(ARG_PUBLIC_ID)) {
+                final String publicID = getArguments().getString(ARG_PUBLIC_ID);
+                presenter.onInit(publicID);
+            }
+        } else if (savedInstanceState.containsKey(ARG_FEATURE)) {
+            final Feature feature = savedInstanceState.getParcelable(ARG_FEATURE);
+            presenter.onInit(feature);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        DaggerQuakeDetailComponent.builder()
+                .applicationComponent(QuakesNZApplication.get(context).getComponent())
+                .quakeDetailModule(new QuakeDetailModule(this))
+                .build().inject(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.share_button:
+                tracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Interactions")
+                        .setAction("Share")
+                        .setLabel("Share")
+                        .build());
+
+                presenter.onShare(feature);
+                break;
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_quake_detail, container, false);
-
-        mMagnitudeBigView = (TextView) v
-                .findViewById(R.id.magnitude_big);
-        mMagnitudeSmallView = (TextView) v
-                .findViewById(R.id.magnitude_small);
-        mIntensityView = (TextView) v.findViewById(R.id.intensity);
-        mLocationView = (TextView) v.findViewById(R.id.location);
-        mDepthView = (TextView) v.findViewById(R.id.depth);
-        mTimeView = (TextView) v.findViewById(R.id.time);
-        mTabView = v.findViewById(R.id.colorTab);
-        return v;
+        return inflater.inflate(R.layout.fragment_quake_detail, container, false);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (feature != null) outState.putParcelable(ARG_FEATURE, feature);
+    }
 
-        mFeature = getArguments().getParcelable(ARG_FEATURE);
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.onStop();
+    }
 
-        if (savedInstanceState == null) {
-            SupportMapFragment fragment = MyMapFragment.newInstance(mFeature.getGeometry());
-            getChildFragmentManager().beginTransaction().add(R.id.map, fragment).commit();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mMagnitudeBigView = (TextView) view.findViewById(R.id.magnitude_big);
+        mMagnitudeSmallView = (TextView) view.findViewById(R.id.magnitude_small);
+        mIntensityView = (TextView) view.findViewById(R.id.intensity);
+        mLocationView = (TextView) view.findViewById(R.id.location);
+        mDepthView = (TextView) view.findViewById(R.id.depth);
+        mTimeView = (TextView) view.findViewById(R.id.time);
+        mTabView = view.findViewById(R.id.colorTab);
+
+        view.findViewById(R.id.share_button).setOnClickListener(this);
+    }
+
+    @Override
+    public void share(Feature feature) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
+                QuakesUtils.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
+                feature.getProperties().getMagnitude(),
+                feature.getProperties().getLocality(),
+                feature.getProperties().getPublicId()
+        ));
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    @Override
+    public void showDetails(Feature feature) {
+        this.feature = feature;
+
+        if (getChildFragmentManager().findFragmentById(R.id.map) == null) {
+            getChildFragmentManager().beginTransaction()
+                    .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
+                    .commit();
         }
-    }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-        super.onActivityCreated(savedInstanceState);
-
-        Properties properties = mFeature.getProperties();
-
+        Properties properties = feature.getProperties();
+        final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
                 .split("\\.");
 
         mMagnitudeBigView.setText(magnitude[0]);
-        String intensity = properties.getIntensity();
-        final int colorForIntensity = getColorForIntensity(intensity);
         mMagnitudeBigView.setTextColor(colorForIntensity);
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
-        mIntensityView.setText(intensity);
-        mLocationView.setText(getString(R.string.location, Math.round(LatLngUtils
-                .findDistance(mFeature.getGeometry().getCoordinates(), mFeature.getClosestCity()
-                        .getCoordinates()) / 1000), mFeature.getClosestCity().getName()));
+        mIntensityView.setText(QuakesUtils.getIntensity(getContext(), properties.getMmi()));
+        mLocationView.setText(properties.getLocality());
         mDepthView.setText(getString(R.string.depth, properties.getDepth()));
-        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getOriginTime()
-                .getTime()));
+        mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getTime().getTime()));
         mTabView.setBackgroundColor(colorForIntensity);
     }
 
-    public int getColorForIntensity(String intensity) {
-        int color;
-        if (intensity.equals("unnoticeable")) {
-            color = getResources().getColor(R.color.unnoticeable);
-        } else if (intensity.equals("weak")) {
-            color = getResources().getColor(R.color.weak);
-        } else if (intensity.equals("light")) {
-            color = getResources().getColor(R.color.light);
-        } else if (intensity.equals("moderate")) {
-            color = getResources().getColor(R.color.moderate);
-        } else if (intensity.equals("strong")) {
-            color = getResources().getColor(R.color.strong);
-        } else if (intensity.equals("severe")) {
-            color = getResources().getColor(R.color.severe);
-        } else
-            color = Color.LTGRAY;
-
-        return color;
+    @Override
+    public void showLoadingError() {
+        Toast.makeText(getContext(), R.string.error_loading_feature, Toast.LENGTH_SHORT).show();
     }
 }

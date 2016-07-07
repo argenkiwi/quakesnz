@@ -1,44 +1,52 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-
-import nz.co.codebros.quakesnz.QuakesNZApplication;
-import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 
-public class DetailActivity extends ActionBarActivity {
+public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_FEATURE = "extra_feature";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_detail);
-
-        ((QuakesNZApplication) getApplication())
-                .getTracker(QuakesNZApplication.TrackerName.APP_TRACKER);
-
+        if (getSupportActionBar() != null) getSupportActionBar().setHomeButtonEnabled(true);
         if (savedInstanceState == null) {
-            Feature feature = getIntent().getParcelableExtra(EXTRA_FEATURE);
-            getSupportFragmentManager().beginTransaction().add(R.id.content,
-                    QuakeDetailFragment.newInstance(feature)).commit();
+            if (getIntent().hasExtra(EXTRA_FEATURE)) {
+                Feature feature = getIntent().getParcelableExtra(EXTRA_FEATURE);
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content, QuakeDetailFragment.newInstance(feature))
+                        .commit();
+            } else {
+                Uri data = getIntent().getData();
+                getSupportFragmentManager().beginTransaction()
+                        .add(android.R.id.content,
+                                QuakeDetailFragment.newInstance(data.getLastPathSegment()))
+                        .commit();
+            }
         }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    TaskStackBuilder.create(this)
+                            .addNextIntentWithParentStack(upIntent)
+                            .startActivities();
+                } else NavUtils.navigateUpTo(this, upIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

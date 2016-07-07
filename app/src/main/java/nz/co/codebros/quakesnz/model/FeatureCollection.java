@@ -1,14 +1,13 @@
 package nz.co.codebros.quakesnz.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class FeatureCollection {
 
-    private Feature[] features;
+    @SerializedName("features")
+    private Feature[] features = new Feature[]{};
 
     public Feature[] getFeatures() {
         return features;
-    }
-
-    public void setFeatures(Feature[] features) {
-        this.features = features;
     }
 }

@@ -1,34 +1,31 @@
 package nz.co.codebros.quakesnz;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
-
-import java.util.HashMap;
+import nz.co.codebros.quakesnz.component.ApplicationComponent;
+import nz.co.codebros.quakesnz.component.DaggerApplicationComponent;
+import nz.co.codebros.quakesnz.module.ApplicationModule;
 
 /**
  * Created by Leandro on 25/07/2014.
  */
 public class QuakesNZApplication extends Application {
+    private ApplicationComponent component;
 
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-
-    public synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!mTrackers.containsKey(trackerId)) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            Tracker t;
-            switch (trackerId) {
-                case APP_TRACKER:
-                default:
-                    t = analytics.newTracker(R.xml.app_tracker);
-            }
-            mTrackers.put(trackerId, t);
-        }
-        return mTrackers.get(trackerId);
+    public static QuakesNZApplication get(Context context) {
+        return (QuakesNZApplication) context.getApplicationContext();
     }
 
-    public enum TrackerName {
-        APP_TRACKER
+    public ApplicationComponent getComponent() {
+        return component;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        component = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
     }
 }

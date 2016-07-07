@@ -1,49 +1,67 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.1'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
+
+    defaultConfig {
+        applicationId "nz.co.codebros.quakesnz"
+        minSdkVersion 11
+        targetSdkVersion 24
+        versionCode 8
+        versionName "2.1.0"
+    }
 
     signingConfigs {
         debug {
             storeFile file("debug.keystore")
         }
-
         release {
             storeFile file("codebros.jks")
             keyAlias "quakesnz"
-
-            File file = file("secure.properties");
-            if (file.exists()) {
-                Properties props = new Properties()
-                props.load(new FileInputStream(file))
-                storePassword props.getProperty("storePassword")
-                keyPassword props.getProperty("keyPassword")
+            File propsFile = file("secure.properties");
+            if (propsFile.exists()) {
+                Properties props = new Properties();
+                props.load(new FileInputStream(propsFile))
+                storePassword props.getProperty('key.store.password')
+                keyPassword props.getProperty('key.alias.password')
             }
         }
     }
 
-    defaultConfig {
-        applicationId "nz.co.codebros.quakesnz"
-        minSdkVersion 9
-        targetSdkVersion 21
-        versionCode 5
-        versionName "1.2.1"
-    }
-
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            signingConfig signingConfigs.debug
+        }
         release {
-            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.google.android.gms:play-services:6.1.71'
-    compile 'com.android.support:cardview-v7:21.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:cardview-v7:24.0.0'
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.google.android.gms:play-services-analytics:9.2.0'
+    compile 'com.google.android.gms:play-services-maps:9.2.0'
+    compile 'com.google.dagger:dagger:2.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.2'
+    apt 'com.google.dagger:dagger-compiler:2.1'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
