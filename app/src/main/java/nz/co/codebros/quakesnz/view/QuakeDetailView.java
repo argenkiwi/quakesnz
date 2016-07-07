@@ -7,4 +7,6 @@ import nz.co.codebros.quakesnz.model.Feature;
  */
 public interface QuakeDetailView {
     void showDetails(Feature feature);
+
+    void share(Feature publicId);
 }

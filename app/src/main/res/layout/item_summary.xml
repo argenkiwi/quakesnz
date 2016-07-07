@@ -87,11 +87,10 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/magnitude_big"
             android:layout_toLeftOf="@id/colorTab"
             android:layout_toStartOf="@+id/colorTab"
-            android:paddingEnd="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp"
+            android:padding="8dp"
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             tools:text="13:37" />

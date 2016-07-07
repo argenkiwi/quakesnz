@@ -11,6 +11,7 @@ import rx.Observer;
 public class QuakeDetailPresenter implements Observer<Feature> {
     private final QuakeDetailView view;
     private final GetFeatureInteractor interactor;
+    private Feature feature;
 
     public QuakeDetailPresenter(QuakeDetailView view, GetFeatureInteractor interactor) {
         this.view = view;
@@ -18,6 +19,7 @@ public class QuakeDetailPresenter implements Observer<Feature> {
     }
 
     public void onInit(Feature feature) {
+        this.feature = feature;
         view.showDetails(feature);
     }
 
@@ -37,10 +39,15 @@ public class QuakeDetailPresenter implements Observer<Feature> {
 
     @Override
     public void onNext(Feature feature) {
+        this.feature = feature;
         view.showDetails(feature);
     }
 
     public void onStop() {
         interactor.cancel();
+    }
+
+    public void onShare() {
+        if (feature != null) view.share(feature);
     }
 }

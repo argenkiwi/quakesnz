@@ -1,8 +1,8 @@
 package nz.co.codebros.quakesnz.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -25,7 +25,7 @@ import nz.co.codebros.quakesnz.presenter.QuakeDetailPresenter;
 import nz.co.codebros.quakesnz.utils.QuakesUtils;
 import nz.co.codebros.quakesnz.view.QuakeDetailView;
 
-public class QuakeDetailFragment extends Fragment implements QuakeDetailView {
+public class QuakeDetailFragment extends Fragment implements QuakeDetailView, View.OnClickListener {
 
     private static final String ARG_FEATURE = "arg_feature";
     private static final String ARG_PUBLIC_ID = "arg_public_id";
@@ -33,7 +33,6 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView {
     @Inject
     QuakeDetailPresenter presenter;
 
-    private Feature mFeature;
     private TextView mMagnitudeBigView;
     private View mTabView;
     private TextView mMagnitudeSmallView;
@@ -92,6 +91,21 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView {
     }
 
     @Override
+    public void share(Feature feature) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
+                QuakesUtils.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
+                feature.getProperties().getMagnitude(),
+                feature.getProperties().getDepth(),
+                feature.getProperties().getLocality(),
+                feature.getProperties().getPublicId()
+        ));
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
@@ -127,5 +141,16 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView {
         mDepthView = (TextView) view.findViewById(R.id.depth);
         mTimeView = (TextView) view.findViewById(R.id.time);
         mTabView = view.findViewById(R.id.colorTab);
+
+        view.findViewById(R.id.share_button).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.share_button:
+                presenter.onShare();
+                break;
+        }
     }
 }
