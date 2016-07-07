@@ -17,7 +17,8 @@
             android:layout_weight="1"
             app:cardBackgroundColor="@android:color/white"
             app:cardUseCompatPadding="true"
-            app:contentPadding="4dp">
+            app:contentPadding="4dp"
+            app:cardElevation="4dp">
 
             <FrameLayout
                 android:id="@+id/map"
@@ -27,7 +28,6 @@
         </android.support.v7.widget.CardView>
 
         <include
-            android:id="@+id/item_summary"
             layout="@layout/item_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -44,6 +44,7 @@
         android:src="@drawable/ic_share_black_24dp"
         android:tint="@android:color/white"
         app:backgroundTint="@color/primary"
-        app:layout_anchor="@id/item_summary"
-        app:layout_anchorGravity="top|right|end" />
+        app:elevation="8dp"
+        app:layout_anchor="@id/map"
+        app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>
