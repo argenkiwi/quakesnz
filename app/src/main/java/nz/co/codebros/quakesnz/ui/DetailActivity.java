@@ -43,6 +43,7 @@ public class DetailActivity extends AppCompatActivity {
                     TaskStackBuilder.create(this)
                             .addNextIntentWithParentStack(upIntent)
                             .startActivities();
+                    finish();
                 } else NavUtils.navigateUpTo(this, upIntent);
                 return true;
             default:
