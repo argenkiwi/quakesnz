@@ -8,7 +8,6 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 
@@ -32,12 +31,16 @@ public class GetFeaturesInteractor {
 
     public void execute(Observer<FeatureCollection> subscriber) {
         final int mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"));
-        final Observable<FeatureCollection> networkStream = service.getQuakes(mmi);
-        subscription = service.getQuakesCached(mmi)
-                .concatWith(networkStream)
+
+        final Observable<FeatureCollection> networkStream = service.getQuakes(mmi)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        final Observable<FeatureCollection> cacheStream = service.getQuakesCached(mmi)
                 .onErrorResumeNext(networkStream)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+                .observeOn(AndroidSchedulers.mainThread());
+
+        subscription = Observable.concat(cacheStream, networkStream).subscribe(subscriber);
     }
 }
