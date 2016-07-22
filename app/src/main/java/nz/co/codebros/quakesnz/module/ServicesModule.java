@@ -1,0 +1,67 @@
+package nz.co.codebros.quakesnz.module;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.utils.LatLngTypeAdapter;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+/**
+ * Created by leandro on 22/07/16.
+ */
+@Module
+public class ServicesModule {
+
+    @Provides
+    @Singleton
+    public static GeonetService provideGeonetService(Retrofit retrofit) {
+        return retrofit.create(GeonetService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static Gson provideGson() {
+        return new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
+                .registerTypeAdapter(LatLng.class, new LatLngTypeAdapter())
+                .create();
+    }
+
+    @Provides
+    public static HttpLoggingInterceptor provideInterceptor() {
+        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
+    }
+
+    @Provides
+    public static Retrofit provideRestAdapter(OkHttpClient client, Gson gson) {
+        return new Retrofit.Builder()
+                .baseUrl("http://api.geonet.org.nz/")
+                .client(client)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+    }
+
+    @Provides
+    public static OkHttpClient provideOkHttpClient(@Named("cacheDir") File cacheDir,
+                                            HttpLoggingInterceptor interceptor) {
+        return new OkHttpClient().newBuilder()
+                .cache(new Cache(cacheDir, 2 * 1024 * 1024)) // 2Mb
+                .addInterceptor(interceptor)
+                .build();
+    }
+}

@@ -20,6 +20,6 @@ public interface GeonetService {
     Observable<FeatureCollection> getQuakes(@Query("MMI") int mmi);
 
     @GET("quake")
-    @Headers("Cache-Control: public, max-stale=3600, only-if-cached")
+    @Headers("Cache-Control: public, only-if-cached, max-stale=3600")
     Observable<FeatureCollection> getQuakesCached(@Query("MMI") int mmi);
 }
