@@ -30,7 +30,7 @@ public class QuakeListPresenter implements Observer<FeatureCollection> {
     @Override
     public void onError(Throwable e) {
         view.hideProgress();
-        view.showDownloadFailedMessage();
+        view.showError();
     }
 
     @Override

@@ -10,9 +10,7 @@ public interface QuakeListView {
 
     void listQuakes(Feature[] features);
 
-    void showDownloadFailedMessage();
-
-    void showLoadFailedMessage();
+    void showError();
 
     void showProgress();
 }

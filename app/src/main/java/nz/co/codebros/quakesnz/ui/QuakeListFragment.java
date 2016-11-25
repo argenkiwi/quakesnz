@@ -3,7 +3,6 @@ package nz.co.codebros.quakesnz.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -141,14 +140,8 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void showDownloadFailedMessage() {
+    public void showError() {
         Log.d(TAG, "Show download failed message.");
-        Toast.makeText(getContext(), R.string.failed_to_download, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showLoadFailedMessage() {
-        Log.d(TAG, "Show load failed message.");
         Toast.makeText(getContext(), R.string.failed_to_download, Toast.LENGTH_SHORT).show();
     }
 
