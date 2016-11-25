@@ -32,12 +32,21 @@ public class GetFeaturesInteractor {
 
     public void execute(Observer<FeatureCollection> subscriber) {
         final int mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"));
-        final Observable<FeatureCollection> networkStream = service.getQuakes(mmi);
-        subscription = service.getQuakesCached(mmi)
-                .concatWith(networkStream)
-                .onErrorResumeNext(networkStream)
+
+        final Observable<FeatureCollection> networkStream = service.getQuakes(mmi)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+                .observeOn(AndroidSchedulers.mainThread());
+
+        final Observable<FeatureCollection> cacheStream = service.getQuakesCached(mmi)
+                .onErrorReturn(new Func1<Throwable, FeatureCollection>() {
+                    @Override
+                    public FeatureCollection call(Throwable throwable) {
+                        return new FeatureCollection();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        subscription = Observable.mergeDelayError(cacheStream, networkStream).subscribe(subscriber);
     }
 }

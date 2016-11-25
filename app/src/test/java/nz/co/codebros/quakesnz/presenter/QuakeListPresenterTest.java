@@ -39,7 +39,6 @@ public class QuakeListPresenterTest {
 
     @Test
     public void shouldCancelCall() {
-        presenter.onViewCreated();
         presenter.onDestroyView();
         interactor.cancel();
     }
@@ -53,22 +52,9 @@ public class QuakeListPresenterTest {
     }
 
     @Test
-    public void shouldLoadQuakes() {
-        presenter.onViewCreated();
-        verify(view).showProgress();
-        verify(interactor).execute(presenter);
-    }
-
-    @Test
     public void shouldRefreshQuakes() {
         presenter.onRefresh();
         verify(view).showProgress();
         verify(interactor).execute(presenter);
-    }
-
-    @Test
-    public void shouldShowError() {
-        presenter.onFeaturesFailedToLoad();
-        verify(view).showDownloadFailedMessage();
     }
 }

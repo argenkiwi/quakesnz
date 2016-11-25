@@ -3,6 +3,7 @@ package nz.co.codebros.quakesnz.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -62,6 +63,15 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            Feature[] features = (Feature[]) savedInstanceState.getParcelableArray("features");
+            featureAdapter.setFeatures(features);
+        } else presenter.onRefresh();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         DaggerQuakeListComponent.builder()
@@ -114,6 +124,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArray("features", featureAdapter.getFeatures());
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout = ((SwipeRefreshLayout) view);
@@ -122,20 +138,18 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
-
-        presenter.onViewCreated();
     }
 
     @Override
     public void showDownloadFailedMessage() {
         Log.d(TAG, "Show download failed message.");
-        Toast.makeText(getContext(), R.string.failed_to_update, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.failed_to_download, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showLoadFailedMessage() {
         Log.d(TAG, "Show load failed message.");
-        Toast.makeText(getContext(), R.string.failed_to_load, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.failed_to_download, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -28,6 +28,18 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         this.listener = listener;
     }
 
+    public Feature[] getFeatures() {
+        Feature[] features = new Feature[this.features.size()];
+        this.features.toArray(features);
+        return features;
+    }
+
+    public void setFeatures(Feature[] features) {
+        this.features.clear();
+        this.features.addAll(Arrays.asList(features));
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return features.size();
@@ -68,12 +80,6 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_summary, viewGroup, false);
         return new ViewHolder(view);
-    }
-
-    public void setFeatures(Feature[] features) {
-        this.features.clear();
-        this.features.addAll(Arrays.asList(features));
-        notifyDataSetChanged();
     }
 
     public interface Listener {

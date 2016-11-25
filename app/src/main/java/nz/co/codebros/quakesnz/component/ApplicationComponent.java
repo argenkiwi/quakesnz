@@ -11,12 +11,16 @@ import javax.inject.Singleton;
 import dagger.Component;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
+import nz.co.codebros.quakesnz.module.ServicesModule;
 
 /**
  * Created by leandro on 9/07/15.
  */
 @Singleton
-@Component(modules = ApplicationModule.class)
+@Component(modules = {
+        ApplicationModule.class,
+        ServicesModule.class
+})
 public interface ApplicationComponent {
 
     Gson getGson();

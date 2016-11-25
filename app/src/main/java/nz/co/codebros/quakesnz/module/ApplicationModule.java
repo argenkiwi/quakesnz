@@ -9,6 +9,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -38,40 +40,9 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Singleton
-    public static GeonetService provideGeonetService(Retrofit retrofit) {
-        return retrofit.create(GeonetService.class);
-    }
-
-    @Provides
-    public static Gson provideGson() {
-        return new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
-                .registerTypeAdapter(LatLng.class, new LatLngTypeAdapter())
-                .create();
-    }
-
-    @Provides
-    public static HttpLoggingInterceptor provideInterceptor() {
-        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
-    }
-
-    @Provides
-    public static Retrofit provideRestAdapter(OkHttpClient client, Gson gson) {
-        return new Retrofit.Builder()
-                .baseUrl("http://api.geonet.org.nz/")
-                .client(client)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-    }
-
-    @Provides
-    public OkHttpClient provideOkHttpClient(HttpLoggingInterceptor interceptor) {
-        return new OkHttpClient().newBuilder()
-                .cache(new Cache(mApplication.getCacheDir(), 2 * 1024 * 1024)) // 2Mb
-                .addInterceptor(interceptor)
-                .build();
+    @Named("cacheDir")
+    public File provideCacheDir(){
+        return mApplication.getCacheDir();
     }
 
     @Provides
