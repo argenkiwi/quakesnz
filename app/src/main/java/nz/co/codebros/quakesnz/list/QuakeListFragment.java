@@ -62,7 +62,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             Feature[] features = (Feature[]) savedInstanceState.getParcelableArray("features");
             featureAdapter.setFeatures(features);
         } else presenter.onRefresh();
@@ -98,14 +98,10 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onFeatureClicked(View view, Feature feature) {
         Log.d(TAG, "Feature selected.");
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat
+        Intent intent = DetailActivity.newIntent(getContext(), feature);
+        ActivityCompat.startActivity(getContext(), intent, ActivityOptionsCompat
                 .makeSceneTransitionAnimation(getActivity(), view,
-                        getString(R.string.transition_name));
-
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                        getString(R.string.transition_name)).toBundle());
     }
 
     @Override

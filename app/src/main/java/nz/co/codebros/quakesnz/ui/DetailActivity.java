@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +14,11 @@ import nz.co.codebros.quakesnz.model.Feature;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_FEATURE = "extra_feature";
+    private static final String EXTRA_FEATURE = "extra_feature";
+
+    public static Intent newIntent(Context context, Feature feature) {
+        return new Intent(context, DetailActivity.class).putExtra(EXTRA_FEATURE, feature);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
