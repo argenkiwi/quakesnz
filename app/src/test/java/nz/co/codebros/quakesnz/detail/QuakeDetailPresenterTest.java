@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.presenter;
+package nz.co.codebros.quakesnz.detail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,10 +6,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import io.reactivex.disposables.Disposable;
 import nz.co.codebros.quakesnz.interactor.GetFeatureInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.view.QuakeDetailView;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -29,6 +30,9 @@ public class QuakeDetailPresenterTest {
     @Mock
     private Feature feature;
 
+    @Mock
+    private Disposable d;
+
     @Before
     public void setUp() throws Exception {
         presenter = new QuakeDetailPresenter(view, interactor);
@@ -37,7 +41,6 @@ public class QuakeDetailPresenterTest {
     @Test
     public void shouldShowDetails() {
         presenter.onInit(feature);
-
         verify(view).showDetails(feature);
     }
 
@@ -45,14 +48,23 @@ public class QuakeDetailPresenterTest {
     public void shouldGetFeature() {
         final String publicID = "";
         presenter.onInit(publicID);
-
         verify(interactor).execute(presenter, publicID);
     }
 
     @Test
     public void shouldShowDetailOnNext() {
         presenter.onNext(feature);
-
         verify(view).showDetails(feature);
+    }
+
+    public void shouldDispose(){
+        presenter.onSubscribe(d);
+        presenter.onDestroyView();
+        verify(d).dispose();
+    }
+
+    public void shouldNotDispose(){
+        presenter.onDestroyView();
+        verify(d, never()).dispose();
     }
 }

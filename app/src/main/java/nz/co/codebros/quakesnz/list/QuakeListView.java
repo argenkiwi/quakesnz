@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.view;
+package nz.co.codebros.quakesnz.list;
 
 import nz.co.codebros.quakesnz.model.Feature;
 

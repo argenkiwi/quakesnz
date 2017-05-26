@@ -5,9 +5,6 @@ import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 
@@ -16,16 +13,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.utils.LatLngTypeAdapter;
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by leandro on 9/07/15.
@@ -41,19 +30,19 @@ public class ApplicationModule {
 
     @Provides
     @Named("cacheDir")
-    public File provideCacheDir(){
+    File provideCacheDir(){
         return mApplication.getCacheDir();
     }
 
     @Provides
-    public SharedPreferences provideSharedPreferences() {
+    SharedPreferences provideSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(mApplication);
     }
 
     @Provides
     @Singleton
     @Named("app")
-    public Tracker provideTracker() {
+    Tracker provideTracker() {
         return GoogleAnalytics.getInstance(mApplication).newTracker(R.xml.app_tracker);
     }
 }

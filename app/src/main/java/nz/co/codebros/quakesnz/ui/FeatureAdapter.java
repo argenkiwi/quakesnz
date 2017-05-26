@@ -86,7 +86,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         void onFeatureClicked(View view, Feature feature);
     }
 
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtMagnitudeBig;
         private final TextView txtMagnitudeSmall;
         private final TextView txtIntensity;
@@ -95,7 +95,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         private final TextView txtTime;
         private final View vTab;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             this.txtMagnitudeBig = (TextView) itemView.findViewById(R.id.magnitude_big);
             this.txtMagnitudeSmall = (TextView) itemView.findViewById(R.id.magnitude_small);

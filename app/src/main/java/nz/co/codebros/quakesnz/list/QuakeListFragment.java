@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.ui;
+package nz.co.codebros.quakesnz.list;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,11 +24,9 @@ import javax.inject.Named;
 
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.component.DaggerQuakeListComponent;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.module.QuakeListModule;
-import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
-import nz.co.codebros.quakesnz.view.QuakeListView;
+import nz.co.codebros.quakesnz.ui.DetailActivity;
+import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
         SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {
@@ -73,10 +71,9 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        DaggerQuakeListComponent.builder()
-                .applicationComponent(QuakesNZApplication.get(context).getComponent())
-                .quakeListModule(new QuakeListModule(this))
-                .build().inject(this);
+        QuakesNZApplication.get(context).getComponent()
+                .plus(new QuakeListModule(this))
+                .inject(this);
     }
 
     @Override

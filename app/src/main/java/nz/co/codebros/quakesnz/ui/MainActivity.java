@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import nz.co.codebros.quakesnz.R;
+import nz.co.codebros.quakesnz.list.QuakeListFragment;
 
 public class MainActivity extends AppCompatActivity {
 

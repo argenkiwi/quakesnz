@@ -8,6 +8,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import nz.co.codebros.quakesnz.detail.QuakeDetailFragment;
 import nz.co.codebros.quakesnz.model.Feature;
 
 public class DetailActivity extends AppCompatActivity {

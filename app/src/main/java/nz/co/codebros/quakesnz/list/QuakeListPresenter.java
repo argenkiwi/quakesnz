@@ -1,9 +1,10 @@
-package nz.co.codebros.quakesnz.presenter;
+package nz.co.codebros.quakesnz.list;
 
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.view.QuakeListView;
-import rx.Observer;
 
 /**
  * Created by leandro on 9/07/15.
@@ -13,18 +14,11 @@ public class QuakeListPresenter implements Observer<FeatureCollection> {
     private final QuakeListView view;
     private final GetFeaturesInteractor interactor;
 
-    public QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor) {
+    private Disposable subscription;
+
+    QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
-    }
-
-    @Override
-    public void onCompleted() {
-        view.hideProgress();
-    }
-
-    public void onDestroyView() {
-        interactor.cancel();
     }
 
     @Override
@@ -34,11 +28,25 @@ public class QuakeListPresenter implements Observer<FeatureCollection> {
     }
 
     @Override
+    public void onComplete() {
+        view.hideProgress();
+    }
+
+    @Override
+    public void onSubscribe(@NonNull Disposable disposable) {
+        this.subscription = disposable;
+    }
+
+    @Override
     public void onNext(FeatureCollection featureCollection) {
         view.listQuakes(featureCollection.getFeatures());
     }
 
-    public void onRefresh() {
+    void onDestroyView() {
+        if (subscription != null) subscription.dispose();
+    }
+
+    void onRefresh() {
         view.showProgress();
         interactor.execute(this);
     }

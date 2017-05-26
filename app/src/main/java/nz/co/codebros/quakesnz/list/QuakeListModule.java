@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.module;
+package nz.co.codebros.quakesnz.list;
 
 import android.content.SharedPreferences;
 
@@ -6,8 +6,6 @@ import dagger.Module;
 import dagger.Provides;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
-import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
-import nz.co.codebros.quakesnz.view.QuakeListView;
 
 /**
  * Created by leandro on 9/07/15.

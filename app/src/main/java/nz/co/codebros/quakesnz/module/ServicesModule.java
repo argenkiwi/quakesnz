@@ -17,7 +17,7 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -28,13 +28,13 @@ public class ServicesModule {
 
     @Provides
     @Singleton
-    public static GeonetService provideGeonetService(Retrofit retrofit) {
+    static GeonetService provideGeonetService(Retrofit retrofit) {
         return retrofit.create(GeonetService.class);
     }
 
     @Provides
     @Singleton
-    public static Gson provideGson() {
+    static Gson provideGson() {
         return new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
                 .registerTypeAdapter(LatLng.class, new LatLngTypeAdapter())
@@ -42,22 +42,22 @@ public class ServicesModule {
     }
 
     @Provides
-    public static HttpLoggingInterceptor provideInterceptor() {
+    static HttpLoggingInterceptor provideInterceptor() {
         return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
     }
 
     @Provides
-    public static Retrofit provideRestAdapter(OkHttpClient client, Gson gson) {
+    static Retrofit provideRestAdapter(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl("http://api.geonet.org.nz/")
                 .client(client)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 
     @Provides
-    public static OkHttpClient provideOkHttpClient(@Named("cacheDir") File cacheDir,
+    static OkHttpClient provideOkHttpClient(@Named("cacheDir") File cacheDir,
                                             HttpLoggingInterceptor interceptor) {
         return new OkHttpClient().newBuilder()
                 .cache(new Cache(cacheDir, 2 * 1024 * 1024)) // 2Mb
