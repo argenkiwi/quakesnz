@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.list;
 
-import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
@@ -9,7 +9,7 @@ import nz.co.codebros.quakesnz.model.FeatureCollection;
 /**
  * Created by leandro on 9/07/15.
  */
-public class QuakeListPresenter implements Observer<FeatureCollection> {
+public class QuakeListPresenter implements SingleObserver<FeatureCollection> {
 
     private final QuakeListView view;
     private final GetFeaturesInteractor interactor;
@@ -28,18 +28,14 @@ public class QuakeListPresenter implements Observer<FeatureCollection> {
     }
 
     @Override
-    public void onComplete() {
-        view.hideProgress();
-    }
-
-    @Override
     public void onSubscribe(@NonNull Disposable disposable) {
         this.subscription = disposable;
     }
 
     @Override
-    public void onNext(FeatureCollection featureCollection) {
+    public void onSuccess(@NonNull FeatureCollection featureCollection) {
         view.listQuakes(featureCollection.getFeatures());
+        view.hideProgress();
     }
 
     void onDestroyView() {

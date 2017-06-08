@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.detail;
 
-import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import nz.co.codebros.quakesnz.interactor.GetFeatureInteractor;
@@ -9,7 +9,7 @@ import nz.co.codebros.quakesnz.model.Feature;
 /**
  * Created by leandro on 7/07/16.
  */
-public class QuakeDetailPresenter implements Observer<Feature> {
+public class QuakeDetailPresenter implements SingleObserver<Feature> {
     private final QuakeDetailView view;
     private final GetFeatureInteractor interactor;
     private Disposable subscription;
@@ -25,18 +25,13 @@ public class QuakeDetailPresenter implements Observer<Feature> {
     }
 
     @Override
-    public void onNext(Feature feature) {
+    public void onSuccess(@NonNull Feature feature) {
         view.showDetails(feature);
     }
 
     @Override
     public void onError(Throwable e) {
         view.showLoadingError();
-    }
-
-    @Override
-    public void onComplete() {
-
     }
 
     void onInit(Feature feature) {

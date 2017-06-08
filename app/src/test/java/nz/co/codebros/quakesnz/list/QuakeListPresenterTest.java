@@ -46,7 +46,7 @@ public class QuakeListPresenterTest {
     public void shouldListQuakes() throws IOException {
         Feature[] features = {};
         when(featureCollection.getFeatures()).thenReturn(features);
-        presenter.onNext(featureCollection);
+        presenter.onSuccess(featureCollection);
         verify(view).listQuakes(features);
     }
 

@@ -2,7 +2,7 @@ package nz.co.codebros.quakesnz.interactor;
 
 import android.content.SharedPreferences;
 
-import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import nz.co.codebros.quakesnz.GeonetService;
@@ -20,7 +20,7 @@ public class GetFeaturesInteractor {
         this.preferences = preferences;
     }
 
-    public void execute(Observer<FeatureCollection> subscriber) {
+    public void execute(SingleObserver<FeatureCollection> subscriber) {
         final int mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"));
         service.getQuakes(mmi)
                 .subscribeOn(Schedulers.io())

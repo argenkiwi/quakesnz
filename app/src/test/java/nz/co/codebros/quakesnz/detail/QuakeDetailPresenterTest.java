@@ -53,7 +53,7 @@ public class QuakeDetailPresenterTest {
 
     @Test
     public void shouldShowDetailOnNext() {
-        presenter.onNext(feature);
+        presenter.onSuccess(feature);
         verify(view).showDetails(feature);
     }
 

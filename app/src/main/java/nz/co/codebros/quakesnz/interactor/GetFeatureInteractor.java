@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.interactor;
 
-import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
@@ -19,7 +20,7 @@ public class GetFeatureInteractor {
         this.service = service;
     }
 
-    public void execute(Observer<Feature> subscriber, String publicID) {
+    public void execute(SingleObserver<Feature> observer, String publicID) {
        service.getQuake(publicID)
                 .map(new Function<FeatureCollection, Feature>() {
                     @Override
@@ -30,6 +31,6 @@ public class GetFeatureInteractor {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+                .subscribe(observer);
     }
 }
