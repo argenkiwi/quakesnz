@@ -28,6 +28,18 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         this.listener = listener;
     }
 
+    public Feature[] getFeatures() {
+        Feature[] features = new Feature[this.features.size()];
+        this.features.toArray(features);
+        return features;
+    }
+
+    public void setFeatures(Feature[] features) {
+        this.features.clear();
+        this.features.addAll(Arrays.asList(features));
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return features.size();
@@ -70,17 +82,11 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         return new ViewHolder(view);
     }
 
-    public void setFeatures(Feature[] features) {
-        this.features.clear();
-        this.features.addAll(Arrays.asList(features));
-        notifyDataSetChanged();
-    }
-
     public interface Listener {
         void onFeatureClicked(View view, Feature feature);
     }
 
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtMagnitudeBig;
         private final TextView txtMagnitudeSmall;
         private final TextView txtIntensity;
@@ -89,7 +95,7 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         private final TextView txtTime;
         private final View vTab;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             this.txtMagnitudeBig = (TextView) itemView.findViewById(R.id.magnitude_big);
             this.txtMagnitudeSmall = (TextView) itemView.findViewById(R.id.magnitude_small);

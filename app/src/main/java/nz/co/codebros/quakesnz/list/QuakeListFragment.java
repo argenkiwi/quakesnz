@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.ui;
+package nz.co.codebros.quakesnz.list;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,11 +24,9 @@ import javax.inject.Named;
 
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.component.DaggerQuakeListComponent;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.module.QuakeListModule;
-import nz.co.codebros.quakesnz.presenter.QuakeListPresenter;
-import nz.co.codebros.quakesnz.view.QuakeListView;
+import nz.co.codebros.quakesnz.ui.DetailActivity;
+import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
         SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {
@@ -62,12 +60,20 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            Feature[] features = (Feature[]) savedInstanceState.getParcelableArray("features");
+            featureAdapter.setFeatures(features);
+        } else presenter.onRefresh();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        DaggerQuakeListComponent.builder()
-                .applicationComponent(QuakesNZApplication.get(context).getComponent())
-                .quakeListModule(new QuakeListModule(this))
-                .build().inject(this);
+        QuakesNZApplication.get(context).getComponent()
+                .plus(new QuakeListModule(this))
+                .inject(this);
     }
 
     @Override
@@ -92,14 +98,10 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onFeatureClicked(View view, Feature feature) {
         Log.d(TAG, "Feature selected.");
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRA_FEATURE, feature);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat
+        Intent intent = DetailActivity.newIntent(getContext(), feature);
+        ActivityCompat.startActivity(getContext(), intent, ActivityOptionsCompat
                 .makeSceneTransitionAnimation(getActivity(), view,
-                        getString(R.string.transition_name));
-
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                        getString(R.string.transition_name)).toBundle());
     }
 
     @Override
@@ -114,6 +116,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArray("features", featureAdapter.getFeatures());
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout = ((SwipeRefreshLayout) view);
@@ -122,20 +130,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
-
-        presenter.onViewCreated();
     }
 
     @Override
-    public void showDownloadFailedMessage() {
+    public void showError() {
         Log.d(TAG, "Show download failed message.");
-        Toast.makeText(getContext(), R.string.failed_to_update, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showLoadFailedMessage() {
-        Log.d(TAG, "Show load failed message.");
-        Toast.makeText(getContext(), R.string.failed_to_load, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.failed_to_download, Toast.LENGTH_SHORT).show();
     }
 
     @Override

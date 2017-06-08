@@ -1,30 +1,25 @@
 package nz.co.codebros.quakesnz.component;
 
-import android.content.SharedPreferences;
-
-import com.google.android.gms.analytics.Tracker;
-import com.google.gson.Gson;
-
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.detail.QuakeDetailComponent;
+import nz.co.codebros.quakesnz.detail.QuakeDetailModule;
+import nz.co.codebros.quakesnz.list.QuakeListComponent;
+import nz.co.codebros.quakesnz.list.QuakeListModule;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
+import nz.co.codebros.quakesnz.module.ServicesModule;
 
 /**
  * Created by leandro on 9/07/15.
  */
 @Singleton
-@Component(modules = ApplicationModule.class)
+@Component(modules = {
+        ApplicationModule.class,
+        ServicesModule.class
+})
 public interface ApplicationComponent {
+    QuakeListComponent plus(QuakeListModule module);
 
-    Gson getGson();
-
-    GeonetService getService();
-
-    SharedPreferences getSharedPreferences();
-
-    @Named("app")
-    Tracker getTracker();
+    QuakeDetailComponent plus(QuakeDetailModule module);
 }

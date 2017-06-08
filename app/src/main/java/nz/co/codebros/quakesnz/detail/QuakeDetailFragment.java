@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.ui;
+package nz.co.codebros.quakesnz.detail;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +22,10 @@ import javax.inject.Named;
 
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.component.DaggerQuakeDetailComponent;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
-import nz.co.codebros.quakesnz.module.QuakeDetailModule;
-import nz.co.codebros.quakesnz.presenter.QuakeDetailPresenter;
+import nz.co.codebros.quakesnz.ui.MyMapFragment;
 import nz.co.codebros.quakesnz.utils.QuakesUtils;
-import nz.co.codebros.quakesnz.view.QuakeDetailView;
 
 public class QuakeDetailFragment extends Fragment implements QuakeDetailView, View.OnClickListener {
 
@@ -89,10 +86,9 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        DaggerQuakeDetailComponent.builder()
-                .applicationComponent(QuakesNZApplication.get(context).getComponent())
-                .quakeDetailModule(new QuakeDetailModule(this))
-                .build().inject(this);
+        QuakesNZApplication.get(context).getComponent()
+                .plus(new QuakeDetailModule(this))
+                .inject(this);
     }
 
     @Override
@@ -123,12 +119,6 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        presenter.onStop();
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mMagnitudeBigView = (TextView) view.findViewById(R.id.magnitude_big);
@@ -140,6 +130,12 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
         mTabView = view.findViewById(R.id.colorTab);
 
         view.findViewById(R.id.share_button).setOnClickListener(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.onDestroyView();
     }
 
     @Override

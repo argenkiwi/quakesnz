@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.view;
+package nz.co.codebros.quakesnz.list;
 
 import nz.co.codebros.quakesnz.model.Feature;
 
@@ -10,9 +10,7 @@ public interface QuakeListView {
 
     void listQuakes(Feature[] features);
 
-    void showDownloadFailedMessage();
-
-    void showLoadFailedMessage();
+    void showError();
 
     void showProgress();
 }

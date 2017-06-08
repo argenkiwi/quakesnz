@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.presenter;
+package nz.co.codebros.quakesnz.list;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,10 +8,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 
+import io.reactivex.disposables.Disposable;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
+import nz.co.codebros.quakesnz.list.QuakeListPresenter;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.view.QuakeListView;
+import nz.co.codebros.quakesnz.list.QuakeListView;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,16 +34,12 @@ public class QuakeListPresenterTest {
     @Mock
     private FeatureCollection featureCollection;
 
+    @Mock
+    private Disposable d;
+
     @Before
     public void setUp() throws Exception {
         presenter = new QuakeListPresenter(view, interactor);
-    }
-
-    @Test
-    public void shouldCancelCall() {
-        presenter.onViewCreated();
-        presenter.onDestroyView();
-        interactor.cancel();
     }
 
     @Test
@@ -53,13 +51,6 @@ public class QuakeListPresenterTest {
     }
 
     @Test
-    public void shouldLoadQuakes() {
-        presenter.onViewCreated();
-        verify(view).showProgress();
-        verify(interactor).execute(presenter);
-    }
-
-    @Test
     public void shouldRefreshQuakes() {
         presenter.onRefresh();
         verify(view).showProgress();
@@ -67,8 +58,9 @@ public class QuakeListPresenterTest {
     }
 
     @Test
-    public void shouldShowError() {
-        presenter.onFeaturesFailedToLoad();
-        verify(view).showDownloadFailedMessage();
+    public void shouldDispose(){
+        presenter.onSubscribe(d);
+        presenter.onDestroyView();
+        verify(d).dispose();
     }
 }
