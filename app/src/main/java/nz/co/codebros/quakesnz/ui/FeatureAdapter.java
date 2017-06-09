@@ -54,11 +54,11 @@ public class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.ViewHold
         viewHolder.txtMagnitudeBig.setText(magnitude[0]);
 
         final Context context = viewHolder.itemView.getContext();
-        final int colorForIntensity = QuakesUtils.getColor(context, item.getProperties().getMmi());
+        final int colorForIntensity = QuakesUtils.INSTANCE.getColor(context, item.getProperties().getMmi());
         viewHolder.txtMagnitudeBig.setTextColor(colorForIntensity);
         viewHolder.txtMagnitudeSmall.setText("." + magnitude[1]);
         viewHolder.txtMagnitudeSmall.setTextColor(colorForIntensity);
-        viewHolder.txtIntensity.setText(QuakesUtils.getIntensity(context, item.getProperties().getMmi()));
+        viewHolder.txtIntensity.setText(QuakesUtils.INSTANCE.getIntensity(context, item.getProperties().getMmi()));
 
         viewHolder.txtLocation.setText(item.getProperties().getLocality());
         viewHolder.txtDepth.setText(context.getString(R.string.depth, item.getProperties()

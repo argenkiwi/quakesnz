@@ -143,7 +143,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
-                QuakesUtils.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
+                QuakesUtils.INSTANCE.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
                 feature.getProperties().getMagnitude(),
                 feature.getProperties().getLocality(),
                 feature.getProperties().getPublicId()
@@ -163,7 +163,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
         }
 
         Properties properties = feature.getProperties();
-        final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());
+        final int colorForIntensity = QuakesUtils.INSTANCE.getColor(getContext(), properties.getMmi());
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
                 .split("\\.");
 
@@ -171,7 +171,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
         mMagnitudeBigView.setTextColor(colorForIntensity);
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
-        mIntensityView.setText(QuakesUtils.getIntensity(getContext(), properties.getMmi()));
+        mIntensityView.setText(QuakesUtils.INSTANCE.getIntensity(getContext(), properties.getMmi()));
         mLocationView.setText(properties.getLocality());
         mDepthView.setText(getString(R.string.depth, properties.getDepth()));
         mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getTime().getTime()));
