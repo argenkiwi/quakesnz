@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.GetFeatureInteractor;
+import nz.co.codebros.quakesnz.interactor.GetFeatureInteractorImpl;
 
 /**
  * Created by leandro on 7/07/16.
@@ -18,7 +19,7 @@ public class QuakeDetailModule {
 
     @Provides
     GetFeatureInteractor provideInteractor(GeonetService service) {
-        return new GetFeatureInteractor(service);
+        return new GetFeatureInteractorImpl(service);
     }
 
     @Provides
