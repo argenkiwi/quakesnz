@@ -12,7 +12,7 @@ import nz.co.codebros.quakesnz.model.Feature
 class GetFeatureInteractorImpl(private val service: GeonetService) : GetFeatureInteractor {
     override fun execute(observer: SingleObserver<Feature>, publicID: String) {
         service.getQuake(publicID)
-                .map { featureCollection -> featureCollection.features[0] }
+                .map { it.features[0] }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer)
