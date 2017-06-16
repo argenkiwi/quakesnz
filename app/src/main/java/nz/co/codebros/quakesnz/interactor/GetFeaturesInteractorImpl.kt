@@ -16,13 +16,13 @@ class GetFeaturesInteractorImpl(
         private val preferences: SharedPreferences,
         private val featureCollectionObserver: Observer<FeatureCollection>
 ) : GetFeaturesInteractor {
-    override fun execute(subscriber: CompletableObserver) {
+    override fun execute(observer: CompletableObserver) {
         val mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"))
         service.getQuakes(mmi)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterSuccess { featureCollectionObserver.onNext(it) }
                 .toCompletable()
-                .subscribe(subscriber)
+                .subscribe(observer)
     }
 }
