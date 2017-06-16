@@ -3,6 +3,7 @@ package nz.co.codebros.quakesnz.list;
 import java.util.ArrayList;
 
 import io.reactivex.CompletableObserver;
+import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -19,11 +20,11 @@ public class QuakeListPresenter {
 
     private final QuakeListView view;
     private final GetFeaturesInteractor interactor;
-    private final Subject<FeatureCollection> featureCollectionBehaviorSubject;
+    private final Observable<FeatureCollection> featureCollectionBehaviorSubject;
     private final ArrayList<Disposable> disposables = new ArrayList<>();
 
     QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor,
-                       Subject<FeatureCollection> featureCollectionBehaviorSubject) {
+                       Observable<FeatureCollection> featureCollectionBehaviorSubject) {
         this.view = view;
         this.interactor = interactor;
         this.featureCollectionBehaviorSubject = featureCollectionBehaviorSubject;

@@ -2,10 +2,9 @@ package nz.co.codebros.quakesnz.interactor
 
 import android.content.SharedPreferences
 import io.reactivex.CompletableObserver
+import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.GeonetService
 import nz.co.codebros.quakesnz.model.FeatureCollection
 
@@ -15,7 +14,7 @@ import nz.co.codebros.quakesnz.model.FeatureCollection
 class GetFeaturesInteractorImpl(
         private val service: GeonetService,
         private val preferences: SharedPreferences,
-        private val featureColectionStream: Subject<FeatureCollection>
+        private val featureColectionStream: Observer<FeatureCollection>
 ) : GetFeaturesInteractor {
     override fun execute(subscriber: CompletableObserver) {
         val mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"))
