@@ -3,17 +3,19 @@ package nz.co.codebros.quakesnz.list;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
-
+import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
-import nz.co.codebros.quakesnz.list.QuakeListPresenter;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.list.QuakeListView;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,6 +25,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class QuakeListPresenterTest {
+    private Subject<FeatureCollection> featureCollectionSubject;
     private QuakeListPresenter presenter;
 
     @Mock
@@ -31,36 +34,85 @@ public class QuakeListPresenterTest {
     @Mock
     private GetFeaturesInteractor interactor;
 
+    @Captor
+    private ArgumentCaptor<CompletableObserver> completableObserverArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Consumer<FeatureCollection>> consumerArgumentCaptor;
+
     @Mock
     private FeatureCollection featureCollection;
 
     @Mock
     private Disposable d;
 
+    @Mock
+    private Throwable e;
+
     @Before
     public void setUp() throws Exception {
-        presenter = new QuakeListPresenter(view, interactor);
+        featureCollectionSubject = BehaviorSubject.create();
+        presenter = new QuakeListPresenter(view, interactor, featureCollectionSubject);
     }
 
     @Test
-    public void shouldListQuakes() throws IOException {
+    public void shouldShowProgress() {
+        getCompletableObserver().onSubscribe(d);
+        verify(view).showProgress();
+    }
+
+    @Test
+    public void shouldHideProgress(){
+        getCompletableObserver().onComplete();
+        verify(view).hideProgress();
+    }
+
+    @Test
+    public void shouldHideProgressOnError(){
+        getCompletableObserver().onError(e);
+        verify(view).hideProgress();
+    }
+
+    @Test
+    public void shouldShowError(){
+        getCompletableObserver().onError(e);
+        verify(view).showError();
+    }
+
+    @Test
+    public void shouldDisposeCompletable(){
+        getCompletableObserver().onSubscribe(d);
+        presenter.onDestroyView();
+        verify(d).dispose();
+    }
+
+    private CompletableObserver getCompletableObserver(){
+        presenter.onRefresh();
+        verify(interactor).execute(completableObserverArgumentCaptor.capture());
+        return completableObserverArgumentCaptor.getValue();
+    }
+
+    @Test
+    public void shouldListQuakes() throws Exception {
         Feature[] features = {};
         when(featureCollection.getFeatures()).thenReturn(features);
-        presenter.onSuccess(featureCollection);
+//        getFeatureCollectionConsumer().accept(featureCollection);
+        presenter.onCreateView();
+        featureCollectionSubject.onNext(featureCollection);
         verify(view).listQuakes(features);
     }
 
-    @Test
-    public void shouldRefreshQuakes() {
-        presenter.onRefresh();
-        verify(view).showProgress();
-        verify(interactor).execute(presenter);
-    }
+    //    @Test
+//    public void shouldDisposeConsumer(){
+//        getFeatureCollectionConsumer();
+//        presenter.onDestroyView();
+//        verify(d).dispose();
+//    }
 
-    @Test
-    public void shouldDispose(){
-        presenter.onSubscribe(d);
-        presenter.onDestroyView();
-        verify(d).dispose();
+    // FIXME Cannot verify subscribe because it's final
+    private Consumer<FeatureCollection> getFeatureCollectionConsumer(){
+        presenter.onCreateView();
+        verify(featureCollectionSubject).subscribe(consumerArgumentCaptor.capture());
+        return consumerArgumentCaptor.getValue();
     }
 }

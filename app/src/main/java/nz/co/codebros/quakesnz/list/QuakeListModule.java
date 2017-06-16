@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractorImpl;
@@ -25,16 +25,16 @@ public class QuakeListModule {
     GetFeaturesInteractor provideInteractor(
             GeonetService service,
             SharedPreferences preferences,
-            BehaviorSubject<FeatureCollection> featureCollectionBehaviourSubject
+            Subject<FeatureCollection> featureCollectionSubject
     ) {
-        return new GetFeaturesInteractorImpl(service, preferences, featureCollectionBehaviourSubject);
+        return new GetFeaturesInteractorImpl(service, preferences, featureCollectionSubject);
     }
 
     @Provides
     QuakeListPresenter providePresenter(
             GetFeaturesInteractor interactor,
-            BehaviorSubject<FeatureCollection> featureCollectionBehaviorSubject
+            Subject<FeatureCollection> featureCollectionSubject
     ) {
-        return new QuakeListPresenter(view, interactor, featureCollectionBehaviorSubject);
+        return new QuakeListPresenter(view, interactor, featureCollectionSubject);
     }
 }

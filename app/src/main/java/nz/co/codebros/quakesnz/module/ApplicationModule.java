@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
@@ -51,7 +52,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    static BehaviorSubject<FeatureCollection> featureCollectionBehaviorSubject(){
+    static Subject<FeatureCollection> featureCollectionBehaviorSubject(){
         return BehaviorSubject.create();
     }
 }
