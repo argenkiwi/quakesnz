@@ -14,14 +14,14 @@ import nz.co.codebros.quakesnz.model.FeatureCollection
 class GetFeaturesInteractorImpl(
         private val service: GeonetService,
         private val preferences: SharedPreferences,
-        private val featureColectionStream: Observer<FeatureCollection>
+        private val featureCollectionObserver: Observer<FeatureCollection>
 ) : GetFeaturesInteractor {
     override fun execute(subscriber: CompletableObserver) {
         val mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"))
         service.getQuakes(mmi)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterSuccess { featureColectionStream.onNext(it) }
+                .doAfterSuccess { featureCollectionObserver.onNext(it) }
                 .toCompletable()
                 .subscribe(subscriber)
     }
