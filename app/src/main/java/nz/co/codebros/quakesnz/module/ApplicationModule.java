@@ -13,8 +13,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.subjects.BehaviorSubject;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
+import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
 
 /**
  * Created by leandro on 9/07/15.
@@ -44,5 +47,11 @@ public class ApplicationModule {
     @Named("app")
     Tracker provideTracker() {
         return GoogleAnalytics.getInstance(mApplication).newTracker(R.xml.app_tracker);
+    }
+
+    @Provides
+    @Singleton
+    static BehaviorSubject<FeatureCollection> featureCollectionBehaviorSubject(){
+        return BehaviorSubject.create();
     }
 }

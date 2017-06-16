@@ -62,10 +62,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            Feature[] features = (Feature[]) savedInstanceState.getParcelableArray("features");
-            featureAdapter.setFeatures(features);
-        } else presenter.onRefresh();
+        if (savedInstanceState == null) presenter.onRefresh();
     }
 
     @Override
@@ -86,6 +83,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        presenter.onCreateView();
         return inflater.inflate(R.layout.fragment_quakes, container, false);
     }
 
@@ -113,12 +111,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .build());
 
         presenter.onRefresh();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArray("features", featureAdapter.getFeatures());
     }
 
     @Override
