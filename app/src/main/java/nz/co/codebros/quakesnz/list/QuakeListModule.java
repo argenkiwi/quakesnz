@@ -9,6 +9,7 @@ import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractorImpl;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.repository.Repository;
 
 /**
  * Created by leandro on 9/07/15.
@@ -35,6 +36,6 @@ public class QuakeListModule {
             GetFeaturesInteractor interactor,
             Subject<FeatureCollection> featureCollectionSubject
     ) {
-        return new QuakeListPresenter(view, interactor, featureCollectionSubject);
+        return new QuakeListPresenter(view, interactor, new Repository<>(featureCollectionSubject));
     }
 }

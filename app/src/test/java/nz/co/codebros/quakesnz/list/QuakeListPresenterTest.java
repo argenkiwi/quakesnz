@@ -5,16 +5,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import io.reactivex.CompletableObserver;
-import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.repository.Repository;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +34,7 @@ public class QuakeListPresenterTest {
     private GetFeaturesInteractor interactor;
 
     @Mock
-    private Observable<FeatureCollection> featureCollectionObservable;
+    private Repository<FeatureCollection> repository;
 
     @Captor
     private ArgumentCaptor<CompletableObserver> completableObserverArgumentCaptor;
@@ -52,7 +53,7 @@ public class QuakeListPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        presenter = new QuakeListPresenter(view, interactor, featureCollectionObservable);
+        presenter = new QuakeListPresenter(view, interactor, repository);
     }
 
     @Test
@@ -92,25 +93,25 @@ public class QuakeListPresenterTest {
         return completableObserverArgumentCaptor.getValue();
     }
 
-//    @Test
-//    public void shouldListQuakes() throws Exception {
-//        Feature[] features = {};
-//        when(featureCollection.getFeatures()).thenReturn(features);
-//        getFeatureCollectionConsumer().accept(featureCollection);
-//        verify(view).listQuakes(features);
-//    }
-//
-//    @Test
-//    public void shouldDisposeConsumer() {
-//        getFeatureCollectionConsumer();
-//        presenter.onDestroyView();
-//        verify(d).dispose();
-//    }
+    @Test
+    public void shouldListQuakes() throws Exception {
+        Feature[] features = {};
+        when(featureCollection.getFeatures()).thenReturn(features);
+        getFeatureCollectionConsumer().accept(featureCollection);
+        verify(view).listQuakes(features);
+    }
 
-    // FIXME Cannot verify subscribe because it's final
+    @Test
+    public void shouldDisposeConsumer() {
+        getFeatureCollectionConsumer();
+        presenter.onDestroyView();
+        verify(d).dispose();
+    }
+
     private Consumer<FeatureCollection> getFeatureCollectionConsumer() {
+        when(repository.subscribe(Matchers.<Consumer<FeatureCollection>>any())).thenReturn(d);
         presenter.onCreateView();
-        verify(featureCollectionObservable).subscribe(consumerArgumentCaptor.capture());
+        verify(repository).subscribe(consumerArgumentCaptor.capture());
         return consumerArgumentCaptor.getValue();
     }
 }

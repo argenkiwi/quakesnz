@@ -3,14 +3,12 @@ package nz.co.codebros.quakesnz.list;
 import java.util.ArrayList;
 
 import io.reactivex.CompletableObserver;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.repository.Repository;
 
 /**
  * Created by leandro on 9/07/15.
@@ -19,26 +17,23 @@ public class QuakeListPresenter {
 
     private final QuakeListView view;
     private final GetFeaturesInteractor interactor;
-    private final Observable<FeatureCollection> featureCollectionObservable;
+    private final Repository<FeatureCollection> featureCollectionRepository;
     private final ArrayList<Disposable> disposables = new ArrayList<>();
 
     QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor,
-                       Observable<FeatureCollection> featureCollectionObservable) {
+                       Repository<FeatureCollection> featureCollectionRepository) {
         this.view = view;
         this.interactor = interactor;
-        this.featureCollectionObservable = featureCollectionObservable;
+        this.featureCollectionRepository = featureCollectionRepository;
     }
 
     void onCreateView() {
-        disposables.add(featureCollectionObservable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<FeatureCollection>() {
-                    @Override
-                    public void accept(@NonNull FeatureCollection featureCollection) throws Exception {
-                        view.listQuakes(featureCollection.getFeatures());
-                    }
-                }));
+        disposables.add(featureCollectionRepository.subscribe(new Consumer<FeatureCollection>() {
+            @Override
+            public void accept(@NonNull FeatureCollection featureCollection) throws Exception {
+                view.listQuakes(featureCollection.getFeatures());
+            }
+        }));
     }
 
     void onDestroyView() {
