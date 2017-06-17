@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
-import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.Subject;
+import io.reactivex.schedulers.Schedulers;
 import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
 
@@ -20,23 +19,26 @@ public class QuakeListPresenter {
 
     private final QuakeListView view;
     private final GetFeaturesInteractor interactor;
-    private final Observable<FeatureCollection> featureCollectionBehaviorSubject;
+    private final Observable<FeatureCollection> featureCollectionObservable;
     private final ArrayList<Disposable> disposables = new ArrayList<>();
 
     QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor,
-                       Observable<FeatureCollection> featureCollectionBehaviorSubject) {
+                       Observable<FeatureCollection> featureCollectionObservable) {
         this.view = view;
         this.interactor = interactor;
-        this.featureCollectionBehaviorSubject = featureCollectionBehaviorSubject;
+        this.featureCollectionObservable = featureCollectionObservable;
     }
 
     void onCreateView() {
-        disposables.add(featureCollectionBehaviorSubject.subscribe(new Consumer<FeatureCollection>() {
-            @Override
-            public void accept(@NonNull FeatureCollection featureCollection) throws Exception {
-                view.listQuakes(featureCollection.getFeatures());
-            }
-        }));
+        disposables.add(featureCollectionObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<FeatureCollection>() {
+                    @Override
+                    public void accept(@NonNull FeatureCollection featureCollection) throws Exception {
+                        view.listQuakes(featureCollection.getFeatures());
+                    }
+                }));
     }
 
     void onDestroyView() {
