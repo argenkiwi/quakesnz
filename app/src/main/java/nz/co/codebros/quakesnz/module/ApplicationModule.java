@@ -49,10 +49,4 @@ public class ApplicationModule {
     Tracker provideTracker() {
         return GoogleAnalytics.getInstance(mApplication).newTracker(R.xml.app_tracker);
     }
-
-    @Provides
-    @Singleton
-    static Subject<FeatureCollection> featureCollectionBehaviorSubject(){
-        return BehaviorSubject.create();
-    }
 }
