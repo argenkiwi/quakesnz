@@ -1,26 +1,33 @@
 package nz.co.codebros.quakesnz.repository;
 
-import io.reactivex.Observable;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.Subject;
 
 /**
- * Created by leandro on 17/06/17.
+ * Created by leandro on 18/06/17.
  */
 
-public class Repository<T> {
-    private Observable<T> observable;
+public abstract class Repository<T> extends Publisher<T> {
 
-    public Repository(Observable<T> observable ){
-        this.observable = observable;
+    public Repository(Subject subject) {
+        super(subject);
     }
 
-    public Disposable subscribe(Consumer<T> consumer){
-        return observable
+    protected Completable load(Single<T> single) {
+        return single
+                .doAfterSuccess(new Consumer<T>() {
+                    @Override
+                    public void accept(@NonNull T it) throws Exception {
+                        publish(it);
+                    }
+                })
+                .toCompletable()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(consumer);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

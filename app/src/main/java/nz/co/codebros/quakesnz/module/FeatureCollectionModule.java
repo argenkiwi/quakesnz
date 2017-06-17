@@ -2,18 +2,15 @@ package nz.co.codebros.quakesnz.module;
 
 import android.content.SharedPreferences;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.GeonetService;
-import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
-import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractorImpl;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractorImpl;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.publisher.Publisher;
-import nz.co.codebros.quakesnz.repository.Repository;
+import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
+import nz.co.codebros.quakesnz.repository.Publisher;
 
 /**
  * Created by leandro on 17/06/17.
@@ -22,31 +19,25 @@ import nz.co.codebros.quakesnz.repository.Repository;
 public class FeatureCollectionModule {
 
     @Provides
-    @Singleton
-    static Subject<FeatureCollection> featureCollectionSubject(){
-        return BehaviorSubject.create();
-    }
-
-    @Provides
-    static Repository<FeatureCollection> featureCollectionRepository(
-            Subject<FeatureCollection> subject
-    ){
-        return new Repository<>(subject);
+    static FeatureCollectionRepository featureCollectionRepository(
+            Subject<FeatureCollection> subject,
+            GeonetService service
+    ) {
+        return new FeatureCollectionRepository(subject, service);
     }
 
     @Provides
     static Publisher<FeatureCollection> featureCollectionPublisher(
-            Subject<FeatureCollection> subject
+            FeatureCollectionRepository repository
     ){
-        return new Publisher<>(subject);
+        return repository;
     }
 
     @Provides
-    static GetFeaturesInteractor interactor(
-            GeonetService service,
+    static LoadFeaturesInteractor interactor(
             SharedPreferences preferences,
-            Publisher<FeatureCollection> publisher
+            FeatureCollectionRepository repository
     ) {
-        return new GetFeaturesInteractorImpl(service, preferences, publisher);
+        return new LoadFeaturesInteractorImpl(preferences, repository);
     }
 }

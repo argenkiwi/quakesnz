@@ -12,7 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
 import nz.co.codebros.quakesnz.repository.Repository;
@@ -31,7 +31,7 @@ public class QuakeListPresenterTest {
     private QuakeListView view;
 
     @Mock
-    private GetFeaturesInteractor interactor;
+    private LoadFeaturesInteractor interactor;
 
     @Mock
     private Repository<FeatureCollection> repository;
@@ -109,7 +109,7 @@ public class QuakeListPresenterTest {
     }
 
     private Consumer<FeatureCollection> getFeatureCollectionConsumer() {
-        when(repository.subscribe(Matchers.<Consumer<FeatureCollection>>any())).thenReturn(d);
+        when(repository.subscribe(Matchers.<Consumer<FeatureCollection>>anyObject())).thenReturn(d);
         presenter.onCreateView();
         verify(repository).subscribe(consumerArgumentCaptor.capture());
         return consumerArgumentCaptor.getValue();

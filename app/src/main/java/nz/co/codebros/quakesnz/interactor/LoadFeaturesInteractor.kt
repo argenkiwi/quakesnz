@@ -5,6 +5,6 @@ import io.reactivex.CompletableObserver
 /**
  * Created by leandro on 10/06/17.
  */
-internal interface GetFeaturesInteractor {
+internal interface LoadFeaturesInteractor {
     fun execute(observer: CompletableObserver)
 }

@@ -2,9 +2,10 @@ package nz.co.codebros.quakesnz.list;
 
 import dagger.Module;
 import dagger.Provides;
-import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.repository.Repository;
+import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
+import nz.co.codebros.quakesnz.repository.Publisher;
 
 /**
  * Created by leandro on 9/07/15.
@@ -19,9 +20,9 @@ public class QuakeListModule {
 
     @Provides
     QuakeListPresenter presenter(
-            GetFeaturesInteractor interactor,
-            Repository<FeatureCollection> repository
+            LoadFeaturesInteractor interactor,
+            Publisher<FeatureCollection> publisher
     ) {
-        return new QuakeListPresenter(view, interactor, repository);
+        return new QuakeListPresenter(view, interactor, publisher);
     }
 }

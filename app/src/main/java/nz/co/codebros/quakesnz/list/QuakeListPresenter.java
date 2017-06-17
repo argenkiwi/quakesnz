@@ -6,9 +6,9 @@ import io.reactivex.CompletableObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.repository.Repository;
+import nz.co.codebros.quakesnz.repository.Publisher;
 
 /**
  * Created by leandro on 9/07/15.
@@ -16,19 +16,19 @@ import nz.co.codebros.quakesnz.repository.Repository;
 public class QuakeListPresenter {
 
     private final QuakeListView view;
-    private final GetFeaturesInteractor interactor;
-    private final Repository<FeatureCollection> featureCollectionRepository;
+    private final LoadFeaturesInteractor loadFeaturesInteractor;
+    private final Publisher<FeatureCollection> featureCollectionPublisher;
     private final ArrayList<Disposable> disposables = new ArrayList<>();
 
-    QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor,
-                       Repository<FeatureCollection> featureCollectionRepository) {
+    QuakeListPresenter(QuakeListView view, LoadFeaturesInteractor loadFeaturesInteractor,
+                       Publisher<FeatureCollection> featureCollectionPublisher) {
         this.view = view;
-        this.interactor = interactor;
-        this.featureCollectionRepository = featureCollectionRepository;
+        this.loadFeaturesInteractor = loadFeaturesInteractor;
+        this.featureCollectionPublisher = featureCollectionPublisher;
     }
 
     void onCreateView() {
-        disposables.add(featureCollectionRepository.subscribe(new Consumer<FeatureCollection>() {
+        disposables.add(featureCollectionPublisher.subscribe(new Consumer<FeatureCollection>() {
             @Override
             public void accept(@NonNull FeatureCollection featureCollection) throws Exception {
                 view.listQuakes(featureCollection.getFeatures());
@@ -43,7 +43,7 @@ public class QuakeListPresenter {
     }
 
     void onRefresh() {
-        interactor.execute(new CompletableObserver() {
+        loadFeaturesInteractor.execute(new CompletableObserver() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
                 view.showProgress();

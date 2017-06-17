@@ -9,7 +9,8 @@ import nz.co.codebros.quakesnz.scope.ViewScope;
  */
 @ViewScope
 @Subcomponent(modules = {
-        QuakeListModule.class
+        QuakeListModule.class,
+        FeatureCollectionModule.class
 })
 public interface QuakeListComponent {
     void inject(QuakeListFragment quakeListFragment);
