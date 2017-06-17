@@ -23,7 +23,7 @@ public class QuakeListModule {
     }
 
     @Provides
-    GetFeaturesInteractor provideInteractor(
+    static GetFeaturesInteractor interactor(
             GeonetService service,
             SharedPreferences preferences,
             Subject<FeatureCollection> featureCollectionSubject
@@ -32,10 +32,15 @@ public class QuakeListModule {
     }
 
     @Provides
-    QuakeListPresenter providePresenter(
+    static Repository<FeatureCollection> repository(Subject<FeatureCollection> subject){
+        return new Repository<>(subject);
+    }
+
+    @Provides
+    QuakeListPresenter presenter(
             GetFeaturesInteractor interactor,
-            Subject<FeatureCollection> featureCollectionSubject
+            Repository<FeatureCollection> repository
     ) {
-        return new QuakeListPresenter(view, interactor, new Repository<>(featureCollectionSubject));
+        return new QuakeListPresenter(view, interactor, repository);
     }
 }
