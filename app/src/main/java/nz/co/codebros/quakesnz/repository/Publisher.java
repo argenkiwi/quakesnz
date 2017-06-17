@@ -10,11 +10,11 @@ import io.reactivex.subjects.Subject;
  * Created by leandro on 18/06/17.
  */
 
-public abstract class Publisher<T> {
+public class Publisher<T> {
 
     private final Subject<T> subject;
 
-    Publisher(Subject<T> subject) {
+    public Publisher(Subject<T> subject) {
         this.subject = subject;
     }
 

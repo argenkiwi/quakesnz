@@ -19,18 +19,18 @@ import nz.co.codebros.quakesnz.repository.Publisher;
 public class FeatureCollectionModule {
 
     @Provides
-    static FeatureCollectionRepository featureCollectionRepository(
-            Subject<FeatureCollection> subject,
-            GeonetService service
-    ) {
-        return new FeatureCollectionRepository(subject, service);
+    static Publisher<FeatureCollection> featureCollectionPublisher(
+            Subject<FeatureCollection> subject
+    ){
+        return new Publisher<>(subject);
     }
 
     @Provides
-    static Publisher<FeatureCollection> featureCollectionPublisher(
-            FeatureCollectionRepository repository
-    ){
-        return repository;
+    static FeatureCollectionRepository featureCollectionRepository(
+            Publisher<FeatureCollection> publisher,
+            GeonetService service
+    ) {
+        return new FeatureCollectionRepository(publisher, service);
     }
 
     @Provides

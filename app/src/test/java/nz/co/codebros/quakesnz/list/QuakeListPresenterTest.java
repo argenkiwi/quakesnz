@@ -15,7 +15,7 @@ import io.reactivex.functions.Consumer;
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
-import nz.co.codebros.quakesnz.repository.Repository;
+import nz.co.codebros.quakesnz.repository.Publisher;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,7 +34,7 @@ public class QuakeListPresenterTest {
     private LoadFeaturesInteractor interactor;
 
     @Mock
-    private Repository<FeatureCollection> repository;
+    private Publisher<FeatureCollection> publisher;
 
     @Captor
     private ArgumentCaptor<CompletableObserver> completableObserverArgumentCaptor;
@@ -53,7 +53,7 @@ public class QuakeListPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        presenter = new QuakeListPresenter(view, interactor, repository);
+        presenter = new QuakeListPresenter(view, interactor, publisher);
     }
 
     @Test
@@ -109,9 +109,9 @@ public class QuakeListPresenterTest {
     }
 
     private Consumer<FeatureCollection> getFeatureCollectionConsumer() {
-        when(repository.subscribe(Matchers.<Consumer<FeatureCollection>>anyObject())).thenReturn(d);
+        when(publisher.subscribe(Matchers.<Consumer<FeatureCollection>>anyObject())).thenReturn(d);
         presenter.onCreateView();
-        verify(repository).subscribe(consumerArgumentCaptor.capture());
+        verify(publisher).subscribe(consumerArgumentCaptor.capture());
         return consumerArgumentCaptor.getValue();
     }
 }
