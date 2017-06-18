@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.repository.Publisher;
+import nz.co.codebros.quakesnz.publisher.Publisher;
 
 /**
  * Created by leandro on 7/07/16.

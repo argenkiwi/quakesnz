@@ -83,7 +83,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        presenter.onCreateView();
         return inflater.inflate(R.layout.fragment_quakes, container, false);
     }
 
@@ -96,6 +95,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onFeatureClicked(View view, Feature feature) {
         Log.d(TAG, "Feature selected.");
+        presenter.onFeatureSelected(feature);
         Intent intent = DetailActivity.newIntent(getContext(), feature.getProperties().getPublicId());
         ActivityCompat.startActivity(getContext(), intent, ActivityOptionsCompat
                 .makeSceneTransitionAnimation(getActivity(), view,
@@ -116,6 +116,8 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter.onViewCreated();
+
         swipeRefreshLayout = ((SwipeRefreshLayout) view);
         swipeRefreshLayout.setOnRefreshListener(this);
 

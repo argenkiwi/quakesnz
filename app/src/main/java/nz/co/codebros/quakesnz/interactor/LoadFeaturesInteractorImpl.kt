@@ -2,6 +2,8 @@ package nz.co.codebros.quakesnz.interactor
 
 import android.content.SharedPreferences
 import io.reactivex.CompletableObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
 
 /**
@@ -13,6 +15,9 @@ class LoadFeaturesInteractorImpl(
 ) : LoadFeaturesInteractor {
     override fun execute(observer: CompletableObserver) {
         val mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"))
-        repository.load(mmi).subscribe(observer)
+        repository.load(mmi)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer)
     }
 }

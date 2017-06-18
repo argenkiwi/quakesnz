@@ -48,11 +48,15 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     private TextView mDepthView;
     private Feature feature;
 
+    public static QuakeDetailFragment newInstance() {
+        return new QuakeDetailFragment();
+    }
+
     public static Fragment newInstance(String publicID) {
         Bundle args = new Bundle();
         args.putString(ARG_PUBLIC_ID, publicID);
 
-        QuakeDetailFragment fragment = new QuakeDetailFragment();
+        QuakeDetailFragment fragment = newInstance();
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +64,9 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        presenter.onRefresh(getArguments().getString(ARG_PUBLIC_ID));
+        if (savedInstanceState == null && getArguments() != null) {
+            presenter.onRefresh(getArguments().getString(ARG_PUBLIC_ID));
+        }
     }
 
     @Override
@@ -89,7 +95,6 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        presenter.onCreateView();
         return inflater.inflate(R.layout.fragment_quake_detail, container, false);
     }
 
@@ -102,6 +107,8 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter.onViewCreated();
+
         mMagnitudeBigView = (TextView) view.findViewById(R.id.magnitude_big);
         mMagnitudeSmallView = (TextView) view.findViewById(R.id.magnitude_small);
         mIntensityView = (TextView) view.findViewById(R.id.intensity);
@@ -121,16 +128,17 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
 
     @Override
     public void share(Feature feature) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
-                QuakesUtils.INSTANCE.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
-                feature.getProperties().getMagnitude(),
-                feature.getProperties().getLocality(),
-                feature.getProperties().getPublicId()
-        ));
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+        Properties properties = feature.getProperties();
+        startActivity(new Intent()
+                .setAction(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
+                        QuakesUtils.INSTANCE.getIntensity(getContext(), properties.getMmi())
+                                .toLowerCase(),
+                        properties.getMagnitude(),
+                        properties.getLocality(),
+                        properties.getPublicId()
+                ))
+                .setType("text/plain"));
     }
 
     @Override

@@ -1,28 +1,26 @@
 package nz.co.codebros.quakesnz.detail;
 
-import java.util.ArrayList;
-
 import io.reactivex.CompletableObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.repository.Publisher;
+import nz.co.codebros.quakesnz.presenter.BasePresenter;
+import nz.co.codebros.quakesnz.publisher.Publisher;
 
 /**
  * Created by leandro on 7/07/16.
  */
-public class QuakeDetailPresenter {
+public class QuakeDetailPresenter extends BasePresenter{
     private final QuakeDetailView view;
     private final Publisher<Feature> publisher;
-    private final LoadFeatureInteractorImpl interactor;
-    private final ArrayList<Disposable> disposables = new ArrayList<>();
+    private final LoadFeatureInteractor interactor;
 
     QuakeDetailPresenter(
             QuakeDetailView view,
             Publisher<Feature> publisher,
-            LoadFeatureInteractorImpl interactor
+            LoadFeatureInteractor interactor
     ) {
         this.view = view;
         this.publisher = publisher;
@@ -30,10 +28,10 @@ public class QuakeDetailPresenter {
     }
 
     void onRefresh(String publicID) {
-        interactor.execute(new CompletableObserver() {
+        interactor.execute(publicID, new CompletableObserver() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                disposables.add(d);
+                addDisposable(d);
             }
 
             @Override
@@ -45,11 +43,11 @@ public class QuakeDetailPresenter {
             public void onError(@NonNull Throwable e) {
                 view.showLoadingError();
             }
-        }, publicID);
+        });
     }
 
-    void onCreateView() {
-        disposables.add(publisher.subscribe(new Consumer<Feature>() {
+    void onViewCreated() {
+        addDisposable(publisher.subscribe(new Consumer<Feature>() {
             @Override
             public void accept(@NonNull Feature feature) throws Exception {
                 view.showDetails(feature);
@@ -58,9 +56,7 @@ public class QuakeDetailPresenter {
     }
 
     void onDestroyView() {
-        while (!disposables.isEmpty()) {
-            disposables.remove(0).dispose();
-        }
+        disposeAll();
     }
 
     void onShare(Feature feature) {

@@ -11,9 +11,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.repository.Publisher;
+import nz.co.codebros.quakesnz.publisher.Publisher;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -33,7 +33,7 @@ public class QuakeDetailPresenterTest {
     private Publisher<Feature> publisher;
 
     @Mock
-    private LoadFeatureInteractorImpl interactor;
+    private LoadFeatureInteractor interactor;
 
     @Mock
     private Throwable e;
@@ -76,12 +76,12 @@ public class QuakeDetailPresenterTest {
     private CompletableObserver getCompletableObserver() {
         final String publicID = "";
         presenter.onRefresh(publicID);
-        verify(interactor).execute(completableObserverArgumentCaptor.capture(), eq(publicID));
+        verify(interactor).execute(eq(publicID), completableObserverArgumentCaptor.capture());
         return completableObserverArgumentCaptor.getValue();
     }
 
     private Consumer<Feature> getFeatureConsumer(){
-        presenter.onCreateView();
+        presenter.onViewCreated();
         verify(publisher).subscribe(consumerArgumentCaptor.capture());
         return consumerArgumentCaptor.getValue();
     }

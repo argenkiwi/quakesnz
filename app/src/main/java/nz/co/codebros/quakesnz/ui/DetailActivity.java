@@ -2,15 +2,14 @@ package nz.co.codebros.quakesnz.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment;
-import nz.co.codebros.quakesnz.model.Feature;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -25,11 +24,11 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null) getSupportActionBar().setHomeButtonEnabled(true);
         if (savedInstanceState == null) {
-            String publicId = getIntent().hasExtra(EXTRA_PUBLIC_ID)
-                    ? getIntent().getStringExtra(EXTRA_PUBLIC_ID)
-                    : getIntent().getData().getLastPathSegment();
+            Fragment fragment = getIntent().getData() != null
+                    ? QuakeDetailFragment.newInstance(getIntent().getData().getLastPathSegment())
+                    : QuakeDetailFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content, QuakeDetailFragment.newInstance(publicId))
+                    .add(android.R.id.content, fragment)
                     .commit();
         }
     }
