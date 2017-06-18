@@ -18,7 +18,7 @@ public class Publisher<T> {
         this.subject = subject;
     }
 
-    void publish(T value){
+    public void publish(T value){
         subject.onNext(value);
     }
 

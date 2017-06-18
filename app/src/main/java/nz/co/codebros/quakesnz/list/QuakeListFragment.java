@@ -96,7 +96,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onFeatureClicked(View view, Feature feature) {
         Log.d(TAG, "Feature selected.");
-        Intent intent = DetailActivity.newIntent(getContext(), feature);
+        Intent intent = DetailActivity.newIntent(getContext(), feature.getProperties().getPublicId());
         ActivityCompat.startActivity(getContext(), intent, ActivityOptionsCompat
                 .makeSceneTransitionAnimation(getActivity(), view,
                         getString(R.string.transition_name)).toBundle());

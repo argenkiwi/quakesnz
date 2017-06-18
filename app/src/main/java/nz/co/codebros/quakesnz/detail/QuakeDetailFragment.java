@@ -48,15 +48,6 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     private TextView mDepthView;
     private Feature feature;
 
-    public static Fragment newInstance(Feature feature) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_FEATURE, feature);
-
-        QuakeDetailFragment fragment = new QuakeDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static Fragment newInstance(String publicID) {
         Bundle args = new Bundle();
         args.putString(ARG_PUBLIC_ID, publicID);
@@ -69,18 +60,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null) {
-            if (getArguments().containsKey(ARG_FEATURE)) {
-                final Feature feature = getArguments().getParcelable(ARG_FEATURE);
-                presenter.onInit(feature);
-            } else if (getArguments().containsKey(ARG_PUBLIC_ID)) {
-                final String publicID = getArguments().getString(ARG_PUBLIC_ID);
-                presenter.onInit(publicID);
-            }
-        } else if (savedInstanceState.containsKey(ARG_FEATURE)) {
-            final Feature feature = savedInstanceState.getParcelable(ARG_FEATURE);
-            presenter.onInit(feature);
-        }
+        presenter.onRefresh(getArguments().getString(ARG_PUBLIC_ID));
     }
 
     @Override
@@ -109,6 +89,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        presenter.onCreateView();
         return inflater.inflate(R.layout.fragment_quake_detail, container, false);
     }
 

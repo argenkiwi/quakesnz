@@ -14,10 +14,10 @@ import nz.co.codebros.quakesnz.model.Feature;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private static final String EXTRA_FEATURE = "extra_feature";
+    private static final String EXTRA_PUBLIC_ID = "extra_public_id";
 
-    public static Intent newIntent(Context context, Feature feature) {
-        return new Intent(context, DetailActivity.class).putExtra(EXTRA_FEATURE, feature);
+    public static Intent newIntent(Context context, String publicId) {
+        return new Intent(context, DetailActivity.class).putExtra(EXTRA_PUBLIC_ID, publicId);
     }
 
     @Override
@@ -25,18 +25,12 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null) getSupportActionBar().setHomeButtonEnabled(true);
         if (savedInstanceState == null) {
-            if (getIntent().hasExtra(EXTRA_FEATURE)) {
-                Feature feature = getIntent().getParcelableExtra(EXTRA_FEATURE);
-                getSupportFragmentManager().beginTransaction()
-                        .add(android.R.id.content, QuakeDetailFragment.newInstance(feature))
-                        .commit();
-            } else {
-                Uri data = getIntent().getData();
-                getSupportFragmentManager().beginTransaction()
-                        .add(android.R.id.content,
-                                QuakeDetailFragment.newInstance(data.getLastPathSegment()))
-                        .commit();
-            }
+            String publicId = getIntent().hasExtra(EXTRA_PUBLIC_ID)
+                    ? getIntent().getStringExtra(EXTRA_PUBLIC_ID)
+                    : getIntent().getData().getLastPathSegment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, QuakeDetailFragment.newInstance(publicId))
+                    .commit();
         }
     }
 

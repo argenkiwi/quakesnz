@@ -3,14 +3,19 @@ package nz.co.codebros.quakesnz.detail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
-import nz.co.codebros.quakesnz.interactor.GetFeatureInteractor;
+import io.reactivex.functions.Consumer;
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.repository.Publisher;
 
-import static org.mockito.Mockito.never;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -25,46 +30,59 @@ public class QuakeDetailPresenterTest {
     private QuakeDetailView view;
 
     @Mock
-    private GetFeatureInteractor interactor;
+    private Publisher<Feature> publisher;
 
     @Mock
-    private Feature feature;
+    private LoadFeatureInteractorImpl interactor;
+
+    @Mock
+    private Throwable e;
 
     @Mock
     private Disposable d;
 
+    @Mock
+    private Feature feature;
+
+    @Captor
+    private ArgumentCaptor<CompletableObserver> completableObserverArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Consumer<Feature>> consumerArgumentCaptor;
+
     @Before
     public void setUp() throws Exception {
-        presenter = new QuakeDetailPresenter(view, interactor);
+        presenter = new QuakeDetailPresenter(view, publisher, interactor);
     }
 
     @Test
-    public void shouldShowDetails() {
-        presenter.onInit(feature);
-        verify(view).showDetails(feature);
+    public void shouldShowLoadingError(){
+        getCompletableObserver().onError(e);
+        verify(view).showLoadingError();
     }
 
-    @Test
-    public void shouldGetFeature() {
-        final String publicID = "";
-        presenter.onInit(publicID);
-        verify(interactor).execute(presenter, publicID);
-    }
-
-    @Test
-    public void shouldShowDetailOnNext() {
-        presenter.onSuccess(feature);
-        verify(view).showDetails(feature);
-    }
-
-    public void shouldDispose(){
-        presenter.onSubscribe(d);
+    public void shouldDispose() {
+        getCompletableObserver().onSubscribe(d);
         presenter.onDestroyView();
         verify(d).dispose();
     }
 
-    public void shouldNotDispose(){
-        presenter.onDestroyView();
-        verify(d, never()).dispose();
+    @Test
+    public void shouldShowDetails() throws Exception {
+        getFeatureConsumer().accept(feature);
+        verify(view).showDetails(feature);
+    }
+
+    private CompletableObserver getCompletableObserver() {
+        final String publicID = "";
+        presenter.onRefresh(publicID);
+        verify(interactor).execute(completableObserverArgumentCaptor.capture(), eq(publicID));
+        return completableObserverArgumentCaptor.getValue();
+    }
+
+    private Consumer<Feature> getFeatureConsumer(){
+        presenter.onCreateView();
+        verify(publisher).subscribe(consumerArgumentCaptor.capture());
+        return consumerArgumentCaptor.getValue();
     }
 }
