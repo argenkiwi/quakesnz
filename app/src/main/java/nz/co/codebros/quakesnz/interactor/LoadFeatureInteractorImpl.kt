@@ -1,12 +1,8 @@
 package nz.co.codebros.quakesnz.interactor
 
-import io.reactivex.CompletableObserver
-import io.reactivex.Observable
-import io.reactivex.ObservableSource
-import io.reactivex.annotations.NonNull
-import io.reactivex.functions.Consumer
-import io.reactivex.functions.Function
-import io.reactivex.functions.Predicate
+import io.reactivex.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import nz.co.codebros.quakesnz.GeonetService
 import nz.co.codebros.quakesnz.model.Feature
 import nz.co.codebros.quakesnz.model.FeatureCollection
@@ -18,22 +14,23 @@ import nz.co.codebros.quakesnz.repository.Publisher
 
 class LoadFeatureInteractorImpl(
         private val featureCollectionObservable: Observable<FeatureCollection>,
-        private val geonetService: GeonetService, private val featurePublisher: Publisher<Feature>
+        private val geonetService: GeonetService,
+        private val featurePublisher: Publisher<Feature>
 ) : LoadFeatureInteractor {
 
     override fun execute(completableObserver: CompletableObserver, publicID: String) {
-        // FIXME Use Observable<Feature[]> instead.
-        featureCollectionObservable
+        // FIXME Only call service if feature hasn't been loaded yet.
+//        featureCollectionObservable
+        geonetService.getQuake(publicID)
                 .map { featureCollection -> featureCollection.features }
                 .flatMap { features -> Observable.fromArray(*features) }
-                .filter { feature -> feature.properties.publicId == publicID }
-                .firstElement()
-                .concatWith(geonetService.getQuake(publicID)
-                        .map { featureCollection -> featureCollection.features[0] })
+//                .filter { feature -> feature.properties.publicId == publicID }
                 .firstElement()
                 .toSingle()
                 .doAfterSuccess { feature -> featurePublisher.publish(feature) }
                 .toCompletable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(completableObserver)
     }
 }
