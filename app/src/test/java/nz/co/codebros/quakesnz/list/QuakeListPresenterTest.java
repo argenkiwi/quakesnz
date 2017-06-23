@@ -26,7 +26,10 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class QuakeListPresenterTest {
+
     private QuakeListPresenter presenter;
+
+    private Feature feature;
 
     @Mock
     private QuakeListView view;
@@ -55,12 +58,10 @@ public class QuakeListPresenterTest {
     @Mock
     private Throwable e;
 
-    @Mock
-    private Feature feature;
-
     @Before
     public void setUp() throws Exception {
         presenter = new QuakeListPresenter(view, interactor, publisher, selectFeatureInteractor);
+        feature = new Feature();
     }
 
     @Test

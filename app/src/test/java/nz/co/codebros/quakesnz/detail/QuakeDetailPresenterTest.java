@@ -26,6 +26,8 @@ public class QuakeDetailPresenterTest {
 
     private QuakeDetailPresenter presenter;
 
+    private Feature feature;
+
     @Mock
     private QuakeDetailView view;
 
@@ -41,8 +43,6 @@ public class QuakeDetailPresenterTest {
     @Mock
     private Disposable d;
 
-    @Mock
-    private Feature feature;
 
     @Captor
     private ArgumentCaptor<CompletableObserver> completableObserverArgumentCaptor;
@@ -53,6 +53,7 @@ public class QuakeDetailPresenterTest {
     @Before
     public void setUp() throws Exception {
         presenter = new QuakeDetailPresenter(view, publisher, interactor);
+        feature = new Feature();
     }
 
     @Test
