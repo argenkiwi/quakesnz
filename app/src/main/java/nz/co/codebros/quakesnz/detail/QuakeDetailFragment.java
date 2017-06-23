@@ -48,20 +48,15 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     private TextView mDepthView;
     private Feature feature;
 
-    public static Fragment newInstance(Feature feature) {
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_FEATURE, feature);
-
-        QuakeDetailFragment fragment = new QuakeDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static QuakeDetailFragment newInstance() {
+        return new QuakeDetailFragment();
     }
 
     public static Fragment newInstance(String publicID) {
         Bundle args = new Bundle();
         args.putString(ARG_PUBLIC_ID, publicID);
 
-        QuakeDetailFragment fragment = new QuakeDetailFragment();
+        QuakeDetailFragment fragment = newInstance();
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,17 +64,8 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null) {
-            if (getArguments().containsKey(ARG_FEATURE)) {
-                final Feature feature = getArguments().getParcelable(ARG_FEATURE);
-                presenter.onInit(feature);
-            } else if (getArguments().containsKey(ARG_PUBLIC_ID)) {
-                final String publicID = getArguments().getString(ARG_PUBLIC_ID);
-                presenter.onInit(publicID);
-            }
-        } else if (savedInstanceState.containsKey(ARG_FEATURE)) {
-            final Feature feature = savedInstanceState.getParcelable(ARG_FEATURE);
-            presenter.onInit(feature);
+        if (savedInstanceState == null && getArguments() != null) {
+            presenter.onRefresh(getArguments().getString(ARG_PUBLIC_ID));
         }
     }
 
@@ -121,6 +107,8 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter.onViewCreated();
+
         mMagnitudeBigView = (TextView) view.findViewById(R.id.magnitude_big);
         mMagnitudeSmallView = (TextView) view.findViewById(R.id.magnitude_small);
         mIntensityView = (TextView) view.findViewById(R.id.intensity);
@@ -140,16 +128,17 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
 
     @Override
     public void share(Feature feature) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
-                QuakesUtils.getIntensity(getContext(), feature.getProperties().getMmi()).toLowerCase(),
-                feature.getProperties().getMagnitude(),
-                feature.getProperties().getLocality(),
-                feature.getProperties().getPublicId()
-        ));
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+        Properties properties = feature.getProperties();
+        startActivity(new Intent()
+                .setAction(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
+                        QuakesUtils.INSTANCE.getIntensity(getContext(), properties.getMmi())
+                                .toLowerCase(),
+                        properties.getMagnitude(),
+                        properties.getLocality(),
+                        properties.getPublicId()
+                ))
+                .setType("text/plain"));
     }
 
     @Override
@@ -163,7 +152,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
         }
 
         Properties properties = feature.getProperties();
-        final int colorForIntensity = QuakesUtils.getColor(getContext(), properties.getMmi());
+        final int colorForIntensity = QuakesUtils.INSTANCE.getColor(getContext(), properties.getMmi());
         String[] magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.getMagnitude())
                 .split("\\.");
 
@@ -171,7 +160,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
         mMagnitudeBigView.setTextColor(colorForIntensity);
         mMagnitudeSmallView.setText("." + magnitude[1]);
         mMagnitudeSmallView.setTextColor(colorForIntensity);
-        mIntensityView.setText(QuakesUtils.getIntensity(getContext(), properties.getMmi()));
+        mIntensityView.setText(QuakesUtils.INSTANCE.getIntensity(getContext(), properties.getMmi()));
         mLocationView.setText(properties.getLocality());
         mDepthView.setText(getString(R.string.depth, properties.getDepth()));
         mTimeView.setText(DateUtils.getRelativeTimeSpanString(properties.getTime().getTime()));

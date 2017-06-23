@@ -1,11 +1,15 @@
 package nz.co.codebros.quakesnz.list;
 
-import android.content.SharedPreferences;
-
 import dagger.Module;
 import dagger.Provides;
-import nz.co.codebros.quakesnz.GeonetService;
-import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
+import io.reactivex.Observer;
+import io.reactivex.subjects.Subject;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
+import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor;
+import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl;
+import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.publisher.Publisher;
 
 /**
  * Created by leandro on 9/07/15.
@@ -14,18 +18,21 @@ import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
 public class QuakeListModule {
     private QuakeListView view;
 
-    public QuakeListModule(QuakeListView view) {
+    QuakeListModule(QuakeListView view) {
         this.view = view;
     }
 
     @Provides
-    public GetFeaturesInteractor provideInteractor(GeonetService service,
-                                                   SharedPreferences preferences) {
-        return new GetFeaturesInteractor(service, preferences);
+    SelectFeatureInteractor selectFeatureInteractor(Subject<Feature> subject){
+        return new SelectFeatureInteractorImpl(subject);
     }
 
     @Provides
-    public QuakeListPresenter providePresenter(GetFeaturesInteractor interactor) {
-        return new QuakeListPresenter(view, interactor);
+    QuakeListPresenter presenter(
+            LoadFeaturesInteractor interactor,
+            Publisher<FeatureCollection> publisher,
+            SelectFeatureInteractor selectFeatureInteractor
+    ) {
+        return new QuakeListPresenter(view, interactor, publisher, selectFeatureInteractor);
     }
 }

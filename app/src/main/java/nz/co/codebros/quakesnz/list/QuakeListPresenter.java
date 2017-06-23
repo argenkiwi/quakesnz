@@ -1,53 +1,71 @@
 package nz.co.codebros.quakesnz.list;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import nz.co.codebros.quakesnz.interactor.GetFeaturesInteractor;
+import io.reactivex.functions.Consumer;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
+import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor;
+import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
+import nz.co.codebros.quakesnz.presenter.BasePresenter;
+import nz.co.codebros.quakesnz.publisher.Publisher;
 
 /**
  * Created by leandro on 9/07/15.
  */
-public class QuakeListPresenter implements Observer<FeatureCollection> {
+public class QuakeListPresenter extends BasePresenter {
 
     private final QuakeListView view;
-    private final GetFeaturesInteractor interactor;
+    private final LoadFeaturesInteractor loadFeaturesInteractor;
+    private final Publisher<FeatureCollection> featureCollectionPublisher;
+    private final SelectFeatureInteractor selectFeatureInteractor;
 
-    private Disposable subscription;
-
-    QuakeListPresenter(QuakeListView view, GetFeaturesInteractor interactor) {
+    QuakeListPresenter(QuakeListView view, LoadFeaturesInteractor loadFeaturesInteractor,
+                       Publisher<FeatureCollection> featureCollectionPublisher,
+                       SelectFeatureInteractor selectFeatureInteractor) {
         this.view = view;
-        this.interactor = interactor;
+        this.loadFeaturesInteractor = loadFeaturesInteractor;
+        this.featureCollectionPublisher = featureCollectionPublisher;
+        this.selectFeatureInteractor = selectFeatureInteractor;
     }
 
-    @Override
-    public void onError(Throwable e) {
-        view.hideProgress();
-        view.showError();
-    }
-
-    @Override
-    public void onComplete() {
-        view.hideProgress();
-    }
-
-    @Override
-    public void onSubscribe(@NonNull Disposable disposable) {
-        this.subscription = disposable;
-    }
-
-    @Override
-    public void onNext(FeatureCollection featureCollection) {
-        view.listQuakes(featureCollection.getFeatures());
+    void onViewCreated() {
+        addDisposable(featureCollectionPublisher.subscribe(new Consumer<FeatureCollection>() {
+            @Override
+            public void accept(@NonNull FeatureCollection featureCollection) throws Exception {
+                view.listQuakes(featureCollection.getFeatures());
+            }
+        }));
     }
 
     void onDestroyView() {
-        if (subscription != null) subscription.dispose();
+        disposeAll();
     }
 
     void onRefresh() {
-        view.showProgress();
-        interactor.execute(this);
+        loadFeaturesInteractor.execute(new CompletableObserver() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                view.showProgress();
+                addDisposable(d);
+            }
+
+            @Override
+            public void onComplete() {
+                view.hideProgress();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                view.hideProgress();
+                view.showError();
+            }
+        });
+    }
+
+    void onFeatureSelected(Feature feature) {
+        selectFeatureInteractor.execute(feature);
     }
 }

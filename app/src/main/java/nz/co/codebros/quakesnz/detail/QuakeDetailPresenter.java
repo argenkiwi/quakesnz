@@ -1,57 +1,65 @@
 package nz.co.codebros.quakesnz.detail;
 
-import io.reactivex.Observer;
+import io.reactivex.CompletableObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import nz.co.codebros.quakesnz.interactor.GetFeatureInteractor;
+import io.reactivex.functions.Consumer;
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor;
 import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.presenter.BasePresenter;
+import nz.co.codebros.quakesnz.publisher.Publisher;
 
 /**
  * Created by leandro on 7/07/16.
  */
-public class QuakeDetailPresenter implements Observer<Feature> {
+public class QuakeDetailPresenter extends BasePresenter{
     private final QuakeDetailView view;
-    private final GetFeatureInteractor interactor;
-    private Disposable subscription;
+    private final Publisher<Feature> publisher;
+    private final LoadFeatureInteractor interactor;
 
-    QuakeDetailPresenter(QuakeDetailView view, GetFeatureInteractor interactor) {
+    QuakeDetailPresenter(
+            QuakeDetailView view,
+            Publisher<Feature> publisher,
+            LoadFeatureInteractor interactor
+    ) {
         this.view = view;
+        this.publisher = publisher;
         this.interactor = interactor;
     }
 
-    @Override
-    public void onSubscribe(@NonNull Disposable d) {
-        this.subscription = d;
+    void onRefresh(String publicID) {
+        interactor.execute(publicID, new CompletableObserver() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                addDisposable(d);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                view.showLoadingError();
+            }
+        });
     }
 
-    @Override
-    public void onNext(Feature feature) {
-        view.showDetails(feature);
+    void onViewCreated() {
+        addDisposable(publisher.subscribe(new Consumer<Feature>() {
+            @Override
+            public void accept(@NonNull Feature feature) throws Exception {
+                view.showDetails(feature);
+            }
+        }));
     }
 
-    @Override
-    public void onError(Throwable e) {
-        view.showLoadingError();
-    }
-
-    @Override
-    public void onComplete() {
-
-    }
-
-    void onInit(Feature feature) {
-        view.showDetails(feature);
-    }
-
-    void onInit(String publicID) {
-        interactor.execute(this, publicID);
+    void onDestroyView() {
+        disposeAll();
     }
 
     void onShare(Feature feature) {
         view.share(feature);
-    }
-
-    void onDestroyView() {
-        if (subscription != null) subscription.dispose();
     }
 }

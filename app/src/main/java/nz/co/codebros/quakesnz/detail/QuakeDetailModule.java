@@ -2,8 +2,9 @@ package nz.co.codebros.quakesnz.detail;
 
 import dagger.Module;
 import dagger.Provides;
-import nz.co.codebros.quakesnz.GeonetService;
-import nz.co.codebros.quakesnz.interactor.GetFeatureInteractor;
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
+import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.publisher.Publisher;
 
 /**
  * Created by leandro on 7/07/16.
@@ -17,12 +18,10 @@ public class QuakeDetailModule {
     }
 
     @Provides
-    GetFeatureInteractor provideInteractor(GeonetService service) {
-        return new GetFeatureInteractor(service);
-    }
-
-    @Provides
-    QuakeDetailPresenter providePresenter(GetFeatureInteractor interactor) {
-        return new QuakeDetailPresenter(view, interactor);
+    QuakeDetailPresenter providePresenter(
+            Publisher<Feature> publisher,
+            LoadFeatureInteractorImpl interactor
+    ) {
+        return new QuakeDetailPresenter(view, publisher, interactor);
     }
 }

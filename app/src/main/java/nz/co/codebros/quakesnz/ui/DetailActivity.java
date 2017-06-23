@@ -2,22 +2,21 @@ package nz.co.codebros.quakesnz.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment;
-import nz.co.codebros.quakesnz.model.Feature;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private static final String EXTRA_FEATURE = "extra_feature";
+    private static final String EXTRA_PUBLIC_ID = "extra_public_id";
 
-    public static Intent newIntent(Context context, Feature feature) {
-        return new Intent(context, DetailActivity.class).putExtra(EXTRA_FEATURE, feature);
+    public static Intent newIntent(Context context, String publicId) {
+        return new Intent(context, DetailActivity.class).putExtra(EXTRA_PUBLIC_ID, publicId);
     }
 
     @Override
@@ -25,18 +24,12 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null) getSupportActionBar().setHomeButtonEnabled(true);
         if (savedInstanceState == null) {
-            if (getIntent().hasExtra(EXTRA_FEATURE)) {
-                Feature feature = getIntent().getParcelableExtra(EXTRA_FEATURE);
-                getSupportFragmentManager().beginTransaction()
-                        .add(android.R.id.content, QuakeDetailFragment.newInstance(feature))
-                        .commit();
-            } else {
-                Uri data = getIntent().getData();
-                getSupportFragmentManager().beginTransaction()
-                        .add(android.R.id.content,
-                                QuakeDetailFragment.newInstance(data.getLastPathSegment()))
-                        .commit();
-            }
+            Fragment fragment = getIntent().getData() != null
+                    ? QuakeDetailFragment.newInstance(getIntent().getData().getLastPathSegment())
+                    : QuakeDetailFragment.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .add(android.R.id.content, fragment)
+                    .commit();
         }
     }
 

@@ -62,10 +62,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            Feature[] features = (Feature[]) savedInstanceState.getParcelableArray("features");
-            featureAdapter.setFeatures(features);
-        } else presenter.onRefresh();
+        if (savedInstanceState == null) presenter.onRefresh();
     }
 
     @Override
@@ -98,7 +95,8 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onFeatureClicked(View view, Feature feature) {
         Log.d(TAG, "Feature selected.");
-        Intent intent = DetailActivity.newIntent(getContext(), feature);
+        presenter.onFeatureSelected(feature);
+        Intent intent = DetailActivity.newIntent(getContext(), feature.getProperties().getPublicId());
         ActivityCompat.startActivity(getContext(), intent, ActivityOptionsCompat
                 .makeSceneTransitionAnimation(getActivity(), view,
                         getString(R.string.transition_name)).toBundle());
@@ -116,14 +114,10 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArray("features", featureAdapter.getFeatures());
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        presenter.onViewCreated();
+
         swipeRefreshLayout = ((SwipeRefreshLayout) view);
         swipeRefreshLayout.setOnRefreshListener(this);
 
