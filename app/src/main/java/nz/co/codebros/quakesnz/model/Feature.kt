@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
 
 data class Feature(
         @SerializedName("geometry")
-        val geometry: Geometry? = null,
+        val geometry: Geometry,
 
         @SerializedName("properties")
-        val properties: Properties? = null
+        val properties: Properties
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readParcelable(Geometry::class.java.classLoader),
