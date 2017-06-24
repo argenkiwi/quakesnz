@@ -9,7 +9,7 @@ import nz.co.codebros.quakesnz.model.FeatureCollection
 
 class FeatureCollectionRepository(
         subject: Subject<FeatureCollection>
-) : BundleRepository<FeatureCollection>(subject) {
+) : BaseBundleRepository<FeatureCollection>(subject) {
     override fun getKey():String {
         return  FeatureCollection::class.java.canonicalName
     }

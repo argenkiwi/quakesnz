@@ -40,10 +40,6 @@ public class QuakeListPresenter extends BasePresenter {
         this.selectFeatureInteractor = selectFeatureInteractor;
     }
 
-    void onDestroyView() {
-        disposeAll();
-    }
-
     void onRefresh() {
         view.showProgress();
         addDisposable(loadFeaturesInteractor.execute(new Action() {
@@ -78,5 +74,10 @@ public class QuakeListPresenter extends BasePresenter {
     @Override
     public void onSaveInstanceState(final Bundle bundle) {
         addDisposable(featureCollectionRepository.subscribe(bundle));
+    }
+
+    @Override
+    public void onDestroyView() {
+        disposeAll();
     }
 }
