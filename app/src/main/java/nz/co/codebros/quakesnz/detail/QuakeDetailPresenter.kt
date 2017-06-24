@@ -1,8 +1,6 @@
 package nz.co.codebros.quakesnz.detail
 
 import android.os.Bundle
-
-import io.reactivex.annotations.NonNull
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
@@ -30,7 +28,7 @@ class QuakeDetailPresenter internal constructor(
     }
 
     override fun onViewCreated() {
-        addDisposable(repository.subscribe { feature -> view.showDetails(feature) })
+        addDisposable(repository.subscribe(Consumer { view.showDetails(it) }))
     }
 
     override fun onViewRestored(bundle: Bundle) {
