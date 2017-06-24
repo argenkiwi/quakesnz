@@ -20,18 +20,19 @@ public class FeatureCollectionModule {
 
     @Provides
     static FeatureCollectionRepository featureCollectionRepository(
-            Subject<FeatureCollection> subject,
-            GeonetService service
+            Subject<FeatureCollection> subject
     ) {
-        return new FeatureCollectionRepository(subject, service);
+        return new FeatureCollectionRepository(subject);
     }
 
     @Provides
     static LoadFeaturesInteractor interactor(
             SharedPreferences preferences,
-            FeatureCollectionRepository repository
+            GeonetService service,
+            Subject<FeatureCollection> subject
+
     ) {
-        return new LoadFeaturesInteractorImpl(preferences, repository);
+        return new LoadFeaturesInteractorImpl(preferences, service, subject);
     }
 
     @Provides

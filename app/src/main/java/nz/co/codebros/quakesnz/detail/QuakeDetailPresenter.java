@@ -1,5 +1,7 @@
 package nz.co.codebros.quakesnz.detail;
 
+import android.os.Bundle;
+
 import io.reactivex.CompletableObserver;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -46,13 +48,24 @@ public class QuakeDetailPresenter extends BasePresenter{
         });
     }
 
-    void onViewCreated() {
+    @Override
+    public void onViewCreated() {
         addDisposable(publisher.subscribe(new Consumer<Feature>() {
             @Override
             public void accept(@NonNull Feature feature) throws Exception {
                 view.showDetails(feature);
             }
         }));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onViewRestored(Bundle bundle) {
+
     }
 
     void onDestroyView() {

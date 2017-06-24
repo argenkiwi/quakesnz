@@ -60,7 +60,7 @@ public class QuakeListPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        presenter = new QuakeListPresenter(view, interactor, publisher, selectFeatureInteractor);
+        presenter = new QuakeListPresenter(view, interactor, publisher);
         feature = new Feature();
     }
 

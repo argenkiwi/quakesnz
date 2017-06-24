@@ -87,6 +87,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         presenter.onDestroyView();
@@ -116,14 +122,16 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.onViewCreated();
-
         swipeRefreshLayout = ((SwipeRefreshLayout) view);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
+
+        if(savedInstanceState!=null){
+            presenter.onViewRestored(savedInstanceState);
+        } else presenter.onViewCreated();
     }
 
     @Override

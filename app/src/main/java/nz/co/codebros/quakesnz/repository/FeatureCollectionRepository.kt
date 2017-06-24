@@ -1,8 +1,6 @@
 package nz.co.codebros.quakesnz.repository
 
-import io.reactivex.Completable
-import io.reactivex.Observer
-import nz.co.codebros.quakesnz.GeonetService
+import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.model.FeatureCollection
 
 /**
@@ -10,10 +8,9 @@ import nz.co.codebros.quakesnz.model.FeatureCollection
  */
 
 class FeatureCollectionRepository(
-        observer: Observer<FeatureCollection>,
-        private val service: GeonetService
-) : Repository<FeatureCollection>(observer) {
-    fun load(mmi: Int): Completable {
-        return load(service.getQuakes(mmi))
+        subject: Subject<FeatureCollection>
+) : BundleRepository<FeatureCollection>(subject) {
+    override fun getKey():String {
+        return  FeatureCollection::class.java.canonicalName
     }
 }

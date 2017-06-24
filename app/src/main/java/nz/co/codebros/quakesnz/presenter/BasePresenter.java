@@ -1,5 +1,7 @@
 package nz.co.codebros.quakesnz.presenter;
 
+import android.os.Bundle;
+
 import java.util.ArrayList;
 
 import io.reactivex.disposables.Disposable;
@@ -20,4 +22,10 @@ public abstract class BasePresenter {
             disposables.remove(0).dispose();
         }
     }
+
+    public abstract void onViewRestored(Bundle bundle);
+
+    public abstract void onViewCreated();
+
+    public abstract void onSaveInstanceState(Bundle bundle);
 }
