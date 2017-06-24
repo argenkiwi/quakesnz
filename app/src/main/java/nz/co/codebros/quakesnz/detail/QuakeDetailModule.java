@@ -2,9 +2,10 @@ package nz.co.codebros.quakesnz.detail;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.publisher.Publisher;
+import nz.co.codebros.quakesnz.repository.FeatureRepository;
 
 /**
  * Created by leandro on 7/07/16.
@@ -16,12 +17,12 @@ public class QuakeDetailModule {
     QuakeDetailModule(QuakeDetailView view) {
         this.view = view;
     }
-
+    
     @Provides
     QuakeDetailPresenter providePresenter(
-            Publisher<Feature> publisher,
+            FeatureRepository repository,
             LoadFeatureInteractorImpl interactor
     ) {
-        return new QuakeDetailPresenter(view, publisher, interactor);
+        return new QuakeDetailPresenter(view, repository, interactor);
     }
 }

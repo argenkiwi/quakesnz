@@ -11,21 +11,16 @@ import nz.co.codebros.quakesnz.module.ApplicationModule;
  * Created by Leandro on 25/07/2014.
  */
 public class QuakesNZApplication extends Application {
-    private ApplicationComponent component;
+
+    private final ApplicationComponent component = DaggerApplicationComponent.builder()
+            .applicationModule(new ApplicationModule(this))
+            .build();
 
     public static QuakesNZApplication get(Context context) {
         return (QuakesNZApplication) context.getApplicationContext();
     }
 
-    public ApplicationComponent getComponent() {
+    public final ApplicationComponent getComponent() {
         return component;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        component = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
     }
 }

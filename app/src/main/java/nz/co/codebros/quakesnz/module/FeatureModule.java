@@ -6,7 +6,6 @@ import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.GeonetService;
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.publisher.Publisher;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
 
 /**
@@ -16,24 +15,15 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository;
 public class FeatureModule {
 
     @Provides
-    static FeatureRepository featureRepository(
-            Subject<Feature> subject,
-            GeonetService service
-    ){
-        return new FeatureRepository(subject, service);
+    static FeatureRepository featureRepository(Subject<Feature> subject){
+        return new FeatureRepository(subject);
     }
 
     @Provides
     static LoadFeatureInteractorImpl getFeatureInteractor(
+            GeonetService service,
             FeatureRepository repository
     ) {
-        return new LoadFeatureInteractorImpl(repository);
-    }
-
-    @Provides
-    static Publisher<Feature> featurePublisher(
-            Subject<Feature> subject
-    ) {
-        return new Publisher<>(subject);
+        return new LoadFeatureInteractorImpl(service, repository);
     }
 }

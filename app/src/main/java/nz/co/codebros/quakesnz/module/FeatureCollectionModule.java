@@ -10,7 +10,6 @@ import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractorImpl;
 import nz.co.codebros.quakesnz.model.FeatureCollection;
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
-import nz.co.codebros.quakesnz.publisher.Publisher;
 
 /**
  * Created by leandro on 17/06/17.
@@ -20,24 +19,18 @@ public class FeatureCollectionModule {
 
     @Provides
     static FeatureCollectionRepository featureCollectionRepository(
-            Subject<FeatureCollection> subject,
-            GeonetService service
+            Subject<FeatureCollection> subject
     ) {
-        return new FeatureCollectionRepository(subject, service);
+        return new FeatureCollectionRepository(subject);
     }
 
     @Provides
     static LoadFeaturesInteractor interactor(
             SharedPreferences preferences,
+            GeonetService service,
             FeatureCollectionRepository repository
-    ) {
-        return new LoadFeaturesInteractorImpl(preferences, repository);
-    }
 
-    @Provides
-    static Publisher<FeatureCollection> featureCollectionPublisher(
-            Subject<FeatureCollection> subject
-    ){
-        return new Publisher<>(subject);
+    ) {
+        return new LoadFeaturesInteractorImpl(preferences, service, repository);
     }
 }
