@@ -11,15 +11,12 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository;
  * Created by leandro on 7/07/16.
  */
 @Module
-public class QuakeDetailModule {
-    private QuakeDetailView view;
+public abstract class QuakeDetailModule {
+    abstract QuakeDetailView quakeDetailView(QuakeDetailFragment fragment);
 
-    QuakeDetailModule(QuakeDetailView view) {
-        this.view = view;
-    }
-    
     @Provides
     QuakeDetailPresenter providePresenter(
+            QuakeDetailView view,
             FeatureRepository repository,
             LoadFeatureInteractorImpl interactor
     ) {

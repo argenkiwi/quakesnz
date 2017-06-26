@@ -20,6 +20,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
@@ -71,10 +72,8 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
-        QuakesNZApplication.get(context).getComponent()
-                .plus(new QuakeDetailModule(this))
-                .inject(this);
     }
 
     @Override
