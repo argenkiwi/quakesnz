@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.list;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.Subject;
@@ -13,20 +14,19 @@ import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
  * Created by leandro on 9/07/15.
  */
 @Module
-public class QuakeListModule {
-    private QuakeListView view;
+public abstract class QuakeListModule {
 
-    QuakeListModule(QuakeListView view) {
-        this.view = view;
-    }
+    @Binds
+    abstract QuakeListView quakeListView(QuakeListFragment fragment);
 
     @Provides
-    SelectFeatureInteractor selectFeatureInteractor(Subject<Feature> subject) {
+    static SelectFeatureInteractor selectFeatureInteractor(Subject<Feature> subject) {
         return new SelectFeatureInteractorImpl(subject);
     }
 
     @Provides
-    QuakeListPresenter presenter(
+    static QuakeListPresenter presenter(
+            QuakeListView view,
             FeatureCollectionRepository featureCollectionRepository,
             LoadFeaturesInteractor loadFeaturesInteractor,
             SelectFeatureInteractor selectFeatureInteractor

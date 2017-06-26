@@ -15,7 +15,7 @@ import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
  * Created by leandro on 17/06/17.
  */
 @Module
-public class FeatureCollectionModule {
+class FeatureCollectionModule {
 
     @Provides
     static FeatureCollectionRepository featureCollectionRepository(

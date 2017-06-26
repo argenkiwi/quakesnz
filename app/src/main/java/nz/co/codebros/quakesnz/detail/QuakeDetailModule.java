@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.detail;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.Subject;
@@ -11,15 +12,14 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository;
  * Created by leandro on 7/07/16.
  */
 @Module
-public class QuakeDetailModule {
-    private QuakeDetailView view;
+public abstract class QuakeDetailModule {
 
-    QuakeDetailModule(QuakeDetailView view) {
-        this.view = view;
-    }
-    
+    @Binds
+    abstract QuakeDetailView quakeDetailView(QuakeDetailFragment fragment);
+
     @Provides
-    QuakeDetailPresenter providePresenter(
+    static QuakeDetailPresenter providePresenter(
+            QuakeDetailView view,
             FeatureRepository repository,
             LoadFeatureInteractorImpl interactor
     ) {

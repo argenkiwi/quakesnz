@@ -3,12 +3,11 @@ package nz.co.codebros.quakesnz.component;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import nz.co.codebros.quakesnz.detail.QuakeDetailComponent;
-import nz.co.codebros.quakesnz.detail.QuakeDetailModule;
-import nz.co.codebros.quakesnz.list.QuakeListComponent;
-import nz.co.codebros.quakesnz.list.QuakeListModule;
+import dagger.android.AndroidInjector;
+import dagger.android.support.AndroidSupportInjectionModule;
+import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.module.ApplicationModule;
-import nz.co.codebros.quakesnz.module.FeatureCollectionModule;
+import nz.co.codebros.quakesnz.module.InjectorsModule;
 import nz.co.codebros.quakesnz.module.ServicesModule;
 import nz.co.codebros.quakesnz.module.SubjectsModule;
 
@@ -17,12 +16,14 @@ import nz.co.codebros.quakesnz.module.SubjectsModule;
  */
 @Singleton
 @Component(modules = {
+        AndroidSupportInjectionModule.class,
+        InjectorsModule.class,
         ApplicationModule.class,
         ServicesModule.class,
         SubjectsModule.class
 })
-public interface ApplicationComponent {
-    QuakeListComponent plus(QuakeListModule module);
-
-    QuakeDetailComponent plus(QuakeDetailModule module);
+interface ApplicationComponent extends AndroidInjector<QuakesNZApplication> {
+    @Component.Builder
+    abstract class Builder extends AndroidInjector.Builder<QuakesNZApplication> {
+    }
 }
