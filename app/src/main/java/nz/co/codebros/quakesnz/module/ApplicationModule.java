@@ -26,27 +26,21 @@ import nz.co.codebros.quakesnz.model.FeatureCollection;
 @Module
 public class ApplicationModule {
 
-    private final QuakesNZApplication mApplication;
-
-    public ApplicationModule(QuakesNZApplication application) {
-        mApplication = application;
-    }
-
     @Provides
     @Named("cacheDir")
-    File provideCacheDir(){
-        return mApplication.getCacheDir();
+    File provideCacheDir(QuakesNZApplication application){
+        return application.getCacheDir();
     }
 
     @Provides
-    SharedPreferences provideSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(mApplication);
+    static SharedPreferences provideSharedPreferences(QuakesNZApplication application) {
+        return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
     @Provides
     @Singleton
     @Named("app")
-    Tracker provideTracker() {
-        return GoogleAnalytics.getInstance(mApplication).newTracker(R.xml.app_tracker);
+    static Tracker provideTracker(QuakesNZApplication application) {
+        return GoogleAnalytics.getInstance(application).newTracker(R.xml.app_tracker);
     }
 }

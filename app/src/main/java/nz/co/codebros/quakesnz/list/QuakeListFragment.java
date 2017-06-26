@@ -22,6 +22,7 @@ import com.google.android.gms.analytics.Tracker;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
@@ -67,10 +68,8 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
-        QuakesNZApplication.get(context).getComponent()
-                .plus(new QuakeListModule(this))
-                .inject(this);
     }
 
     @Override
