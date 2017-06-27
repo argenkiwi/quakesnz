@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
-import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.ui.DetailActivity;
@@ -127,7 +126,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
 
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             presenter.onViewRestored(savedInstanceState);
         } else presenter.onViewCreated();
     }

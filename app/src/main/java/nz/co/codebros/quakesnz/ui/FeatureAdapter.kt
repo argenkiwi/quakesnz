@@ -25,9 +25,7 @@ class FeatureAdapter(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int {
-        return features.size
-    }
+    override fun getItemCount() = features.size
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val feature = features[i]
