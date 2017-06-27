@@ -60,12 +60,12 @@ class FeatureAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtMagnitudeBig: TextView = itemView.findViewById(R.id.magnitude_big) as TextView
-        val txtMagnitudeSmall: TextView = itemView.findViewById(R.id.magnitude_small) as TextView
-        val txtIntensity: TextView = itemView.findViewById(R.id.intensity) as TextView
-        val txtLocation: TextView = itemView.findViewById(R.id.location) as TextView
-        val txtDepth: TextView = itemView.findViewById(R.id.depth) as TextView
-        val txtTime: TextView = itemView.findViewById(R.id.time) as TextView
+        val txtMagnitudeBig = itemView.findViewById(R.id.magnitude_big) as TextView
+        val txtMagnitudeSmall = itemView.findViewById(R.id.magnitude_small) as TextView
+        val txtIntensity = itemView.findViewById(R.id.intensity) as TextView
+        val txtLocation = itemView.findViewById(R.id.location) as TextView
+        val txtDepth = itemView.findViewById(R.id.depth) as TextView
+        val txtTime = itemView.findViewById(R.id.time) as TextView
         val vTab: View = itemView.findViewById(R.id.colorTab)
     }
 }
