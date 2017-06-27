@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.annotations.NonNull;
 import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
@@ -49,10 +50,12 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     private TextView mDepthView;
     private Feature feature;
 
+    @NonNull
     public static QuakeDetailFragment newInstance() {
         return new QuakeDetailFragment();
     }
 
+    @NonNull
     public static Fragment newInstance(String publicID) {
         Bundle args = new Bundle();
         args.putString(ARG_PUBLIC_ID, publicID);
@@ -146,7 +149,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
 
         if (getChildFragmentManager().findFragmentById(R.id.map) == null) {
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.map, MyMapFragment.newInstance(feature.getGeometry()))
+                    .add(R.id.map, MyMapFragment.Companion.newInstance(feature.getGeometry()))
                     .commit();
         }
 

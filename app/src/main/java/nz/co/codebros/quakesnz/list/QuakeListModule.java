@@ -21,7 +21,7 @@ public abstract class QuakeListModule {
     abstract QuakeListView quakeListView(QuakeListFragment fragment);
 
     @Binds
-    abstract FeatureAdapter.Listener listener(QuakeListFragment fragment);
+    abstract FeatureAdapter.Listener featureAdapterListener(QuakeListFragment fragment);
 
     @Provides
     static FeatureAdapter featureAdapter(FeatureAdapter.Listener listener){
