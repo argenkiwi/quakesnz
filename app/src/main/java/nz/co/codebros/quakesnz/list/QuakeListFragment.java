@@ -3,6 +3,7 @@ package nz.co.codebros.quakesnz.list;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -38,10 +39,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     QuakeListPresenter presenter;
 
     @Inject
+    FeatureAdapter featureAdapter;
+
+    @Inject
     @Named("app")
     Tracker tracker;
 
-    private FeatureAdapter featureAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public static QuakeListFragment newInstance() {
@@ -55,7 +58,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void listQuakes(Feature[] features) {
+    public void listQuakes(@NonNull Feature[] features) {
         Log.d(TAG, "List quakes.");
         featureAdapter.setFeatures(features);
     }
@@ -70,12 +73,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        featureAdapter = new FeatureAdapter(this);
     }
 
     @Nullable
@@ -98,7 +95,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void onFeatureClicked(View view, Feature feature) {
+    public void onFeatureClicked(@NonNull View view, @NonNull Feature feature) {
         Log.d(TAG, "Feature selected.");
         presenter.onFeatureSelected(feature);
         Intent intent = DetailActivity
