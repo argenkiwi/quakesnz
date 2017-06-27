@@ -3,6 +3,7 @@ package nz.co.codebros.quakesnz.detail;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -21,8 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
-import io.reactivex.annotations.NonNull;
-import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
@@ -129,7 +128,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     }
 
     @Override
-    public void share(Feature feature) {
+    public void share(@NonNull Feature feature) {
         Properties properties = feature.getProperties();
         startActivity(new Intent()
                 .setAction(Intent.ACTION_SEND)
@@ -144,7 +143,7 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     }
 
     @Override
-    public void showDetails(Feature feature) {
+    public void showDetails(@NonNull Feature feature) {
         this.feature = feature;
 
         if (getChildFragmentManager().findFragmentById(R.id.map) == null) {
