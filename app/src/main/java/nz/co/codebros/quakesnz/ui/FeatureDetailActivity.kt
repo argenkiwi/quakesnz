@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
 
-class DetailActivity : AppCompatActivity() {
+class FeatureDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, DetailActivity::class.java)
+            return Intent(context, FeatureDetailActivity::class.java)
         }
     }
 }
