@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment;
 import nz.co.codebros.quakesnz.detail.QuakeDetailModule;
+import nz.co.codebros.quakesnz.detail.QuakeMapFragment;
 import nz.co.codebros.quakesnz.list.QuakeListFragment;
 import nz.co.codebros.quakesnz.list.QuakeListModule;
 
@@ -17,4 +18,7 @@ public abstract class InjectorsModule {
 
     @ContributesAndroidInjector(modules = {QuakeListModule.class, FeatureCollectionModule.class})
     abstract QuakeListFragment quakeListFragment();
+
+    @ContributesAndroidInjector(modules = FeatureModule.class)
+    abstract QuakeMapFragment quakeMapFragment();
 }
