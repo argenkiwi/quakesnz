@@ -52,7 +52,7 @@ public class QuakeMapFragment extends SupportMapFragment {
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 6f));
                         } else {
                             marker.setPosition(latLng);
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                         }
                     }
                 });

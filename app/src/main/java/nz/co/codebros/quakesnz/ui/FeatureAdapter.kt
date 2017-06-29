@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.model.Feature
 import nz.co.codebros.quakesnz.utils.QuakesUtils
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by leandro on 12/07/15.
@@ -17,12 +19,24 @@ import java.util.*
 class FeatureAdapter(
         private val listener: Listener
 ) : RecyclerView.Adapter<FeatureAdapter.ViewHolder>() {
-    private val features = ArrayList<Feature>()
+    var features: MutableList<Feature> = ArrayList()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+            notifyDataSetChanged()
+        }
 
-    fun setFeatures(features: Array<Feature>) {
-        this.features.clear()
-        this.features.addAll(Arrays.asList(*features))
-        notifyDataSetChanged()
+    var selectedPosition: Int = -1
+        set(value) {
+            if (value != field) {
+                notifyItemChanged(selectedPosition)
+                field = value
+                notifyItemChanged(selectedPosition)
+            }
+        }
+
+    fun setSelectedFeature(feature: Feature) {
+        selectedPosition = features.indexOf(feature)
     }
 
     override fun getItemCount() = features.size
@@ -44,7 +58,11 @@ class FeatureAdapter(
         viewHolder.txtTime.text = DateUtils.getRelativeTimeSpanString(feature.properties.time.time)
         viewHolder.vTab.setBackgroundColor(colorForIntensity)
 
-        viewHolder.itemView.setOnClickListener { view -> listener.onFeatureClicked(view, feature) }
+        viewHolder.cardView.cardElevation = if (i == selectedPosition) 3.0f else 1.0f
+        viewHolder.itemView.setOnClickListener { view ->
+            selectedPosition = i
+            listener.onFeatureClicked(view, feature)
+        }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -58,6 +76,7 @@ class FeatureAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cardView = itemView as CardView
         val txtMagnitudeBig = itemView.findViewById(R.id.magnitude_big) as TextView
         val txtMagnitudeSmall = itemView.findViewById(R.id.magnitude_small) as TextView
         val txtIntensity = itemView.findViewById(R.id.intensity) as TextView

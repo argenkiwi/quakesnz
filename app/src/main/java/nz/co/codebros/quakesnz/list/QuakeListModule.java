@@ -9,6 +9,7 @@ import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor;
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
+import nz.co.codebros.quakesnz.repository.FeatureRepository;
 import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 /**
@@ -37,10 +38,11 @@ public abstract class QuakeListModule {
     static QuakeListPresenter presenter(
             QuakeListView view,
             FeatureCollectionRepository featureCollectionRepository,
+            FeatureRepository featureRepository,
             LoadFeaturesInteractor loadFeaturesInteractor,
             SelectFeatureInteractor selectFeatureInteractor
     ) {
-        return new QuakeListPresenter(view, featureCollectionRepository, loadFeaturesInteractor,
-                selectFeatureInteractor);
+        return new QuakeListPresenter(view, featureCollectionRepository, featureRepository,
+                loadFeaturesInteractor, selectFeatureInteractor);
     }
 }

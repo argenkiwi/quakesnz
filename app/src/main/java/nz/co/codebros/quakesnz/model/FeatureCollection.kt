@@ -4,14 +4,14 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-class FeatureCollection(
+data class FeatureCollection(
         @SerializedName("features")
-        val features: Array<Feature>
+        val features: List<Feature>
 ) : Parcelable {
-    constructor(parcel: Parcel) : this(parcel.createTypedArray(Feature))
+    constructor(parcel: Parcel) : this(parcel.createTypedArrayList(Feature))
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeTypedArray(features, flags)
+        parcel.writeTypedList(features)
     }
 
     override fun describeContents(): Int {

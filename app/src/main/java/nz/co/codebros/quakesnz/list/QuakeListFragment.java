@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -54,7 +56,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void listQuakes(@NonNull Feature[] features) {
+    public void listQuakes(@NonNull List<Feature> features) {
         Log.d(TAG, "List quakes.");
         featureAdapter.setFeatures(features);
     }
@@ -139,6 +141,11 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void showProgress() {
         Log.d(TAG, "Show progress.");
         swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void selectFeature(Feature feature) {
+        featureAdapter.setSelectedFeature(feature);
     }
 
     public interface OnFeatureClickedListener{

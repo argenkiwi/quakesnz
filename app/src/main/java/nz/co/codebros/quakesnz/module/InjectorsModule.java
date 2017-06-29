@@ -17,7 +17,11 @@ public abstract class InjectorsModule {
     @ContributesAndroidInjector(modules = {QuakeDetailModule.class, FeatureModule.class})
     abstract QuakeDetailFragment quakeDetailFragment();
 
-    @ContributesAndroidInjector(modules = {QuakeListModule.class, FeatureCollectionModule.class})
+    @ContributesAndroidInjector(modules = {
+            QuakeListModule.class,
+            FeatureCollectionModule.class,
+            FeatureModule.class
+    })
     abstract QuakeListFragment quakeListFragment();
 
     @ContributesAndroidInjector(modules = FeatureModule.class)
