@@ -1,10 +1,8 @@
 package nz.co.codebros.quakesnz.ui
 
-import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceFragment
-
 import nz.co.codebros.quakesnz.R
 
 /**
@@ -18,7 +16,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        activity.setResult(Activity.RESULT_OK)
+
     }
 
     override fun onStart() {

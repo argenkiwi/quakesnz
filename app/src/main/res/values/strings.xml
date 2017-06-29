@@ -37,6 +37,4 @@
     <string name="filter_view_quake_details">View Quake Details</string>
     <string name="default_share_content">A %1$s earthquake of magnitude %2$.1f occurred %3$s. #QuakesNZ http://www.geonet.org.nz/quakes/region/newzealand/%4$s</string>
     <string name="error_loading_feature">Failed to load quake details.</string>
-    <string name="title_feature_list">Features</string>
-    <string name="title_feature_detail">Feature Detail</string>
 </resources>

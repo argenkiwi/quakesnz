@@ -7,6 +7,7 @@ import nz.co.codebros.quakesnz.detail.QuakeDetailModule;
 import nz.co.codebros.quakesnz.detail.QuakeMapFragment;
 import nz.co.codebros.quakesnz.list.QuakeListFragment;
 import nz.co.codebros.quakesnz.list.QuakeListModule;
+import nz.co.codebros.quakesnz.settings.SettingsFragment;
 
 /**
  * Created by leandro on 26/06/17.
@@ -21,4 +22,7 @@ public abstract class InjectorsModule {
 
     @ContributesAndroidInjector(modules = FeatureModule.class)
     abstract QuakeMapFragment quakeMapFragment();
+
+    @ContributesAndroidInjector(modules = FeatureCollectionModule.class)
+    abstract SettingsFragment settingsFragment();
 }
