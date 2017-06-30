@@ -8,7 +8,7 @@
 
     <!-- The screen names that will appear in reports -->
     <screenName name="nz.co.codebros.quakesnz.ui.MainActivity">Quakes List</screenName>
-    <screenName name="nz.co.codebros.quakesnz.ui.DetailActivity">Quake Detail</screenName>
+    <screenName name="nz.co.codebros.quakesnz.ui.FeatureDetailActivity">Quake Detail</screenName>
     <screenName name="nz.co.codebros.quakesnz.ui.SettingsActivity">Settings</screenName>
     <screenName name="nz.co.codebros.quakesnz.ui.AboutActivity">About</screenName>
     <screenName name="nz.co.codebros.quakesnz.ui.InfoActivity">Info</screenName>

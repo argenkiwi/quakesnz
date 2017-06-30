@@ -25,7 +25,6 @@ import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
-import nz.co.codebros.quakesnz.ui.MyMapFragment;
 import nz.co.codebros.quakesnz.utils.QuakesUtils;
 
 public class QuakeDetailFragment extends Fragment implements QuakeDetailView, View.OnClickListener {
@@ -145,12 +144,6 @@ public class QuakeDetailFragment extends Fragment implements QuakeDetailView, Vi
     @Override
     public void showDetails(@NonNull Feature feature) {
         this.feature = feature;
-
-        if (getChildFragmentManager().findFragmentById(R.id.map) == null) {
-            getChildFragmentManager().beginTransaction()
-                    .add(R.id.map, MyMapFragment.Companion.newInstance(feature.getGeometry()))
-                    .commit();
-        }
 
         Properties properties = feature.getProperties();
         final int colorForIntensity = QuakesUtils.INSTANCE.getColor(getContext(), properties.getMmi());

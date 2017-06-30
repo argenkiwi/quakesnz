@@ -2,8 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffd7d7d7"
-                tools:context=".ui.MainActivity">
+                android:background="#ffd7d7d7">
 
     <fragment
         android:name="nz.co.codebros.quakesnz.list.QuakeListFragment"

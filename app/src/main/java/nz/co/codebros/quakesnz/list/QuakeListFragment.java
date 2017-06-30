@@ -1,12 +1,9 @@
 package nz.co.codebros.quakesnz.list;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,13 +17,14 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.ui.DetailActivity;
 import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
@@ -45,10 +43,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     Tracker tracker;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    public static QuakeListFragment newInstance() {
-        return new QuakeListFragment();
-    }
+    private OnFeatureClickedListener listener;
 
     @Override
     public void hideProgress() {
@@ -57,7 +52,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void listQuakes(@NonNull Feature[] features) {
+    public void listQuakes(@NonNull List<Feature> features) {
         Log.d(TAG, "List quakes.");
         featureAdapter.setFeatures(features);
     }
@@ -72,6 +67,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+        try {
+            this.listener = (OnFeatureClickedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnFeatureClickedListener");
+        }
     }
 
     @Nullable
@@ -97,12 +98,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void onFeatureClicked(@NonNull View view, @NonNull Feature feature) {
         Log.d(TAG, "Feature selected.");
         presenter.onFeatureSelected(feature);
-        Intent intent = DetailActivity.Companion
-                .newIntent(getContext());
-        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(getActivity(), view,
-                        getString(R.string.transition_name));
-        ActivityCompat.startActivity(getContext(), intent, activityOptionsCompat.toBundle());
+        this.listener.onFeatureClicked(view);
     }
 
     @Override
@@ -141,5 +137,14 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void showProgress() {
         Log.d(TAG, "Show progress.");
         swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void selectFeature(Feature feature) {
+        featureAdapter.setSelectedFeature(feature);
+    }
+
+    public interface OnFeatureClickedListener{
+        void onFeatureClicked(View view);
     }
 }

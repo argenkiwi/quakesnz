@@ -8,9 +8,11 @@ import nz.co.codebros.quakesnz.model.Feature
 interface QuakeListView {
     fun hideProgress()
 
-    fun listQuakes(features: Array<Feature>)
+    fun listQuakes(features: List<Feature>)
 
     fun showError()
 
     fun showProgress()
+
+    fun selectFeature(feature: Feature)
 }
