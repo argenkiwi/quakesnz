@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.detail;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +36,18 @@ public class QuakeMapFragment extends SupportMapFragment {
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+        getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                googleMap.moveCamera(CameraUpdateFactory
+                        .newLatLngZoom(new LatLng(-41.3090732, 175.1858282), 4.5f));
+            }
+        });
     }
 
     @Override

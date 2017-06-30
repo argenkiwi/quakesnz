@@ -45,10 +45,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     private SwipeRefreshLayout swipeRefreshLayout;
     private OnFeatureClickedListener listener;
 
-    public static QuakeListFragment newInstance() {
-        return new QuakeListFragment();
-    }
-
     @Override
     public void hideProgress() {
         Log.d(TAG, "Hide progress.");

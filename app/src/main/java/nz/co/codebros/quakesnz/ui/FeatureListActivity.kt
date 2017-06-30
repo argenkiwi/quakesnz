@@ -9,7 +9,11 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import nz.co.codebros.quakesnz.R
+import nz.co.codebros.quakesnz.detail.QuakeMapFragment
 import nz.co.codebros.quakesnz.list.QuakeListFragment
 
 class FeatureListActivity : AppCompatActivity(), QuakeListFragment.OnFeatureClickedListener {
@@ -24,7 +28,7 @@ class FeatureListActivity : AppCompatActivity(), QuakeListFragment.OnFeatureClic
         setSupportActionBar(toolbar)
         toolbar.title = title
 
-        mTwoPane = findViewById(R.id.feature_detail_container) != null
+        mTwoPane = findViewById(R.id.map_container) != null
     }
 
     override fun onFeatureClicked(view: View) {
