@@ -10,7 +10,6 @@ import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
-import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 /**
  * Created by leandro on 9/07/15.

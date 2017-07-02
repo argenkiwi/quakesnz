@@ -22,12 +22,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
+import dagger.android.support.DaggerFragment;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
 import nz.co.codebros.quakesnz.model.Properties;
 import nz.co.codebros.quakesnz.utils.QuakesUtils;
 
-public class QuakeDetailFragment extends Fragment implements QuakeDetailView, View.OnClickListener {
+public class QuakeDetailFragment extends DaggerFragment implements QuakeDetailView, View.OnClickListener {
 
     private static final String ARG_FEATURE = "arg_feature";
     private static final String ARG_PUBLIC_ID = "arg_public_id";

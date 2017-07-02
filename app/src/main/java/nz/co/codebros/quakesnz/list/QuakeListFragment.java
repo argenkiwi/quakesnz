@@ -25,7 +25,6 @@ import javax.inject.Named;
 import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
         SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {
@@ -140,7 +139,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void selectFeature(Feature feature) {
+    public void selectFeature(@NonNull Feature feature) {
         featureAdapter.setSelectedFeature(feature);
     }
 

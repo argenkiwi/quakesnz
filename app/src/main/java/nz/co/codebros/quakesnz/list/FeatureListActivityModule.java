@@ -1,21 +1,18 @@
-package nz.co.codebros.quakesnz.module;
+package nz.co.codebros.quakesnz.list;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import nz.co.codebros.quakesnz.detail.QuakeDetailFragment;
-import nz.co.codebros.quakesnz.detail.QuakeDetailModule;
 import nz.co.codebros.quakesnz.detail.QuakeMapFragment;
 import nz.co.codebros.quakesnz.list.QuakeListFragment;
 import nz.co.codebros.quakesnz.list.QuakeListModule;
-import nz.co.codebros.quakesnz.settings.SettingsFragment;
+import nz.co.codebros.quakesnz.module.FeatureCollectionModule;
+import nz.co.codebros.quakesnz.module.FeatureModule;
 
 /**
- * Created by leandro on 26/06/17.
+ * Created by leandro on 3/07/17.
  */
 @Module
-public abstract class InjectorsModule {
-    @ContributesAndroidInjector(modules = {QuakeDetailModule.class, FeatureModule.class})
-    abstract QuakeDetailFragment quakeDetailFragment();
+public abstract class FeatureListActivityModule {
 
     @ContributesAndroidInjector(modules = {
             QuakeListModule.class,
@@ -26,7 +23,4 @@ public abstract class InjectorsModule {
 
     @ContributesAndroidInjector(modules = FeatureModule.class)
     abstract QuakeMapFragment quakeMapFragment();
-
-    @ContributesAndroidInjector(modules = FeatureCollectionModule.class)
-    abstract SettingsFragment settingsFragment();
 }
