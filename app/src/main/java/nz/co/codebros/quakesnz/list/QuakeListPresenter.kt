@@ -11,6 +11,7 @@ import nz.co.codebros.quakesnz.model.Feature
 import nz.co.codebros.quakesnz.model.FeatureCollection
 import nz.co.codebros.quakesnz.presenter.BasePresenter
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
+import nz.co.codebros.quakesnz.repository.FeatureRepository
 
 /**
  * Created by leandro on 9/07/15.
@@ -18,6 +19,7 @@ import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
 class QuakeListPresenter internal constructor(
         private val view: QuakeListView,
         private val featureCollectionRepository: FeatureCollectionRepository,
+        private val featureRepository: FeatureRepository,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
 ) : BasePresenter() {
@@ -41,6 +43,7 @@ class QuakeListPresenter internal constructor(
 
     override fun onViewCreated() {
         addDisposable(featureCollectionRepository.subscribe(featureCollectionConsumer))
+        addDisposable(featureRepository.subscribe(Consumer{view.selectFeature(it)}))
     }
 
     override fun onViewRestored(bundle: Bundle) {

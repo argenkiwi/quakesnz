@@ -1,11 +1,9 @@
 package nz.co.codebros.quakesnz.list;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,14 +17,14 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
-import nz.co.codebros.quakesnz.QuakesNZApplication;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.ui.DetailActivity;
 import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
@@ -38,15 +36,14 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     QuakeListPresenter presenter;
 
     @Inject
+    FeatureAdapter featureAdapter;
+
+    @Inject
     @Named("app")
     Tracker tracker;
 
-    private FeatureAdapter featureAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    public static QuakeListFragment newInstance() {
-        return new QuakeListFragment();
-    }
+    private OnFeatureClickedListener listener;
 
     @Override
     public void hideProgress() {
@@ -55,7 +52,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void listQuakes(Feature[] features) {
+    public void listQuakes(@NonNull List<Feature> features) {
         Log.d(TAG, "List quakes.");
         featureAdapter.setFeatures(features);
     }
@@ -70,12 +67,12 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        featureAdapter = new FeatureAdapter(this);
+        try {
+            this.listener = (OnFeatureClickedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnFeatureClickedListener");
+        }
     }
 
     @Nullable
@@ -98,13 +95,10 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     }
 
     @Override
-    public void onFeatureClicked(View view, Feature feature) {
+    public void onFeatureClicked(@NonNull View view, @NonNull Feature feature) {
         Log.d(TAG, "Feature selected.");
         presenter.onFeatureSelected(feature);
-        Intent intent = DetailActivity.newIntent(getContext(), feature.getProperties().getPublicId());
-        ActivityCompat.startActivity(getContext(), intent, ActivityOptionsCompat
-                .makeSceneTransitionAnimation(getActivity(), view,
-                        getString(R.string.transition_name)).toBundle());
+        this.listener.onFeatureClicked(view);
     }
 
     @Override
@@ -128,7 +122,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
 
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             presenter.onViewRestored(savedInstanceState);
         } else presenter.onViewCreated();
     }
@@ -143,5 +137,14 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void showProgress() {
         Log.d(TAG, "Show progress.");
         swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void selectFeature(Feature feature) {
+        featureAdapter.setSelectedFeature(feature);
+    }
+
+    public interface OnFeatureClickedListener{
+        void onFeatureClicked(View view);
     }
 }

@@ -46,7 +46,7 @@ public class InfoActivity extends AppCompatActivity implements ActionBar.TabList
                         body = R.string.after_body;
                 }
 
-                return InfoFragment.newInstance(title, body);
+                return InfoFragment.Companion.newInstance(title, body);
             }
 
             @Override

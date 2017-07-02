@@ -17,8 +17,8 @@ class QuakeDetailPresenter internal constructor(
         private val interactor: LoadFeatureInteractor
 ) : BasePresenter() {
 
-    fun onRefresh(publicID: String) {
-        addDisposable(interactor.execute(publicID, Action {
+    fun onRefresh(publicId: String) {
+        addDisposable(interactor.execute(publicId, Action {
             // TODO Do something!
         }, Consumer<Throwable> { view.showLoadingError() })!!)
     }

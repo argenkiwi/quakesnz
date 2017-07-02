@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
 
-class Geometry(
+data class Geometry(
         @SerializedName("coordinates")
         val coordinates: LatLng
 ) : Parcelable {
