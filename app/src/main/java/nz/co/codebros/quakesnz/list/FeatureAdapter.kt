@@ -58,7 +58,7 @@ class FeatureAdapter(
         viewHolder.txtTime.text = DateUtils.getRelativeTimeSpanString(feature.properties.time.time)
         viewHolder.vTab.setBackgroundColor(colorForIntensity)
 
-        viewHolder.cardView.cardElevation = if (i == selectedPosition) 3.0f else 1.0f
+        viewHolder.cardView.cardElevation = if (i == selectedPosition) 8.0f else 2.0f
         viewHolder.itemView.setOnClickListener { view ->
             selectedPosition = i
             listener.onFeatureClicked(view, feature)
