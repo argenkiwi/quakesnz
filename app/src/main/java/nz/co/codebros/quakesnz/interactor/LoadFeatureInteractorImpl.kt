@@ -5,7 +5,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import nz.co.codebros.quakesnz.GeonetService
+import nz.co.codebros.quakesnz.core.GeonetService
 import nz.co.codebros.quakesnz.repository.FeatureRepository
 
 /**

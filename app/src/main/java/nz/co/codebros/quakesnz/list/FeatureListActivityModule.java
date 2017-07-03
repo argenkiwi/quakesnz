@@ -3,8 +3,6 @@ package nz.co.codebros.quakesnz.list;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import nz.co.codebros.quakesnz.detail.QuakeMapFragment;
-import nz.co.codebros.quakesnz.list.QuakeListFragment;
-import nz.co.codebros.quakesnz.list.QuakeListModule;
 import nz.co.codebros.quakesnz.module.FeatureCollectionModule;
 import nz.co.codebros.quakesnz.module.FeatureModule;
 

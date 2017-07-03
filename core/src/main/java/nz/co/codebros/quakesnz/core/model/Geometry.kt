@@ -1,19 +1,27 @@
-package nz.co.codebros.quakesnz.model
+package nz.co.codebros.quakesnz.core.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Created by leandro on 3/07/17.
+ */
+
 data class Geometry(
+        @SerializedName("type")
+        val type :String,
+
         @SerializedName("coordinates")
-        val coordinates: LatLng
+        val coordinates: Coordinates
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-            parcel.readParcelable<LatLng>(LatLng::class.java.classLoader)
+            parcel.readString(),
+            parcel.readParcelable(Coordinates::class.java.classLoader)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(type)
         parcel.writeParcelable(coordinates, flags)
     }
 

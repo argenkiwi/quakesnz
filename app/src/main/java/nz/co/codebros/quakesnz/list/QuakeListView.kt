@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.list
 
-import nz.co.codebros.quakesnz.model.Feature
+import nz.co.codebros.quakesnz.core.model.Feature
 
 /**
  * Created by leandro on 9/07/15.

@@ -16,7 +16,8 @@ import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
  * Created by leandro on 29/06/17.
  */
 
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject
     LoadFeaturesInteractor interactor;

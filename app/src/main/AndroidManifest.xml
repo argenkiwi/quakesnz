@@ -25,7 +25,7 @@
             android:value="@string/maps_api_key" />
 
         <activity
-            android:name=".list.FeatureListActivity"
+            android:name="nz.co.codebros.quakesnz.list.FeatureListActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -39,7 +39,7 @@
         <activity
             android:name=".detail.FeatureDetailActivity"
             android:label="@string/quake_details"
-            android:parentActivityName=".list.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />
@@ -66,7 +66,7 @@
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/about"
-            android:parentActivityName=".list.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />
@@ -74,7 +74,7 @@
         <activity
             android:name=".ui.InfoActivity"
             android:label="@string/emergency_advice"
-            android:parentActivityName=".list.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />
@@ -82,7 +82,7 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/settings"
-            android:parentActivityName=".list.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />

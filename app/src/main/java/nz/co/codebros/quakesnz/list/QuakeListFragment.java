@@ -24,7 +24,7 @@ import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.core.model.Feature;
 
 public class QuakeListFragment extends Fragment implements QuakeListView,
         SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {

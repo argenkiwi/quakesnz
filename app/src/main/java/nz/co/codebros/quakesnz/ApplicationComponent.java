@@ -6,7 +6,7 @@ import dagger.Component;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
-import nz.co.codebros.quakesnz.module.ServicesModule;
+import nz.co.codebros.quakesnz.core.ServicesModule;
 import nz.co.codebros.quakesnz.module.SubjectsModule;
 
 /**

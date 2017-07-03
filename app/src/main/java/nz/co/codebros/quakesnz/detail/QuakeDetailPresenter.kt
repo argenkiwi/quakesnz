@@ -4,7 +4,7 @@ import android.os.Bundle
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
-import nz.co.codebros.quakesnz.model.Feature
+import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.presenter.BasePresenter
 import nz.co.codebros.quakesnz.repository.BundleRepository
 

@@ -24,8 +24,8 @@ import javax.inject.Named;
 import dagger.android.support.AndroidSupportInjection;
 import dagger.android.support.DaggerFragment;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.model.Feature;
-import nz.co.codebros.quakesnz.model.Properties;
+import nz.co.codebros.quakesnz.core.model.Feature;
+import nz.co.codebros.quakesnz.core.model.Properties;
 import nz.co.codebros.quakesnz.utils.QuakesUtils;
 
 public class QuakeDetailFragment extends DaggerFragment implements QuakeDetailView, View.OnClickListener {

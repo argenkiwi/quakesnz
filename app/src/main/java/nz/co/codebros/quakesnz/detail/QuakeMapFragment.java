@@ -17,7 +17,9 @@ import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.core.model.Coordinates;
+import nz.co.codebros.quakesnz.core.model.Feature;
+import nz.co.codebros.quakesnz.core.model.Geometry;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
 
 /**
@@ -59,7 +61,11 @@ public class QuakeMapFragment extends SupportMapFragment {
                 getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        LatLng latLng = feature.getGeometry().getCoordinates();
+                        Coordinates coordinates = feature.getGeometry().getCoordinates();
+                        LatLng latLng = new LatLng(
+                                coordinates.getLatitude(),
+                                coordinates.getLongitude()
+                        );
                         if (marker == null) {
                             marker = googleMap.addMarker(new MarkerOptions().position(latLng));
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 6f));
