@@ -27,13 +27,13 @@ public abstract class ServicesModule {
 
     @Provides
     @Singleton
-    static GeonetService provideGeonetService(Retrofit retrofit) {
+    static GeonetService geonetService(Retrofit retrofit) {
         return retrofit.create(GeonetService.class);
     }
 
     @Provides
     @Singleton
-    static Gson provideGson() {
+    static Gson gson() {
         return new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
                 .registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapter())
@@ -41,12 +41,12 @@ public abstract class ServicesModule {
     }
 
     @Provides
-    static HttpLoggingInterceptor provideInterceptor() {
+    static HttpLoggingInterceptor httpLoggingInterceptor() {
         return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
     }
 
     @Provides
-    static Retrofit provideRestAdapter(OkHttpClient client, Gson gson) {
+    static Retrofit retrofit(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl("http://api.geonet.org.nz/")
                 .client(client)
@@ -56,7 +56,7 @@ public abstract class ServicesModule {
     }
 
     @Provides
-    static OkHttpClient provideOkHttpClient(
+    static OkHttpClient okHttpClient(
             @Named("cacheDir") File cacheDir,
             HttpLoggingInterceptor interceptor
     ) {
