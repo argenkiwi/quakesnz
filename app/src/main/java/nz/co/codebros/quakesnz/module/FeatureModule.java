@@ -12,7 +12,7 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository;
  * Created by leandro on 18/06/17.
  */
 @Module
-public class FeatureModule {
+public abstract class FeatureModule {
 
     @Provides
     static FeatureRepository featureRepository(Subject<Feature> subject){

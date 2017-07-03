@@ -38,19 +38,19 @@ public abstract class ApplicationModule {
 
     @Provides
     @Named("cacheDir")
-    public static File provideCacheDir(QuakesNZApplication application){
+    static File cacheDir(QuakesNZApplication application){
         return application.getCacheDir();
     }
 
     @Provides
-    public static SharedPreferences provideSharedPreferences(QuakesNZApplication application) {
+    static SharedPreferences sharedPreferences(QuakesNZApplication application) {
         return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
     @Provides
     @Singleton
     @Named("app")
-    public static Tracker provideTracker(QuakesNZApplication application) {
+    static Tracker tracker(QuakesNZApplication application) {
         return GoogleAnalytics.getInstance(application).newTracker(R.xml.app_tracker);
     }
 }
