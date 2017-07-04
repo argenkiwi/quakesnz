@@ -1,14 +1,13 @@
 package nz.co.codebros.quakesnz.settings;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
+import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 
@@ -16,34 +15,35 @@ import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
  * Created by leandro on 29/06/17.
  */
 
-public class SettingsFragment extends PreferenceFragment
+public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject
     LoadFeaturesInteractor interactor;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        AndroidInjection.inject(this);
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        getPreferenceManager().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        getPreferenceManager().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override

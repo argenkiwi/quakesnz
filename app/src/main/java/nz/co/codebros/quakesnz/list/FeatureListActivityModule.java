@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.list;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import nz.co.codebros.quakesnz.detail.QuakeMapFragment;
@@ -11,6 +12,9 @@ import nz.co.codebros.quakesnz.module.FeatureModule;
  */
 @Module
 public abstract class FeatureListActivityModule {
+
+    @Binds
+    abstract QuakeListFragment.OnFeatureClickedListener onFeatureClickedListener(FeatureListActivity activit);
 
     @ContributesAndroidInjector(modules = {
             QuakeListModule.class,

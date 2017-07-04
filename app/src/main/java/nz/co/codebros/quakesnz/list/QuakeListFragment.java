@@ -38,11 +38,13 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     FeatureAdapter featureAdapter;
 
     @Inject
+    OnFeatureClickedListener listener;
+
+    @Inject
     @Named("app")
     Tracker tracker;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private OnFeatureClickedListener listener;
 
     @Override
     public void hideProgress() {
@@ -66,12 +68,6 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
-        try {
-            this.listener = (OnFeatureClickedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnFeatureClickedListener");
-        }
     }
 
     @Nullable
@@ -97,7 +93,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
     public void onFeatureClicked(@NonNull View view, @NonNull Feature feature) {
         Log.d(TAG, "Feature selected.");
         presenter.onFeatureSelected(feature);
-        this.listener.onFeatureClicked(view);
+        listener.onFeatureClicked(view);
     }
 
     @Override
