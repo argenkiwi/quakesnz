@@ -1,6 +1,5 @@
-package nz.co.codebros.quakesnz.utils;
+package nz.co.codebros.quakesnz.core.model;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -11,10 +10,10 @@ import java.io.IOException;
 /**
  * Created by Leandro on 02/04/2014.
  */
-public class LatLngTypeAdapter extends TypeAdapter<LatLng>{
+public class CoordinatesTypeAdapter extends TypeAdapter<Coordinates>{
 
     @Override
-    public void write(JsonWriter out, LatLng value) throws IOException {
+    public void write(JsonWriter out, Coordinates value) throws IOException {
 
         if (value == null) {
             out.nullValue();
@@ -22,13 +21,13 @@ public class LatLngTypeAdapter extends TypeAdapter<LatLng>{
         }
 
         out.beginArray();
-        out.value(value.longitude);
-        out.value(value.latitude);
+        out.value(value.getLongitude());
+        out.value(value.getLatitude());
         out.endArray();
     }
 
     @Override
-    public LatLng read(JsonReader in) throws IOException {
+    public Coordinates read(JsonReader in) throws IOException {
 
         if (in.peek() == JsonToken.NULL) {
             in.nextNull();
@@ -40,6 +39,6 @@ public class LatLngTypeAdapter extends TypeAdapter<LatLng>{
         final double lat = in.nextDouble();
         in.endArray();
 
-        return new LatLng(lat, lng);
+        return new Coordinates(lat, lng);
     }
 }

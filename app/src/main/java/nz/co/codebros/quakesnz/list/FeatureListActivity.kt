@@ -1,22 +1,21 @@
-package nz.co.codebros.quakesnz.ui
+package nz.co.codebros.quakesnz.list
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.google.android.gms.maps.GoogleMapOptions
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
+import dagger.android.support.DaggerAppCompatActivity
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.detail.QuakeMapFragment
-import nz.co.codebros.quakesnz.list.QuakeListFragment
+import nz.co.codebros.quakesnz.detail.FeatureDetailActivity
+import nz.co.codebros.quakesnz.ui.AboutActivity
+import nz.co.codebros.quakesnz.ui.InfoActivity
+import nz.co.codebros.quakesnz.settings.SettingsActivity
 
-class FeatureListActivity : AppCompatActivity(), QuakeListFragment.OnFeatureClickedListener {
+class FeatureListActivity : DaggerAppCompatActivity(), QuakeListFragment.OnFeatureClickedListener {
 
     private var mTwoPane: Boolean = false
 

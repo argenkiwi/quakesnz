@@ -1,6 +1,5 @@
-package nz.co.codebros.quakesnz.module;
+package nz.co.codebros.quakesnz.core;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,8 +10,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import nz.co.codebros.quakesnz.GeonetService;
-import nz.co.codebros.quakesnz.utils.LatLngTypeAdapter;
+import nz.co.codebros.quakesnz.core.model.Coordinates;
+import nz.co.codebros.quakesnz.core.model.CoordinatesTypeAdapter;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -24,30 +23,30 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by leandro on 22/07/16.
  */
 @Module
-public class ServicesModule {
+public abstract class ServicesModule {
 
     @Provides
     @Singleton
-    static GeonetService provideGeonetService(Retrofit retrofit) {
+    static GeonetService geonetService(Retrofit retrofit) {
         return retrofit.create(GeonetService.class);
     }
 
     @Provides
     @Singleton
-    static Gson provideGson() {
+    static Gson gson() {
         return new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
-                .registerTypeAdapter(LatLng.class, new LatLngTypeAdapter())
+                .registerTypeAdapter(Coordinates.class, new CoordinatesTypeAdapter())
                 .create();
     }
 
     @Provides
-    static HttpLoggingInterceptor provideInterceptor() {
+    static HttpLoggingInterceptor httpLoggingInterceptor() {
         return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
     }
 
     @Provides
-    static Retrofit provideRestAdapter(OkHttpClient client, Gson gson) {
+    static Retrofit retrofit(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
                 .baseUrl("http://api.geonet.org.nz/")
                 .client(client)
@@ -57,8 +56,10 @@ public class ServicesModule {
     }
 
     @Provides
-    static OkHttpClient provideOkHttpClient(@Named("cacheDir") File cacheDir,
-                                            HttpLoggingInterceptor interceptor) {
+    static OkHttpClient okHttpClient(
+            @Named("cacheDir") File cacheDir,
+            HttpLoggingInterceptor interceptor
+    ) {
         return new OkHttpClient().newBuilder()
                 .cache(new Cache(cacheDir, 2 * 1024 * 1024)) // 2Mb
                 .addInterceptor(interceptor)

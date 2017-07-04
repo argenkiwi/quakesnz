@@ -7,10 +7,9 @@ import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor;
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl;
-import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
-import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 /**
  * Created by leandro on 9/07/15.

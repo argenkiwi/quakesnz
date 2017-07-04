@@ -2,13 +2,12 @@ package nz.co.codebros.quakesnz.list
 
 import android.os.Bundle
 
-import io.reactivex.annotations.NonNull
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
-import nz.co.codebros.quakesnz.model.Feature
-import nz.co.codebros.quakesnz.model.FeatureCollection
+import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.core.model.FeatureCollection
 import nz.co.codebros.quakesnz.presenter.BasePresenter
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
 import nz.co.codebros.quakesnz.repository.FeatureRepository

@@ -25,7 +25,7 @@
             android:value="@string/maps_api_key" />
 
         <activity
-            android:name=".ui.FeatureListActivity"
+            android:name="nz.co.codebros.quakesnz.list.FeatureListActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -37,12 +37,12 @@
         </activity>
 
         <activity
-            android:name=".ui.FeatureDetailActivity"
+            android:name=".detail.FeatureDetailActivity"
             android:label="@string/quake_details"
-            android:parentActivityName=".ui.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
+                android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />
 
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
@@ -66,26 +66,26 @@
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/about"
-            android:parentActivityName=".ui.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
+                android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />
         </activity>
         <activity
             android:name=".ui.InfoActivity"
             android:label="@string/emergency_advice"
-            android:parentActivityName=".ui.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
+                android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />
         </activity>
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/settings"
-            android:parentActivityName=".ui.FeatureListActivity">
+            android:parentActivityName="nz.co.codebros.quakesnz.list.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
+                android:value="nz.co.codebros.quakesnz.list.FeatureListActivity" />
         </activity>
     </application>
 

@@ -1,14 +1,12 @@
-package nz.co.codebros.quakesnz.component;
+package nz.co.codebros.quakesnz;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
+import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
-import nz.co.codebros.quakesnz.QuakesNZApplication;
-import nz.co.codebros.quakesnz.module.ApplicationModule;
-import nz.co.codebros.quakesnz.module.InjectorsModule;
-import nz.co.codebros.quakesnz.module.ServicesModule;
+import nz.co.codebros.quakesnz.core.ServicesModule;
 import nz.co.codebros.quakesnz.module.SubjectsModule;
 
 /**
@@ -16,8 +14,8 @@ import nz.co.codebros.quakesnz.module.SubjectsModule;
  */
 @Singleton
 @Component(modules = {
+        AndroidInjectionModule.class,
         AndroidSupportInjectionModule.class,
-        InjectorsModule.class,
         ApplicationModule.class,
         ServicesModule.class,
         SubjectsModule.class

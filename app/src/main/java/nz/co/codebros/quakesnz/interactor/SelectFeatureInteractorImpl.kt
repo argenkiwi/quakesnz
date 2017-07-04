@@ -1,7 +1,7 @@
 package nz.co.codebros.quakesnz.interactor
 
 import io.reactivex.Observer
-import nz.co.codebros.quakesnz.model.Feature
+import nz.co.codebros.quakesnz.core.model.Feature
 
 /**
  * Created by leandro on 19/06/17.

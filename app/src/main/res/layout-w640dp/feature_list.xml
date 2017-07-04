@@ -3,18 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    android:showDividers="middle"
-    tools:context="nz.co.codebros.quakesnz.ui.FeatureListActivity">
+    tools:context=".list.FeatureListActivity">
 
     <fragment
         android:id="@+id/feature_list"
         android:name="nz.co.codebros.quakesnz.list.QuakeListFragment"
         android:layout_width="@dimen/item_width"
         android:layout_height="match_parent"
-        tools:context="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
+        tools:context=".list.FeatureListActivity" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/map_container"

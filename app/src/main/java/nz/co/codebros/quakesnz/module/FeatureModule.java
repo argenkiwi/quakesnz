@@ -3,16 +3,16 @@ package nz.co.codebros.quakesnz.module;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.Subject;
-import nz.co.codebros.quakesnz.GeonetService;
+import nz.co.codebros.quakesnz.core.GeonetService;
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
-import nz.co.codebros.quakesnz.model.Feature;
+import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
 
 /**
  * Created by leandro on 18/06/17.
  */
 @Module
-class FeatureModule {
+public abstract class FeatureModule {
 
     @Provides
     static FeatureRepository featureRepository(Subject<Feature> subject){

@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.ui
+package nz.co.codebros.quakesnz.list
 
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.model.Feature
+import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.utils.QuakesUtils
 import java.util.*
 import kotlin.collections.ArrayList
@@ -58,7 +58,7 @@ class FeatureAdapter(
         viewHolder.txtTime.text = DateUtils.getRelativeTimeSpanString(feature.properties.time.time)
         viewHolder.vTab.setBackgroundColor(colorForIntensity)
 
-        viewHolder.cardView.cardElevation = if (i == selectedPosition) 3.0f else 1.0f
+        viewHolder.cardView.cardElevation = if (i == selectedPosition) 8.0f else 2.0f
         viewHolder.itemView.setOnClickListener { view ->
             selectedPosition = i
             listener.onFeatureClicked(view, feature)

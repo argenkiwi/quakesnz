@@ -5,4 +5,4 @@
     android:name="nz.co.codebros.quakesnz.list.QuakeListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
+    tools:context=".list.FeatureListActivity" />
