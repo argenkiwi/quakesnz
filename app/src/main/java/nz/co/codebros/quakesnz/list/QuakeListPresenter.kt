@@ -16,12 +16,12 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository
  * Created by leandro on 9/07/15.
  */
 class QuakeListPresenter internal constructor(
-        private val view: QuakeListView,
+        view: QuakeListView,
         private val featureCollectionRepository: FeatureCollectionRepository,
         private val featureRepository: FeatureRepository,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
-) : BasePresenter() {
+) : BasePresenter<QuakeListView>(view) {
     private val featureCollectionConsumer = Consumer<FeatureCollection> { featureCollection ->
         view.listQuakes(featureCollection.features)
     }

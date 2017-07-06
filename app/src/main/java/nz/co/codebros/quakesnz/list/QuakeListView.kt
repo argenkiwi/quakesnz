@@ -1,11 +1,12 @@
 package nz.co.codebros.quakesnz.list
 
 import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.presenter.View
 
 /**
  * Created by leandro on 9/07/15.
  */
-interface QuakeListView {
+interface QuakeListView : View{
     fun hideProgress()
 
     fun listQuakes(features: List<Feature>)

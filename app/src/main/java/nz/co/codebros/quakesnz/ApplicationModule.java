@@ -27,15 +27,6 @@ import nz.co.codebros.quakesnz.settings.SettingsActivity;
 @Module
 public abstract class ApplicationModule {
 
-    @ContributesAndroidInjector(modules = FeatureListActivityModule.class)
-    abstract FeatureListActivity featureListActivity();
-
-    @ContributesAndroidInjector(modules = FeatureDetailActivityModule.class)
-    abstract FeatureDetailActivity featureDetailActivity();
-
-    @ContributesAndroidInjector(modules = SettingsActivityModule.class)
-    abstract SettingsActivity settingsActivity();
-
     @Provides
     @Named("cacheDir")
     static File cacheDir(QuakesNZApplication application){
@@ -53,4 +44,13 @@ public abstract class ApplicationModule {
     static Tracker tracker(QuakesNZApplication application) {
         return GoogleAnalytics.getInstance(application).newTracker(R.xml.app_tracker);
     }
+
+    @ContributesAndroidInjector(modules = FeatureListActivityModule.class)
+    abstract FeatureListActivity featureListActivity();
+
+    @ContributesAndroidInjector(modules = FeatureDetailActivityModule.class)
+    abstract FeatureDetailActivity featureDetailActivity();
+
+    @ContributesAndroidInjector(modules = SettingsActivityModule.class)
+    abstract SettingsActivity settingsActivity();
 }

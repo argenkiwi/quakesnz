@@ -15,6 +15,7 @@ import nz.co.codebros.quakesnz.core.model.FeatureCollection;
  */
 @Module
 public abstract class SubjectsModule {
+
     @Provides
     @Singleton
     static Subject<FeatureCollection> featureCollectionSubject() {

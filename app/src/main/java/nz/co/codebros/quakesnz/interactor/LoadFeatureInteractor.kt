@@ -7,6 +7,6 @@ import io.reactivex.functions.Consumer
 /**
  * Created by leandro on 10/06/17.
  */
-internal interface LoadFeatureInteractor {
+interface LoadFeatureInteractor {
     fun execute(publicId: String, onComplete: Action, onError: Consumer<Throwable>): Disposable?
 }

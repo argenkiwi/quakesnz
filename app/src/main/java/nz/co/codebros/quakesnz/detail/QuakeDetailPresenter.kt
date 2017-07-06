@@ -3,19 +3,19 @@ package nz.co.codebros.quakesnz.detail
 import android.os.Bundle
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
 import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
 import nz.co.codebros.quakesnz.presenter.BasePresenter
 import nz.co.codebros.quakesnz.repository.BundleRepository
 
 /**
  * Created by leandro on 7/07/16.
  */
-class QuakeDetailPresenter internal constructor(
-        private val view: QuakeDetailView,
+class QuakeDetailPresenter(
+        view: QuakeDetailView,
         private val repository: BundleRepository<Feature>,
         private val interactor: LoadFeatureInteractor
-) : BasePresenter() {
+) : BasePresenter<QuakeDetailView>(view) {
 
     fun onRefresh(publicId: String) {
         addDisposable(interactor.execute(publicId, Action {
