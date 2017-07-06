@@ -1,10 +1,8 @@
 package nz.co.codebros.quakesnz.list;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +20,13 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import dagger.android.support.AndroidSupportInjection;
+import kotlin.Unit;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.core.model.Feature;
+import nz.co.codebros.quakesnz.presenter.BasePresenter;
+import nz.co.codebros.quakesnz.ui.BaseFragment;
 
-public class QuakeListFragment extends Fragment implements QuakeListView,
+public class QuakeListFragment extends BaseFragment<Unit> implements QuakeListView,
         SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {
 
     private static final String TAG = QuakeListFragment.class.getSimpleName();
@@ -58,35 +58,11 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         featureAdapter.setFeatures(features);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null) presenter.onRefresh();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_quakes, container, false);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        presenter.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        presenter.onDestroyView();
     }
 
     @Override
@@ -104,7 +80,7 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
                 .setLabel("Refresh")
                 .build());
 
-        presenter.onRefresh();
+        presenter.onInit(null);
     }
 
     @Override
@@ -116,10 +92,11 @@ public class QuakeListFragment extends Fragment implements QuakeListView,
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(featureAdapter);
+    }
 
-        if (savedInstanceState != null) {
-            presenter.onViewRestored(savedInstanceState);
-        } else presenter.onViewCreated();
+    @Override
+    protected BasePresenter<?, Unit> getPresenter() {
+        return presenter;
     }
 
     @Override

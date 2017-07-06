@@ -17,8 +17,11 @@ abstract class SettingsModule {
     abstract SettingsView settingsView(SettingsFragment fragment);
 
     @Provides
-    static SettingsPresenter settingsPresenter(SettingsView view, SharedPreferences preferences,
-                                               LoadFeaturesInteractor interactor){
+    static SettingsPresenter settingsPresenter(
+            SettingsView view,
+            SharedPreferences preferences,
+            LoadFeaturesInteractor interactor
+    ) {
         return new SettingsPresenter(view, preferences, interactor);
     }
 }

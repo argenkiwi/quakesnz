@@ -15,32 +15,32 @@ class QuakeDetailPresenter(
         view: QuakeDetailView,
         private val repository: BundleRepository<Feature>,
         private val interactor: LoadFeatureInteractor
-) : BasePresenter<QuakeDetailView>(view) {
+) : BasePresenter<QuakeDetailView, QuakeDetailProps>(view) {
 
-    fun onRefresh(publicId: String) {
-        addDisposable(interactor.execute(publicId, Action {
-            // TODO Do something!
-        }, Consumer<Throwable> { view.showLoadingError() })!!)
-    }
-
-    fun onShare(feature: Feature) {
-        view.share(feature)
+    override fun onInit(props: QuakeDetailProps?) {
+        super.onInit(props)
+        props?.let {
+            addDisposable(interactor.execute(it.publicId, Action {
+                // TODO Show progress indicator?
+            }, Consumer<Throwable> {
+                view.showLoadingError()
+            }))
+        }
     }
 
     override fun onViewCreated() {
         addDisposable(repository.subscribe(Consumer { view.showDetails(it) }))
     }
 
-    override fun onViewRestored(bundle: Bundle) {
+    override fun onRestoreState(bundle: Bundle) {
         repository.publish(bundle)
-        onViewCreated()
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
+    override fun onSaveState(bundle: Bundle) {
         addDisposable(repository.subscribe(bundle))
     }
 
-    override fun onDestroyView() {
-        disposeAll()
+    fun onShare(feature: Feature) {
+        view.share(feature)
     }
 }
