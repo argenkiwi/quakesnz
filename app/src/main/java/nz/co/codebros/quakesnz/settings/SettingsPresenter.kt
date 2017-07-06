@@ -1,10 +1,9 @@
 package nz.co.codebros.quakesnz.settings
 
 import android.content.SharedPreferences
-import android.os.Bundle
 
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
-import nz.co.codebros.quakesnz.presenter.BasePresenter
+import nz.co.codebros.quakesnz.core.BasePresenter
 
 /**
  * Created by leandro on 6/07/17.

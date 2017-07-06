@@ -24,9 +24,9 @@ import javax.inject.Named;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.core.model.Properties;
-import nz.co.codebros.quakesnz.presenter.BasePresenter;
-import nz.co.codebros.quakesnz.ui.BaseFragment;
-import nz.co.codebros.quakesnz.utils.QuakesUtils;
+import nz.co.codebros.quakesnz.core.BasePresenter;
+import nz.co.codebros.quakesnz.core.BaseFragment;
+import nz.co.codebros.quakesnz.QuakesUtils;
 
 public class QuakeDetailFragment extends BaseFragment<QuakeDetailProps> implements QuakeDetailView,
         View.OnClickListener {

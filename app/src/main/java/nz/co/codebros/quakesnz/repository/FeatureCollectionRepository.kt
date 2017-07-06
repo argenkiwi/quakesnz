@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.repository
 
 import io.reactivex.subjects.Subject
+import nz.co.codebros.quakesnz.core.BaseBundleRepository
 import nz.co.codebros.quakesnz.core.model.FeatureCollection
 
 /**

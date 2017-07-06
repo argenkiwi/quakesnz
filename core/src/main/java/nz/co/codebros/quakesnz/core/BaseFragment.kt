@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.ui
+package nz.co.codebros.quakesnz.core
 
 import android.content.Context
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.view.View
 
 import dagger.android.support.AndroidSupportInjection
-import nz.co.codebros.quakesnz.presenter.BasePresenter
 
 /**
  * Created by leandro on 6/07/17.

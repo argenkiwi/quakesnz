@@ -7,7 +7,7 @@ import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.core.model.FeatureCollection
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
-import nz.co.codebros.quakesnz.presenter.BasePresenter
+import nz.co.codebros.quakesnz.core.BasePresenter
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
 import nz.co.codebros.quakesnz.repository.FeatureRepository
 

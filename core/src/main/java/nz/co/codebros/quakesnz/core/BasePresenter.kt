@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.presenter
+package nz.co.codebros.quakesnz.core
 
 import android.os.Bundle
 import io.reactivex.disposables.CompositeDisposable

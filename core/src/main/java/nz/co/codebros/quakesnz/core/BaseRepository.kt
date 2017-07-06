@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.repository
+package nz.co.codebros.quakesnz.core
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

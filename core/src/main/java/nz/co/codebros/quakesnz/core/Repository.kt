@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.repository
+package nz.co.codebros.quakesnz.core
 
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer

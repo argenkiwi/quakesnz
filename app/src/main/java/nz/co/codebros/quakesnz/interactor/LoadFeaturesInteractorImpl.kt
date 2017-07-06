@@ -9,7 +9,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import nz.co.codebros.quakesnz.core.GeonetService
 import nz.co.codebros.quakesnz.core.model.FeatureCollection
-import nz.co.codebros.quakesnz.repository.Repository
+import nz.co.codebros.quakesnz.core.Repository
 
 /**
  * Created by leandro on 2/04/16.

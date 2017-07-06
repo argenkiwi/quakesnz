@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.presenter
+package nz.co.codebros.quakesnz.core
 
 /**
  * Created by leandro on 24/06/17.

@@ -5,8 +5,8 @@ import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
-import nz.co.codebros.quakesnz.presenter.BasePresenter
-import nz.co.codebros.quakesnz.repository.BundleRepository
+import nz.co.codebros.quakesnz.core.BasePresenter
+import nz.co.codebros.quakesnz.core.BundleRepository
 
 /**
  * Created by leandro on 7/07/16.
