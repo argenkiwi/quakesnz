@@ -23,14 +23,14 @@ class LoadFeaturesInteractorImpl(
         return completable()?.subscribe(onSuccess, onError)
     }
 
-    override fun execute() {
-        completable()?.subscribe()
+    override fun execute(): Disposable? {
+        return completable()?.subscribe()
     }
 
     private fun completable(): Completable? {
         val mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"))
         return service.getQuakes(mmi)
-                .doAfterSuccess { repository.publish(it) }
+                .doOnSuccess { repository.publish(it) }
                 .toCompletable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

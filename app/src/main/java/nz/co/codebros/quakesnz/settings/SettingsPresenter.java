@@ -44,10 +44,11 @@ public class SettingsPresenter extends BasePresenter<SettingsView>
     @Override
     public void onDestroyView() {
         preferences.unregisterOnSharedPreferenceChangeListener(this);
+        disposeAll();
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        interactor.execute();
+        addDisposable(interactor.execute());
     }
 }
