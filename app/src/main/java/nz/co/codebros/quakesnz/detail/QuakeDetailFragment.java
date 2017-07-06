@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -62,6 +64,7 @@ public class QuakeDetailFragment extends BaseFragment<QuakeDetailProps> implemen
         return fragment;
     }
 
+    @NonNull
     @Override
     protected BasePresenter<?, QuakeDetailProps> getPresenter() {
         return presenter;
@@ -103,8 +106,9 @@ public class QuakeDetailFragment extends BaseFragment<QuakeDetailProps> implemen
         view.findViewById(R.id.share_button).setOnClickListener(this);
     }
 
+    @Nullable
     @Override
-    protected QuakeDetailProps fromArguments(Bundle bundle) {
+    protected QuakeDetailProps fromArguments(@NonNull Bundle bundle) {
         String publicId = bundle.getString(ARG_PUBLIC_ID);
         return publicId != null ? new QuakeDetailProps(publicId) : null;
     }

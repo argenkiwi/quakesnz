@@ -21,6 +21,7 @@ import nz.co.codebros.quakesnz.module.SubjectsModule;
         SubjectsModule.class
 })
 interface ApplicationComponent extends AndroidInjector<QuakesNZApplication> {
+
     @Component.Builder
     abstract class Builder extends AndroidInjector.Builder<QuakesNZApplication> {
     }

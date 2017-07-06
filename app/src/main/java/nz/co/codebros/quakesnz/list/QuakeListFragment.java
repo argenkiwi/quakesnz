@@ -95,6 +95,7 @@ public class QuakeListFragment extends BaseFragment<Unit> implements QuakeListVi
         recyclerView.setAdapter(featureAdapter);
     }
 
+    @NonNull
     @Override
     protected BasePresenter<?, Unit> getPresenter() {
         return presenter;
