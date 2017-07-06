@@ -1,30 +1,24 @@
 package nz.co.codebros.quakesnz.settings;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.View;
 
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import nz.co.codebros.quakesnz.R;
-import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 
 /**
  * Created by leandro on 29/06/17.
  */
 
-public class SettingsFragment extends PreferenceFragmentCompat
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements SettingsView {
 
     @Inject
-    LoadFeaturesInteractor interactor;
-
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
-    }
+    SettingsPresenter presenter;
 
     @Override
     public void onAttach(Context context) {
@@ -33,21 +27,23 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getPreferenceManager().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        getPreferenceManager().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState == null) {
+            presenter.onViewCreated();
+        } else {
+            presenter.onDestroyView();
+        }
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        interactor.execute();
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.onDestroyView();
     }
 }
