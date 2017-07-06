@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.presenter
 
+import io.reactivex.disposables.CompositeDisposable
 import java.util.ArrayList
 
 import io.reactivex.disposables.Disposable
@@ -9,15 +10,13 @@ import io.reactivex.disposables.Disposable
  */
 
 abstract class BasePresenter : Presenter {
-    private val disposables = ArrayList<Disposable>()
+    private val disposables = CompositeDisposable()
 
     protected fun addDisposable(disposable: Disposable) {
         disposables.add(disposable)
     }
 
     protected fun disposeAll() {
-        while (!disposables.isEmpty()) {
-            disposables.removeAt(0).dispose()
-        }
+        disposables.dispose()
     }
 }
