@@ -14,7 +14,7 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository
 /**
  * Created by leandro on 9/07/15.
  */
-class QuakeListPresenter internal constructor(
+class QuakeListPresenter (
         view: QuakeListView,
         private val featureCollectionRepository: FeatureCollectionRepository,
         private val featureRepository: FeatureRepository,

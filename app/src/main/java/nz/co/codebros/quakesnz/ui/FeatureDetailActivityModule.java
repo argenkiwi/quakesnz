@@ -1,10 +1,10 @@
-package nz.co.codebros.quakesnz.detail;
+package nz.co.codebros.quakesnz.ui;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment;
 import nz.co.codebros.quakesnz.detail.QuakeDetailModule;
-import nz.co.codebros.quakesnz.detail.QuakeMapFragment;
+import nz.co.codebros.quakesnz.map.QuakeMapFragment;
 import nz.co.codebros.quakesnz.module.FeatureModule;
 
 /**

@@ -14,11 +14,11 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
-import nz.co.codebros.quakesnz.detail.FeatureDetailActivityModule;
-import nz.co.codebros.quakesnz.list.FeatureListActivityModule;
+import nz.co.codebros.quakesnz.ui.FeatureDetailActivityModule;
+import nz.co.codebros.quakesnz.ui.FeatureListActivityModule;
 import nz.co.codebros.quakesnz.settings.SettingsActivityModule;
-import nz.co.codebros.quakesnz.detail.FeatureDetailActivity;
-import nz.co.codebros.quakesnz.list.FeatureListActivity;
+import nz.co.codebros.quakesnz.ui.FeatureDetailActivity;
+import nz.co.codebros.quakesnz.ui.FeatureListActivity;
 import nz.co.codebros.quakesnz.settings.SettingsActivity;
 
 /**

@@ -25,6 +25,7 @@ import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.presenter.BasePresenter;
 import nz.co.codebros.quakesnz.ui.BaseFragment;
+import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 public class QuakeListFragment extends BaseFragment<Unit> implements QuakeListView,
         SwipeRefreshLayout.OnRefreshListener, FeatureAdapter.Listener {
