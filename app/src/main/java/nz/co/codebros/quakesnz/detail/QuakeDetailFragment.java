@@ -1,10 +1,8 @@
 package nz.co.codebros.quakesnz.detail;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -16,21 +14,23 @@ import android.widget.Toast;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import dagger.android.support.AndroidSupportInjection;
-import dagger.android.support.DaggerFragment;
 import nz.co.codebros.quakesnz.R;
 import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.core.model.Properties;
-import nz.co.codebros.quakesnz.utils.QuakesUtils;
+import nz.co.codebros.quakesnz.core.BasePresenter;
+import nz.co.codebros.quakesnz.core.BaseFragment;
+import nz.co.codebros.quakesnz.QuakesUtils;
 
-public class QuakeDetailFragment extends DaggerFragment implements QuakeDetailView, View.OnClickListener {
+public class QuakeDetailFragment extends BaseFragment<QuakeDetailProps> implements QuakeDetailView,
+        View.OnClickListener {
 
-    private static final String ARG_FEATURE = "arg_feature";
     private static final String ARG_PUBLIC_ID = "arg_public_id";
 
     @Inject
@@ -64,18 +64,10 @@ public class QuakeDetailFragment extends DaggerFragment implements QuakeDetailVi
         return fragment;
     }
 
+    @NonNull
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null && getArguments() != null) {
-            presenter.onRefresh(getArguments().getString(ARG_PUBLIC_ID));
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
+    protected BasePresenter<?, QuakeDetailProps> getPresenter() {
+        return presenter;
     }
 
     @Override
@@ -100,15 +92,8 @@ public class QuakeDetailFragment extends DaggerFragment implements QuakeDetailVi
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (feature != null) outState.putParcelable(ARG_FEATURE, feature);
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.onViewCreated();
 
         mMagnitudeBigView = (TextView) view.findViewById(R.id.magnitude_big);
         mMagnitudeSmallView = (TextView) view.findViewById(R.id.magnitude_small);
@@ -121,10 +106,11 @@ public class QuakeDetailFragment extends DaggerFragment implements QuakeDetailVi
         view.findViewById(R.id.share_button).setOnClickListener(this);
     }
 
+    @Nullable
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        presenter.onDestroyView();
+    protected QuakeDetailProps fromArguments(@NonNull Bundle bundle) {
+        String publicId = bundle.getString(ARG_PUBLIC_ID);
+        return publicId != null ? new QuakeDetailProps(publicId) : null;
     }
 
     @Override

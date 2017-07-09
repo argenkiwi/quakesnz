@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.list
+package nz.co.codebros.quakesnz.ui
 
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.model.Feature
-import nz.co.codebros.quakesnz.utils.QuakesUtils
+import nz.co.codebros.quakesnz.QuakesUtils
 import java.util.*
 import kotlin.collections.ArrayList
 

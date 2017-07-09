@@ -11,6 +11,9 @@ import nz.co.codebros.quakesnz.settings.SettingsFragment;
 @Module
 public abstract class SettingsActivityModule {
 
-    @ContributesAndroidInjector(modules = FeatureCollectionModule.class)
+    @ContributesAndroidInjector(modules = {
+            SettingsModule.class,
+            FeatureCollectionModule.class
+    })
     abstract SettingsFragment settingsFragment();
 }

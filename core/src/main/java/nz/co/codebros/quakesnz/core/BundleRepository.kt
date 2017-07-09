@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.repository
+package nz.co.codebros.quakesnz.core
 
 import android.os.Bundle
 import android.os.Parcelable

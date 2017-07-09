@@ -9,7 +9,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import nz.co.codebros.quakesnz.core.GeonetService
 import nz.co.codebros.quakesnz.core.model.FeatureCollection
-import nz.co.codebros.quakesnz.repository.Repository
+import nz.co.codebros.quakesnz.core.Repository
 
 /**
  * Created by leandro on 2/04/16.
@@ -19,18 +19,18 @@ class LoadFeaturesInteractorImpl(
         private val service: GeonetService,
         private val repository: Repository<FeatureCollection>
 ) : LoadFeaturesInteractor {
-    override fun execute(onSuccess: Action, onError: Consumer<Throwable>): Disposable? {
-        return completable()?.subscribe(onSuccess, onError)
+    override fun execute(onSuccess: Action, onError: Consumer<Throwable>): Disposable {
+        return completable().subscribe(onSuccess, onError)
     }
 
-    override fun execute() {
-        completable()?.subscribe()
+    override fun execute(): Disposable {
+        return completable().subscribe()
     }
 
-    private fun completable(): Completable? {
+    private fun completable(): Completable {
         val mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"))
         return service.getQuakes(mmi)
-                .doAfterSuccess { repository.publish(it) }
+                .doOnSuccess { repository.publish(it) }
                 .toCompletable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

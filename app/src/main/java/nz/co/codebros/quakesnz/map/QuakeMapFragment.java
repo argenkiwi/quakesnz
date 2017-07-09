@@ -1,7 +1,9 @@
-package nz.co.codebros.quakesnz.detail;
+package nz.co.codebros.quakesnz.map;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,18 +45,20 @@ public class QuakeMapFragment extends SupportMapFragment {
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                googleMap.moveCamera(CameraUpdateFactory
-                        .newLatLngZoom(new LatLng(-41.3090732, 175.1858282), 4.5f));
-            }
-        });
+        if(bundle == null) {
+            getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    googleMap.moveCamera(CameraUpdateFactory
+                            .newLatLngZoom(new LatLng(-41.3090732, 175.1858282), 4.5f));
+                }
+            });
+        }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         disposable = repository.subscribe(new Consumer<Feature>() {
             @Override
             public void accept(@NonNull final Feature feature) throws Exception {
@@ -80,8 +84,8 @@ public class QuakeMapFragment extends SupportMapFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
         if (disposable != null) disposable.dispose();
     }
 }

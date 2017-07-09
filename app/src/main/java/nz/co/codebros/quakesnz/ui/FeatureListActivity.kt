@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.list
+package nz.co.codebros.quakesnz.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,9 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import dagger.android.support.DaggerAppCompatActivity
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.detail.FeatureDetailActivity
-import nz.co.codebros.quakesnz.ui.AboutActivity
-import nz.co.codebros.quakesnz.ui.InfoActivity
+import nz.co.codebros.quakesnz.list.QuakeListFragment
 import nz.co.codebros.quakesnz.settings.SettingsActivity
 
 class FeatureListActivity : DaggerAppCompatActivity(), QuakeListFragment.OnFeatureClickedListener {

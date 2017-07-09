@@ -6,7 +6,7 @@
     <string name="depth">Depth: %1$.0f km</string>
     <string name="location">%1$d km away from %2$s</string>
     <string name="about">About</string>
-    <string name="about_body">Quakes NZ was built in Wellington, New Zealand by Leandro Peralta and Daniel Watts.\n\nLeandro Peralta - Developer\nleandro.peralta@androideas.net\n\nDaniel Watts - Designer\ndaniel@wattscreative.me</string>
+    <string name="about_body">Quakes NZ was built in Wellington, New Zealand by Leandro Peralta and Daniel Watts.\n\nLeandro Peralta - Developer\nleandro.peralta@live.com.ar\n\nDaniel Watts - Designer\ndaniel@wattscreative.me</string>
     <string name="acknowledgements">Acknowledgements</string>
     <string name="acknowledgements_body">We would like to thank the following organisations for providing the awesome data used within this app.\n\ngeonet.org.nz\nThe New Zealand GeoNet project and its sponsors EQC, GNS Science and LINZ.\n\ncivildefence.govt.nz\nThe Ministry of Civil Defence and Emergency Management.</string>
     <string name="before_title">Before an Earthquake</string>
@@ -35,6 +35,6 @@
     <string name="strong">Strong</string>
     <string name="severe">Severe</string>
     <string name="filter_view_quake_details">View Quake Details</string>
-    <string name="default_share_content">A %1$s earthquake of magnitude %2$.1f occurred %3$s. #QuakesNZ http://www.geonet.org.nz/quakes/region/newzealand/%4$s</string>
+    <string name="default_share_content">A %1$s earthquake of magnitude %2$.1f occurred %3$s. #QuakesNZ https://www.geonet.org.nz/earthquake/%4$s</string>
     <string name="error_loading_feature">Failed to load quake details.</string>
 </resources>

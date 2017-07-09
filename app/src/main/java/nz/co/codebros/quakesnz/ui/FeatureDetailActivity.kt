@@ -1,10 +1,11 @@
-package nz.co.codebros.quakesnz.detail
+package nz.co.codebros.quakesnz.ui
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import dagger.android.support.DaggerAppCompatActivity
+import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
 
 class FeatureDetailActivity : DaggerAppCompatActivity() {
 
