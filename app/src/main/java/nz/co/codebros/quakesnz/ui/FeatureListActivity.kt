@@ -21,11 +21,11 @@ class FeatureListActivity : DaggerAppCompatActivity(), QuakeListFragment.OnFeatu
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feature_list)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.title = title
 
-        mTwoPane = findViewById(R.id.map_container) != null
+        mTwoPane = findViewById<View>(R.id.map_container) != null
     }
 
     override fun onFeatureClicked(view: View) {

@@ -24,10 +24,10 @@ class InfoFragment : Fragment() {
         val view = inflater?.inflate(R.layout.fragment_info, container, false)
 
         view?.let {
-            val txtTitle = it.findViewById(R.id.title) as TextView
+            val txtTitle = it.findViewById<TextView>(R.id.title)
             txtTitle.setText(arguments.getInt(ARG_TITLE))
 
-            val bodyView = it.findViewById(R.id.body) as TextView
+            val bodyView = it.findViewById<TextView>(R.id.body)
             bodyView.setText(arguments.getInt(ARG_BODY))
             Linkify.addLinks(bodyView, Linkify.ALL)
         }
