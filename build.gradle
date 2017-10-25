@@ -15,3 +15,14 @@ allprojects {
         jcenter()
     }
 }
+ext {
+    // SDK and tools
+    min_sdk_version = 14
+    target_sdk_version = 26
+    compile_sdk_version = 26
+    build_tools_version = '26.0.2'
+
+    // Dependencies versions
+    support_library_version = '26.1.0'
+    dagger_version = '2.12'
+}
