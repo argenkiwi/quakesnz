@@ -3,17 +3,18 @@ package nz.co.codebros.quakesnz.detail
 import android.os.Bundle
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
+import nz.co.codebros.quakesnz.core.BasePresenter
 import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
-import nz.co.codebros.quakesnz.core.BasePresenter
-import nz.co.codebros.quakesnz.core.BundleRepository
+import nz.co.codebros.quakesnz.repository.FeatureRepository
+import javax.inject.Inject
 
 /**
  * Created by leandro on 7/07/16.
  */
-class QuakeDetailPresenter(
+class QuakeDetailPresenter @Inject constructor(
         view: QuakeDetailView,
-        private val repository: BundleRepository<Feature>,
+        private val repository: FeatureRepository,
         private val interactor: LoadFeatureInteractor
 ) : BasePresenter<QuakeDetailView, QuakeDetailProps>(view) {
 

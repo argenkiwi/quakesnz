@@ -25,24 +25,7 @@ public abstract class QuakeListModule {
     abstract FeatureAdapter.Listener featureAdapterListener(QuakeListFragment fragment);
 
     @Provides
-    static FeatureAdapter featureAdapter(FeatureAdapter.Listener listener){
-        return new FeatureAdapter(listener);
-    }
-
-    @Provides
     static SelectFeatureInteractor selectFeatureInteractor(Subject<Feature> subject) {
         return new SelectFeatureInteractorImpl(subject);
-    }
-
-    @Provides
-    static QuakeListPresenter presenter(
-            QuakeListView view,
-            FeatureCollectionRepository featureCollectionRepository,
-            FeatureRepository featureRepository,
-            LoadFeaturesInteractor loadFeaturesInteractor,
-            SelectFeatureInteractor selectFeatureInteractor
-    ) {
-        return new QuakeListPresenter(view, featureCollectionRepository, featureRepository,
-                loadFeaturesInteractor, selectFeatureInteractor);
     }
 }

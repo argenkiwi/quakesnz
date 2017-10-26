@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.Subject;
 import nz.co.codebros.quakesnz.core.GeonetService;
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor;
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
@@ -15,12 +16,7 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository;
 public abstract class FeatureModule {
 
     @Provides
-    static FeatureRepository featureRepository(Subject<Feature> subject){
-        return new FeatureRepository(subject);
-    }
-
-    @Provides
-    static LoadFeatureInteractorImpl getFeatureInteractor(
+    static LoadFeatureInteractor getFeatureInteractor(
             GeonetService service,
             FeatureRepository repository
     ) {

@@ -11,12 +11,13 @@ import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.QuakesUtils
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 /**
  * Created by leandro on 12/07/15.
  */
-class FeatureAdapter(
+class FeatureAdapter @Inject constructor(
         private val listener: Listener
 ) : RecyclerView.Adapter<FeatureAdapter.ViewHolder>() {
     var features: MutableList<Feature> = ArrayList()

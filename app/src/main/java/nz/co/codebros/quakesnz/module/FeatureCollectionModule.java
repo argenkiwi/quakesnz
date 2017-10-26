@@ -18,13 +18,6 @@ import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
 public abstract class FeatureCollectionModule {
 
     @Provides
-    static FeatureCollectionRepository featureCollectionRepository(
-            Subject<FeatureCollection> subject
-    ) {
-        return new FeatureCollectionRepository(subject);
-    }
-
-    @Provides
     static LoadFeaturesInteractor interactor(
             SharedPreferences preferences,
             GeonetService service,

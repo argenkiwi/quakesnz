@@ -10,11 +10,12 @@ import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import nz.co.codebros.quakesnz.core.BasePresenter
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
 import nz.co.codebros.quakesnz.repository.FeatureRepository
+import javax.inject.Inject
 
 /**
  * Created by leandro on 9/07/15.
  */
-class QuakeListPresenter (
+class QuakeListPresenter @Inject constructor(
         view: QuakeListView,
         private val featureCollectionRepository: FeatureCollectionRepository,
         private val featureRepository: FeatureRepository,
