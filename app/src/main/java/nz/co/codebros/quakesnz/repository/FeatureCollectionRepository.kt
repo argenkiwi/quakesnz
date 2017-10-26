@@ -11,7 +11,5 @@ import nz.co.codebros.quakesnz.core.model.FeatureCollection
 class FeatureCollectionRepository(
         subject: Subject<FeatureCollection>
 ) : BaseBundleRepository<FeatureCollection>(subject) {
-    override fun getKey():String {
-        return  FeatureCollection::class.java.canonicalName
-    }
+    override fun getKey() = FeatureCollection::class.java.canonicalName
 }
