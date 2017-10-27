@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.core.model.FeatureCollection;
@@ -21,6 +22,7 @@ class QuakeListViewModel extends ViewModel {
 
     private final FeatureCollectionRepository repository;
     private MutableLiveData<List<Feature>> features;
+    private Disposable disposable;
 
     QuakeListViewModel(FeatureCollectionRepository repository) {
         this.repository = repository;
@@ -29,7 +31,7 @@ class QuakeListViewModel extends ViewModel {
     LiveData<List<Feature>> getFeatures() {
         if (features == null) {
             features = new MutableLiveData<>();
-            repository.subscribe(new Consumer<FeatureCollection>() {
+            disposable = repository.subscribe(new Consumer<FeatureCollection>() {
                 @Override
                 public void accept(FeatureCollection featureCollection) throws Exception {
                     features.setValue(featureCollection.getFeatures());
@@ -37,6 +39,12 @@ class QuakeListViewModel extends ViewModel {
             });
         }
         return features;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposable.dispose();
     }
 
     static class Factory extends ViewModelProvider.NewInstanceFactory {
