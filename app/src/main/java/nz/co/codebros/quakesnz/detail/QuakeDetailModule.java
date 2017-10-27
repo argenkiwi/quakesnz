@@ -20,7 +20,7 @@ public abstract class QuakeDetailModule {
     static QuakeDetailViewModel.Factory factory(FeatureRepository repository) {
         return new QuakeDetailViewModel.Factory(repository);
     }
-    
+
     @Provides
     static QuakeDetailViewModel quakeDetailViewModel(
             QuakeDetailFragment fragment,

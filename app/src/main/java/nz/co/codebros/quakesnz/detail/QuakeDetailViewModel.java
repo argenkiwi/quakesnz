@@ -27,7 +27,7 @@ class QuakeDetailViewModel extends ViewModel {
     }
 
     public LiveData<Feature> getFeature() {
-        if (feature != null) {
+        if (feature == null) {
             feature = new MutableLiveData<>();
             disposable = repository.subscribe(new Consumer<Feature>() {
                 @Override
