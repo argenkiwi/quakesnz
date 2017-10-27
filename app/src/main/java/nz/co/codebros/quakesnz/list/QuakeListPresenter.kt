@@ -17,15 +17,10 @@ import javax.inject.Inject
  */
 class QuakeListPresenter @Inject constructor(
         view: QuakeListView,
-        private val featureCollectionRepository: FeatureCollectionRepository,
         private val featureRepository: FeatureRepository,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
 ) : BasePresenter<QuakeListView, Unit>(view) {
-
-    private val featureCollectionConsumer = Consumer<FeatureCollection> { (features) ->
-        view.listQuakes(features)
-    }
 
     override fun onInit(props: Unit?) {
         super.onInit(props)
@@ -40,18 +35,7 @@ class QuakeListPresenter @Inject constructor(
 
     override fun onViewCreated() {
         super.onViewCreated()
-        addDisposable(featureCollectionRepository.subscribe(featureCollectionConsumer))
         addDisposable(featureRepository.subscribe(Consumer { view.selectFeature(it) }))
-    }
-
-    override fun onRestoreState(bundle: Bundle) {
-        super.onRestoreState(bundle)
-        featureCollectionRepository.publish(bundle)
-    }
-
-    override fun onSaveState(bundle: Bundle) {
-        super.onSaveState(bundle)
-        addDisposable(featureCollectionRepository.subscribe(bundle))
     }
 
     fun onFeatureSelected(feature: Feature) {
