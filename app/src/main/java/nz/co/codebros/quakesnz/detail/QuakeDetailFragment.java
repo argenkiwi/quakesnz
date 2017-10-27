@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.detail;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -89,13 +90,24 @@ public class QuakeDetailFragment extends BaseFragment<QuakeDetailProps> implemen
     }
 
     @Override
+    public void onCreate(@android.support.annotation.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel.getFeature().observe(this, new Observer<Feature>() {
+            @Override
+            public void onChanged(@android.support.annotation.Nullable Feature feature) {
+                showDetails(feature);
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_quake_detail, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mMagnitudeBigView = (TextView) view.findViewById(R.id.magnitude_big);

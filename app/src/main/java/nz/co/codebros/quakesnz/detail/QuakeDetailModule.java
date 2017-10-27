@@ -5,8 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor;
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
 
 /**
@@ -19,7 +17,15 @@ public abstract class QuakeDetailModule {
     abstract QuakeDetailView quakeDetailView(QuakeDetailFragment fragment);
 
     @Provides
-    static QuakeDetailViewModel quakeDetailViewModel(QuakeDetailFragment fragment) {
-        return ViewModelProviders.of(fragment).get(QuakeDetailViewModel.class);
+    static QuakeDetailViewModel.Factory factory(FeatureRepository repository) {
+        return new QuakeDetailViewModel.Factory(repository);
+    }
+    
+    @Provides
+    static QuakeDetailViewModel quakeDetailViewModel(
+            QuakeDetailFragment fragment,
+            QuakeDetailViewModel.Factory factory
+    ) {
+        return ViewModelProviders.of(fragment, factory).get(QuakeDetailViewModel.class);
     }
 }

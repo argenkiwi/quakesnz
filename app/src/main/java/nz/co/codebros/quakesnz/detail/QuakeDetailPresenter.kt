@@ -14,7 +14,6 @@ import javax.inject.Inject
  */
 class QuakeDetailPresenter @Inject constructor(
         view: QuakeDetailView,
-        private val repository: FeatureRepository,
         private val interactor: LoadFeatureInteractor
 ) : BasePresenter<QuakeDetailView, QuakeDetailProps>(view) {
 
@@ -27,18 +26,6 @@ class QuakeDetailPresenter @Inject constructor(
                 view.showLoadingError()
             }))
         }
-    }
-
-    override fun onViewCreated() {
-        addDisposable(repository.subscribe(Consumer { view.showDetails(it) }))
-    }
-
-    override fun onRestoreState(bundle: Bundle) {
-        repository.publish(bundle)
-    }
-
-    override fun onSaveState(bundle: Bundle) {
-        addDisposable(repository.subscribe(bundle))
     }
 
     fun onShare(feature: Feature) {
