@@ -4,12 +4,13 @@ import android.content.SharedPreferences
 
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.core.BasePresenter
+import javax.inject.Inject
 
 /**
  * Created by leandro on 6/07/17.
  */
 
-class SettingsPresenter internal constructor(
+class SettingsPresenter @Inject internal constructor(
         view: SettingsView,
         private val preferences: SharedPreferences,
         private val interactor: LoadFeaturesInteractor
