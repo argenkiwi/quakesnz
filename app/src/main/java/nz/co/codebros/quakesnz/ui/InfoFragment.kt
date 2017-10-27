@@ -17,24 +17,24 @@ import nz.co.codebros.quakesnz.R
 class InfoFragment : Fragment() {
 
     override fun onCreateView(
-            inflater: LayoutInflater?,
+            inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val view = inflater?.inflate(R.layout.fragment_info, container, false)
+        val view = inflater.inflate(R.layout.fragment_info, container, false)
 
         view?.let {
             val txtTitle = it.findViewById<TextView>(R.id.title)
-            txtTitle.setText(arguments.getInt(ARG_TITLE))
-
             val bodyView = it.findViewById<TextView>(R.id.body)
-            bodyView.setText(arguments.getInt(ARG_BODY))
-            Linkify.addLinks(bodyView, Linkify.ALL)
+            arguments?.let {
+                txtTitle.setText(it.getInt(ARG_TITLE))
+                bodyView.setText(it.getInt(ARG_BODY))
+                Linkify.addLinks(bodyView, Linkify.ALL)
+            }
         }
 
         return view
     }
-
     companion object {
 
         val ARG_TITLE = "arg_title"
