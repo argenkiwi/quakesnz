@@ -15,7 +15,7 @@ abstract class BasePresenter<out V, in P>(val view: V) : Presenter<P> {
         disposables.add(disposable)
     }
 
-    protected fun disposeAll() {
+    private fun disposeAll() {
         disposables.dispose()
     }
 
