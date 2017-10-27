@@ -37,6 +37,9 @@ public class QuakeDetailFragment extends BaseFragment<QuakeDetailProps> implemen
     QuakeDetailPresenter presenter;
 
     @Inject
+    QuakeDetailViewModel viewModel;
+
+    @Inject
     @Named("app")
     Tracker tracker;
 
