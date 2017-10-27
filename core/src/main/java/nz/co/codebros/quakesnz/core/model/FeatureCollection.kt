@@ -14,17 +14,11 @@ data class FeatureCollection(
         parcel.writeTypedList(features)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<FeatureCollection> {
-        override fun createFromParcel(parcel: Parcel): FeatureCollection {
-            return FeatureCollection(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel): FeatureCollection = FeatureCollection(parcel)
 
-        override fun newArray(size: Int): Array<FeatureCollection?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<FeatureCollection?> = arrayOfNulls(size)
     }
 }

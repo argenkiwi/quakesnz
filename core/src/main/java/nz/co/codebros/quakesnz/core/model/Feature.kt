@@ -21,17 +21,11 @@ data class Feature(
         parcel.writeParcelable(properties, flags)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<Feature> {
-        override fun createFromParcel(parcel: Parcel): Feature {
-            return Feature(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel): Feature = Feature(parcel)
 
-        override fun newArray(size: Int): Array<Feature?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<Feature?> = arrayOfNulls(size)
     }
 }

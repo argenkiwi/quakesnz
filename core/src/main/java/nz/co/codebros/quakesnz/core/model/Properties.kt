@@ -48,17 +48,11 @@ data class Properties(
         parcel.writeString(quality)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<Properties> {
-        override fun createFromParcel(parcel: Parcel): Properties {
-            return Properties(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel): Properties = Properties(parcel)
 
-        override fun newArray(size: Int): Array<Properties?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<Properties?> = arrayOfNulls(size)
     }
 }

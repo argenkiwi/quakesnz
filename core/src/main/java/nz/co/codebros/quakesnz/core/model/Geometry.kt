@@ -25,17 +25,11 @@ data class Geometry(
         parcel.writeParcelable(coordinates, flags)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Geometry> {
-        override fun createFromParcel(parcel: Parcel): Geometry {
-            return Geometry(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel): Geometry = Geometry(parcel)
 
-        override fun newArray(size: Int): Array<Geometry?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<Geometry?> = arrayOfNulls(size)
     }
 }

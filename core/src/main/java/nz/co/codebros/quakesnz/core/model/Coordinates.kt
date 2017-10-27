@@ -21,17 +21,11 @@ data class Coordinates(
         parcel.writeDouble(longitude)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<Coordinates> {
-        override fun createFromParcel(parcel: Parcel): Coordinates {
-            return Coordinates(parcel)
-        }
+        override fun createFromParcel(parcel: Parcel): Coordinates = Coordinates(parcel)
 
-        override fun newArray(size: Int): Array<Coordinates?> {
-            return arrayOfNulls(size)
-        }
+        override fun newArray(size: Int): Array<Coordinates?> = arrayOfNulls(size)
     }
 }
