@@ -76,6 +76,9 @@ dependencies {
     // Dagger Android
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 
+    // Architecture Components
+    compile 'android.arch.lifecycle:extensions:1.0.0-rc1';
+
     // Testing
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'

@@ -20,12 +20,12 @@ abstract class BaseFragment<P> : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val presenter = presenter
-        if (savedInstanceState != null) {
-            presenter.onRestoreState(savedInstanceState)
-        } else if (arguments != null) {
-            presenter.onInit(fromArguments(arguments))
-        } else presenter.onInit()
+        val arguments = arguments
+        when {
+            savedInstanceState != null -> presenter.onRestoreState(savedInstanceState)
+            arguments != null -> presenter.onInit(fromArguments(arguments))
+            else -> presenter.onInit()
+        }
     }
 
     override fun onDestroyView() {
@@ -33,19 +33,17 @@ abstract class BaseFragment<P> : Fragment() {
         presenter.onDestroyView()
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.onViewCreated()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter.onSaveState(outState!!)
+        presenter.onSaveState(outState)
     }
 
-    protected open fun fromArguments(bundle: Bundle): P? {
-        return null
-    }
+    protected open fun fromArguments(bundle: Bundle): P? = null
 
     protected abstract val presenter: BasePresenter<*, P>
 }
