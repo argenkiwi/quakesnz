@@ -95,7 +95,7 @@ public class QuakeDetailFragment extends BaseFragment<QuakeDetailProps> implemen
         viewModel.getFeature().observe(this, new Observer<Feature>() {
             @Override
             public void onChanged(@android.support.annotation.Nullable Feature feature) {
-                showDetails(feature);
+                if (feature != null) showDetails(feature);
             }
         });
     }
