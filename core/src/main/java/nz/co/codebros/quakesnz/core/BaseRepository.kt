@@ -13,12 +13,10 @@ import io.reactivex.subjects.Subject
 abstract class BaseRepository<T> protected constructor(
         private val subject: Subject<T>
 ) : Repository<T> {
-    override fun subscribe(consumer: Consumer<T>): Disposable {
-        return subject
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(consumer)
-    }
+    override fun subscribe(consumer: Consumer<T>): Disposable = subject
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(consumer)
 
     override fun publish(t: T) {
         subject.onNext(t)

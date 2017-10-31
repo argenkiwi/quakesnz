@@ -19,9 +19,8 @@ abstract class BaseBundleRepository<T : Parcelable> protected constructor(
         if (t != null) publish(t)
     }
 
-    override fun subscribe(bundle: Bundle): Disposable {
-        return subject.subscribe { t -> bundle.putParcelable(getKey(), t) }
-    }
+    override fun subscribe(bundle: Bundle): Disposable =
+            subject.subscribe { t -> bundle.putParcelable(getKey(), t) }
 
     protected abstract fun getKey() : String
 }
