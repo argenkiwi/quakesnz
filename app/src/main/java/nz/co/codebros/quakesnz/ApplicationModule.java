@@ -14,22 +14,31 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
-import nz.co.codebros.quakesnz.ui.FeatureDetailActivityModule;
-import nz.co.codebros.quakesnz.ui.FeatureListActivityModule;
+import nz.co.codebros.quakesnz.settings.SettingsActivity;
 import nz.co.codebros.quakesnz.settings.SettingsActivityModule;
 import nz.co.codebros.quakesnz.ui.FeatureDetailActivity;
+import nz.co.codebros.quakesnz.ui.FeatureDetailActivityModule;
 import nz.co.codebros.quakesnz.ui.FeatureListActivity;
-import nz.co.codebros.quakesnz.settings.SettingsActivity;
+import nz.co.codebros.quakesnz.ui.FeatureListActivityModule;
 
 /**
- * Created by leandro on 9/07/15.
+ * Created by Leandro on 2/11/2017.
  */
 @Module
-public abstract class ApplicationModule {
+abstract class ApplicationModule {
+
+    @ContributesAndroidInjector(modules = FeatureListActivityModule.class)
+    abstract FeatureListActivity featureListActivity();
+
+    @ContributesAndroidInjector(modules = FeatureDetailActivityModule.class)
+    abstract FeatureDetailActivity featureDetailActivity();
+
+    @ContributesAndroidInjector(modules = SettingsActivityModule.class)
+    abstract SettingsActivity settingsActivity();
 
     @Provides
     @Named("cacheDir")
-    static File cacheDir(QuakesNZApplication application){
+    static File cacheDir(QuakesNZApplication application) {
         return application.getCacheDir();
     }
 
@@ -44,13 +53,4 @@ public abstract class ApplicationModule {
     static Tracker tracker(QuakesNZApplication application) {
         return GoogleAnalytics.getInstance(application).newTracker(R.xml.app_tracker);
     }
-
-    @ContributesAndroidInjector(modules = FeatureListActivityModule.class)
-    abstract FeatureListActivity featureListActivity();
-
-    @ContributesAndroidInjector(modules = FeatureDetailActivityModule.class)
-    abstract FeatureDetailActivity featureDetailActivity();
-
-    @ContributesAndroidInjector(modules = SettingsActivityModule.class)
-    abstract SettingsActivity settingsActivity();
 }

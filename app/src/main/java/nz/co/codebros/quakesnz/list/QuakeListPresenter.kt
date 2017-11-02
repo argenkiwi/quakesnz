@@ -15,7 +15,7 @@ import javax.inject.Inject
 /**
  * Created by leandro on 9/07/15.
  */
-class QuakeListPresenter @Inject constructor(
+class QuakeListPresenter(
         view: QuakeListView,
         private val featureRepository: FeatureRepository,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,

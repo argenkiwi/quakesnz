@@ -20,14 +20,9 @@ import kotlin.collections.ArrayList
 class FeatureAdapter @Inject constructor(
         private val listener: Listener
 ) : RecyclerView.Adapter<FeatureAdapter.ViewHolder>() {
-    var features: MutableList<Feature> = ArrayList()
-        set(value) {
-            field.clear()
-            field.addAll(value)
-            notifyDataSetChanged()
-        }
+    val features: MutableList<Feature> = ArrayList()
 
-    var selectedPosition: Int = -1
+    private var selectedPosition: Int = -1
         set(value) {
             if (value != field) {
                 notifyItemChanged(selectedPosition)
@@ -35,6 +30,12 @@ class FeatureAdapter @Inject constructor(
                 notifyItemChanged(selectedPosition)
             }
         }
+
+    fun setFeatures(features: List<Feature>) {
+        this.features.clear()
+        this.features.addAll(features)
+        notifyDataSetChanged()
+    }
 
     fun setSelectedFeature(feature: Feature) {
         selectedPosition = features.indexOf(feature)

@@ -27,6 +27,7 @@ abstract class BaseFragment<P> : Fragment() {
             else -> presenter.onInit()
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.onDestroyView()

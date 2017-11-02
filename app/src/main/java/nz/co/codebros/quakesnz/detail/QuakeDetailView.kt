@@ -6,7 +6,7 @@ import nz.co.codebros.quakesnz.core.model.Feature
  * Created by leandro on 7/07/16.
  */
 interface QuakeDetailView {
-    fun share(publicId: Feature)
+    fun share(feature: Feature)
 
     fun showDetails(feature: Feature)
 

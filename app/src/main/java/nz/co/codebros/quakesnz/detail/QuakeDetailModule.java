@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.detail;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 
 import dagger.Binds;
@@ -8,7 +9,7 @@ import dagger.Provides;
 import nz.co.codebros.quakesnz.repository.FeatureRepository;
 
 /**
- * Created by leandro on 7/07/16.
+ * Created by Leandro on 2/11/2017.
  */
 @Module
 public abstract class QuakeDetailModule {

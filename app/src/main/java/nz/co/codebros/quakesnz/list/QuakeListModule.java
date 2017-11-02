@@ -6,14 +6,16 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.Subject;
+import nz.co.codebros.quakesnz.core.model.Feature;
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor;
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl;
-import nz.co.codebros.quakesnz.core.model.Feature;
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository;
+import nz.co.codebros.quakesnz.repository.FeatureRepository;
 import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 
 /**
- * Created by leandro on 9/07/15.
+ * Created by Leandro on 2/11/2017.
  */
 @Module
 public abstract class QuakeListModule {
@@ -22,11 +24,11 @@ public abstract class QuakeListModule {
     abstract QuakeListView quakeListView(QuakeListFragment fragment);
 
     @Binds
-    abstract FeatureAdapter.Listener featureAdapterListener(QuakeListFragment fragment);
+    abstract FeatureAdapter.Listener listener(QuakeListFragment fragment);
 
     @Provides
-    static SelectFeatureInteractor selectFeatureInteractor(Subject<Feature> subject) {
-        return new SelectFeatureInteractorImpl(subject);
+    static SelectFeatureInteractor selectFeatureInteractor(Subject<Feature> featureSubject) {
+        return new SelectFeatureInteractorImpl(featureSubject);
     }
 
     @Provides
@@ -40,5 +42,16 @@ public abstract class QuakeListModule {
             QuakeListViewModel.Factory factory
     ) {
         return ViewModelProviders.of(fragment, factory).get(QuakeListViewModel.class);
+    }
+
+    @Provides
+    static QuakeListPresenter quakeListPresenter(
+            QuakeListView view,
+            FeatureRepository featureRepository,
+            LoadFeaturesInteractor loadFeaturesInteractor,
+            SelectFeatureInteractor selectFeatureInteractor
+    ) {
+        return new QuakeListPresenter(view, featureRepository, loadFeaturesInteractor,
+                selectFeatureInteractor);
     }
 }
