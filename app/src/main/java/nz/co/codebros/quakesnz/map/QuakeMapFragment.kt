@@ -52,7 +52,7 @@ class QuakeMapFragment : SupportMapFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        disposable = repository?.subscribe(Consumer { (geometry) ->
+        disposable = repository.subscribe(Consumer { (geometry) ->
             getMapAsync { googleMap ->
                 val coordinates = geometry.coordinates
                 val latLng = LatLng(

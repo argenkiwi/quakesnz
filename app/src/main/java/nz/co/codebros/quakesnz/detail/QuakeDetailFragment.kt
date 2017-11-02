@@ -50,7 +50,7 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView, V
     override fun onClick(view: View) {
         when (view.id) {
             R.id.share_button -> {
-                tracker?.send(HitBuilders.EventBuilder()
+                tracker.send(HitBuilders.EventBuilder()
                         .setCategory("Interactions")
                         .setAction("Share")
                         .setLabel("Share")
