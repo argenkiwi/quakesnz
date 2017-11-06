@@ -67,9 +67,10 @@ class QuakeListFragment : DaggerFragment(), FeatureAdapter.Listener {
             viewModel.onRefresh()
         })
 
-        val recyclerView = view.findViewById<View>(R.id.recycler_view) as RecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = featureAdapter
+        view.findViewById<RecyclerView>(R.id.recycler_view).let {
+            it.layoutManager = LinearLayoutManager(activity)
+            it.adapter = featureAdapter
+        }
     }
 
     override fun onFeatureClicked(view: View, feature: Feature) {
