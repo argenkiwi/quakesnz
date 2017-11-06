@@ -10,23 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
-
-import java.util.Locale
-
+import nz.co.codebros.quakesnz.QuakesUtils
+import nz.co.codebros.quakesnz.R
+import nz.co.codebros.quakesnz.core.BaseFragment
+import nz.co.codebros.quakesnz.core.model.Feature
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
-import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.core.model.Feature
-import nz.co.codebros.quakesnz.core.model.Properties
-import nz.co.codebros.quakesnz.core.BasePresenter
-import nz.co.codebros.quakesnz.core.BaseFragment
-import nz.co.codebros.quakesnz.QuakesUtils
-
-class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView, View.OnClickListener {
+class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
 
     @Inject
     override lateinit var presenter: QuakeDetailPresenter
@@ -38,39 +32,25 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView, V
     @field:[Inject Named("app")]
     internal lateinit var tracker: Tracker
 
-    private var mMagnitudeBigView: TextView? = null
-    private var mTabView: View? = null
-    private var mMagnitudeSmallView: TextView? = null
-    private var mIntensityView: TextView? = null
-    private var mTimeView: TextView? = null
-    private var mLocationView: TextView? = null
-    private var mDepthView: TextView? = null
-    private var feature: Feature? = null
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.share_button -> {
-                tracker.send(HitBuilders.EventBuilder()
-                        .setCategory("Interactions")
-                        .setAction("Share")
-                        .setLabel("Share")
-                        .build())
-
-                presenter.onShare(feature!!)
-            }
-        }
-    }
+    private lateinit var mMagnitudeBigView: TextView
+    private lateinit var mTabView: View
+    private lateinit var mMagnitudeSmallView: TextView
+    private lateinit var mIntensityView: TextView
+    private lateinit var mTimeView: TextView
+    private lateinit var mLocationView: TextView
+    private lateinit var mDepthView: TextView
+    private lateinit var feature: Feature
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.feature.observe(this, Observer { feature -> if (feature != null) showDetails(feature) })
+        viewModel.feature.observe(this, Observer { it?.let { showDetails(it) } })
     }
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ) = inflater.inflate(R.layout.fragment_quake_detail, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_quake_detail, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -83,7 +63,19 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView, V
         mTimeView = view.findViewById<View>(R.id.time) as TextView
         mTabView = view.findViewById(R.id.colorTab)
 
-        view.findViewById<View>(R.id.share_button).setOnClickListener(this)
+        view.findViewById<View>(R.id.share_button).setOnClickListener({
+            when (it.id) {
+                R.id.share_button -> {
+                    tracker.send(HitBuilders.EventBuilder()
+                            .setCategory("Interactions")
+                            .setAction("Share")
+                            .setLabel("Share")
+                            .build())
+
+                    presenter.onShare(feature)
+                }
+            }
+        })
     }
 
     override fun fromArguments(bundle: Bundle): QuakeDetailProps? {
@@ -113,15 +105,15 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView, V
         val magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.magnitude)
                 .split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
-        mMagnitudeBigView!!.text = magnitude[0]
-        mMagnitudeBigView!!.setTextColor(colorForIntensity)
-        mMagnitudeSmallView!!.text = "." + magnitude[1]
-        mMagnitudeSmallView!!.setTextColor(colorForIntensity)
-        mIntensityView!!.text = QuakesUtils.getIntensity(context!!, properties.mmi)
-        mLocationView!!.text = properties.locality
-        mDepthView!!.text = getString(R.string.depth, properties.depth)
-        mTimeView!!.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
-        mTabView!!.setBackgroundColor(colorForIntensity)
+        mMagnitudeBigView.text = magnitude[0]
+        mMagnitudeBigView.setTextColor(colorForIntensity)
+        mMagnitudeSmallView.text = ".${magnitude[1]}"
+        mMagnitudeSmallView.setTextColor(colorForIntensity)
+        mIntensityView.text = QuakesUtils.getIntensity(context!!, properties.mmi)
+        mLocationView.text = properties.locality
+        mDepthView.text = getString(R.string.depth, properties.depth)
+        mTimeView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
+        mTabView.setBackgroundColor(colorForIntensity)
     }
 
     override fun showLoadingError() {
