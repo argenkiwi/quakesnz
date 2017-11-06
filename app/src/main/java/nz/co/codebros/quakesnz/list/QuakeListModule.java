@@ -32,8 +32,11 @@ public abstract class QuakeListModule {
     }
 
     @Provides
-    static QuakeListViewModel.Factory viewModelFactory(FeatureCollectionRepository repository) {
-        return new QuakeListViewModel.Factory(repository);
+    static QuakeListViewModel.Factory viewModelFactory(
+            FeatureCollectionRepository repository,
+            LoadFeaturesInteractor interactor
+    ) {
+        return new QuakeListViewModel.Factory(repository, interactor);
     }
 
     @Provides
@@ -48,10 +51,8 @@ public abstract class QuakeListModule {
     static QuakeListPresenter quakeListPresenter(
             QuakeListView view,
             FeatureRepository featureRepository,
-            LoadFeaturesInteractor loadFeaturesInteractor,
             SelectFeatureInteractor selectFeatureInteractor
     ) {
-        return new QuakeListPresenter(view, featureRepository, loadFeaturesInteractor,
-                selectFeatureInteractor);
+        return new QuakeListPresenter(view, featureRepository, selectFeatureInteractor);
     }
 }

@@ -19,13 +19,10 @@ class LoadFeaturesInteractorImpl(
         private val service: GeonetService,
         private val repository: Repository<FeatureCollection>
 ) : LoadFeaturesInteractor {
-    override fun execute(onSuccess: Action, onError: Consumer<Throwable>): Disposable {
-        return completable().subscribe(onSuccess, onError)
-    }
+    override fun execute(onSuccess: Action, onError: Consumer<Throwable>): Disposable =
+            completable().subscribe(onSuccess, onError)
 
-    override fun execute(): Disposable {
-        return completable().subscribe()
-    }
+    override fun execute(): Disposable = completable().subscribe()
 
     private fun completable(): Completable {
         val mmi = Integer.parseInt(preferences.getString("pref_intensity", "3"))

@@ -38,11 +38,6 @@ class QuakeListFragment : BaseFragment<Unit>(), QuakeListView, FeatureAdapter.Li
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-    override fun hideProgress() {
-        Log.d(TAG, "Hide progress.")
-        swipeRefreshLayout.isRefreshing = false
-    }
-
     override fun listQuakes(features: List<Feature>) {
         Log.d(TAG, "List quakes.")
         featureAdapter.setFeatures(features)
@@ -50,7 +45,12 @@ class QuakeListFragment : BaseFragment<Unit>(), QuakeListView, FeatureAdapter.Li
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.features.observe(this, Observer { it?.let { listQuakes(it) } })
+        viewModel.state.observe(this, Observer {
+            it?.let { swipeRefreshLayout.isRefreshing = it.isLoading }
+            it?.features?.let { listQuakes(it) }
+            it?.error?.let { showError() }
+        })
+        viewModel.onRefresh()
     }
 
     override fun onCreateView(
@@ -75,7 +75,7 @@ class QuakeListFragment : BaseFragment<Unit>(), QuakeListView, FeatureAdapter.Li
                     .setLabel("Refresh")
                     .build())
 
-            presenter.onInit(null)
+            viewModel.onRefresh()
         })
 
         val recyclerView = view.findViewById<View>(R.id.recycler_view) as RecyclerView
@@ -83,18 +83,13 @@ class QuakeListFragment : BaseFragment<Unit>(), QuakeListView, FeatureAdapter.Li
         recyclerView.adapter = featureAdapter
     }
 
-    override fun showError() {
-        Log.d(TAG, "Show download failed message.")
-        Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun showProgress() {
-        Log.d(TAG, "Show progress.")
-        swipeRefreshLayout.isRefreshing = true
-    }
-
     override fun selectFeature(feature: Feature) {
         featureAdapter.setSelectedFeature(feature)
+    }
+
+    private fun showError() {
+        Log.d(TAG, "Show download failed message.")
+        Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
     }
 
     interface OnFeatureClickedListener {
