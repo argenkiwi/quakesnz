@@ -21,9 +21,6 @@ import nz.co.codebros.quakesnz.ui.FeatureAdapter;
 public abstract class QuakeListModule {
 
     @Binds
-    abstract QuakeListView quakeListView(QuakeListFragment fragment);
-
-    @Binds
     abstract FeatureAdapter.Listener listener(QuakeListFragment fragment);
 
     @Provides
@@ -33,10 +30,17 @@ public abstract class QuakeListModule {
 
     @Provides
     static QuakeListViewModel.Factory viewModelFactory(
-            FeatureCollectionRepository repository,
-            LoadFeaturesInteractor interactor
+            FeatureCollectionRepository featureCollectionRepository,
+            FeatureRepository featureRepository,
+            LoadFeaturesInteractor loadFeaturesInteractor,
+            SelectFeatureInteractor selectFeatureInteractor
     ) {
-        return new QuakeListViewModel.Factory(repository, interactor);
+        return new QuakeListViewModel.Factory(
+                featureCollectionRepository,
+                featureRepository,
+                loadFeaturesInteractor,
+                selectFeatureInteractor
+        );
     }
 
     @Provides
@@ -45,14 +49,5 @@ public abstract class QuakeListModule {
             QuakeListViewModel.Factory factory
     ) {
         return ViewModelProviders.of(fragment, factory).get(QuakeListViewModel.class);
-    }
-
-    @Provides
-    static QuakeListPresenter quakeListPresenter(
-            QuakeListView view,
-            FeatureRepository featureRepository,
-            SelectFeatureInteractor selectFeatureInteractor
-    ) {
-        return new QuakeListPresenter(view, featureRepository, selectFeatureInteractor);
     }
 }
