@@ -19,12 +19,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
     @Inject
     internal lateinit var presenter: SettingsPresenter
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
+        AndroidSupportInjection.inject(this)
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
     }
 
