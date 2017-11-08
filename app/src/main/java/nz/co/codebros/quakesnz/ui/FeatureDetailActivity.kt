@@ -13,9 +13,10 @@ class FeatureDetailActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            val fragment: Fragment = if (intent.data != null) {
-                QuakeDetailFragment.newInstance(intent.data.lastPathSegment)
-            } else QuakeDetailFragment.newInstance()
+            val fragment: Fragment = when {
+                intent.data != null -> QuakeDetailFragment.newInstance(intent.data.lastPathSegment)
+                else -> QuakeDetailFragment.newInstance()
+            }
 
             supportFragmentManager.beginTransaction()
                     .add(android.R.id.content, fragment)
@@ -24,8 +25,6 @@ class FeatureDetailActivity : DaggerAppCompatActivity() {
     }
 
     companion object {
-        fun newIntent(context: Context): Intent {
-            return Intent(context, FeatureDetailActivity::class.java)
-        }
+        fun newIntent(context: Context) = Intent(context, FeatureDetailActivity::class.java)
     }
 }
