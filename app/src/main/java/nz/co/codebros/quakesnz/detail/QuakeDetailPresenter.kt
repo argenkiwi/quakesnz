@@ -13,7 +13,6 @@ class QuakeDetailPresenter @Inject constructor(
         view: QuakeDetailView,
         private val interactor: LoadFeatureInteractor
 ) : BasePresenter<QuakeDetailView, QuakeDetailProps>(view) {
-
     override fun onInit(props: QuakeDetailProps?) {
         super.onInit(props)
         props?.let {

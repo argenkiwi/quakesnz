@@ -31,7 +31,6 @@ internal class QuakeDetailViewModel(private val repository: FeatureRepository) :
     }
 
     internal class Factory(private val repository: FeatureRepository) : ViewModelProvider.Factory {
-
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
                 QuakeDetailViewModel(repository) as T
     }

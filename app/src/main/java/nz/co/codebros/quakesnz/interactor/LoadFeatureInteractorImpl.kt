@@ -20,13 +20,11 @@ class LoadFeatureInteractorImpl(
             publicId: String,
             onComplete: Action,
             onError: Consumer<Throwable>
-    ): Disposable {
-        return service.getQuake(publicId)
-                .map { (features) -> features[0] }
-                .doOnSuccess { repository.publish(it) }
-                .toCompletable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onComplete, onError)
-    }
+    ): Disposable = service.getQuake(publicId)
+            .map { (features) -> features[0] }
+            .doOnSuccess { repository.publish(it) }
+            .toCompletable()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(onComplete, onError)
 }
