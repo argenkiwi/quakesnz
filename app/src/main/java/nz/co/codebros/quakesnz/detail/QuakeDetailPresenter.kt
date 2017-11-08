@@ -1,12 +1,9 @@
 package nz.co.codebros.quakesnz.detail
 
-import android.os.Bundle
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.core.BasePresenter
-import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
-import nz.co.codebros.quakesnz.repository.FeatureRepository
 import javax.inject.Inject
 
 /**
@@ -26,9 +23,5 @@ class QuakeDetailPresenter @Inject constructor(
                 view.showLoadingError()
             }))
         }
-    }
-
-    fun onShare(feature: Feature) {
-        view.share(feature)
     }
 }

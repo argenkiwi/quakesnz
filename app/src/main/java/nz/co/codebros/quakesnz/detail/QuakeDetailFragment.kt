@@ -28,7 +28,6 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
     @Inject
     internal lateinit var viewModel: QuakeDetailViewModel
 
-
     @field:[Inject Named("app")]
     internal lateinit var tracker: Tracker
 
@@ -39,7 +38,7 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
     private lateinit var mTimeView: TextView
     private lateinit var mLocationView: TextView
     private lateinit var mDepthView: TextView
-    private lateinit var feature: Feature
+    private lateinit var mShareButton: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,21 +60,8 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
         mLocationView = view.findViewById<View>(R.id.location) as TextView
         mDepthView = view.findViewById<View>(R.id.depth) as TextView
         mTimeView = view.findViewById<View>(R.id.time) as TextView
-        mTabView = view.findViewById(R.id.colorTab)
-
-        view.findViewById<View>(R.id.share_button).setOnClickListener({
-            when (it.id) {
-                R.id.share_button -> {
-                    tracker.send(HitBuilders.EventBuilder()
-                            .setCategory("Interactions")
-                            .setAction("Share")
-                            .setLabel("Share")
-                            .build())
-
-                    presenter.onShare(feature)
-                }
-            }
-        })
+        mTabView = view.findViewById<View>(R.id.colorTab)
+        mShareButton = view.findViewById<View>(R.id.share_button);
     }
 
     override fun fromArguments(bundle: Bundle): QuakeDetailProps? {
@@ -83,23 +69,7 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
         return if (publicId != null) QuakeDetailProps(publicId) else null
     }
 
-    override fun share(feature: Feature) {
-        val properties = feature.properties
-        startActivity(Intent()
-                .setAction(Intent.ACTION_SEND)
-                .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
-                        QuakesUtils.getIntensity(context!!, properties.mmi)
-                                .toLowerCase(),
-                        properties.magnitude,
-                        properties.locality,
-                        properties.publicId
-                ))
-                .setType("text/plain"))
-    }
-
-    override fun showDetails(feature: Feature) {
-        this.feature = feature
-
+    private fun showDetails(feature: Feature) {
         val properties = feature.properties
         val colorForIntensity = QuakesUtils.getColor(context!!, properties.mmi)
         val magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.magnitude)
@@ -114,6 +84,28 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
         mDepthView.text = getString(R.string.depth, properties.depth)
         mTimeView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
         mTabView.setBackgroundColor(colorForIntensity)
+        mShareButton.setOnClickListener({
+            when (it.id) {
+                R.id.share_button -> {
+                    tracker.send(HitBuilders.EventBuilder()
+                            .setCategory("Interactions")
+                            .setAction("Share")
+                            .setLabel("Share")
+                            .build())
+
+                    startActivity(Intent()
+                            .setAction(Intent.ACTION_SEND)
+                            .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
+                                    QuakesUtils.getIntensity(context!!, properties.mmi)
+                                            .toLowerCase(),
+                                    properties.magnitude,
+                                    properties.locality,
+                                    properties.publicId
+                            ))
+                            .setType("text/plain"))
+                }
+            }
+        })
     }
 
     override fun showLoadingError() {

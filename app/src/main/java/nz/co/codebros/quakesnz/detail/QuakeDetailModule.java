@@ -1,6 +1,5 @@
 package nz.co.codebros.quakesnz.detail;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 
 import dagger.Binds;
