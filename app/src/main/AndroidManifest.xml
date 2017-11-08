@@ -76,14 +76,6 @@
                 android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
         </activity>
         <activity
-            android:name=".ui.InfoActivity"
-            android:label="@string/emergency_advice"
-            android:parentActivityName=".ui.FeatureListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
-        </activity>
-        <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/settings"
             android:parentActivityName=".ui.FeatureListActivity">

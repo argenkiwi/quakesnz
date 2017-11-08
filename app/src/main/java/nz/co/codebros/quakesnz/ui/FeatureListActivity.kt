@@ -48,10 +48,6 @@ class FeatureListActivity : DaggerAppCompatActivity(), QuakeListFragment.OnFeatu
                 startActivity(Intent(this, SettingsActivity::class.java))
                 return true
             }
-            R.id.action_info -> {
-                startActivity(Intent(this, InfoActivity::class.java))
-                return true
-            }
             R.id.action_about -> {
                 startActivity(Intent(this, AboutActivity::class.java))
                 return true
