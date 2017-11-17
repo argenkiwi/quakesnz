@@ -10,8 +10,8 @@ import javax.inject.Singleton
 
 import dagger.Module
 import dagger.Provides
-import nz.co.codebros.quakesnz.core.model.Coordinates
-import nz.co.codebros.quakesnz.core.model.CoordinatesTypeAdapter
+import nz.co.codebros.quakesnz.core.data.Coordinates
+import nz.co.codebros.quakesnz.core.data.CoordinatesTypeAdapter
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

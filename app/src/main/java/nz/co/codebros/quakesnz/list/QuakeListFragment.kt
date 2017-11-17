@@ -13,7 +13,7 @@ import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import dagger.android.support.DaggerFragment
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.ui.FeatureAdapter
 import javax.inject.Inject
 import javax.inject.Named

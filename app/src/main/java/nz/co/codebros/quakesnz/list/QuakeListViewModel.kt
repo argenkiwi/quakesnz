@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
-import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository

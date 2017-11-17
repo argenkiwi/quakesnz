@@ -2,7 +2,7 @@ package nz.co.codebros.quakesnz.repository
 
 import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.core.BaseBundleRepository
-import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.core.data.Feature
 import javax.inject.Inject
 
 /**

@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.core.model
+package nz.co.codebros.quakesnz.core.data
 
 import android.os.Parcel
 import android.os.Parcelable

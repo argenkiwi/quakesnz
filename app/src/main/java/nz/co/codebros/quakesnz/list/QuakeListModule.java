@@ -6,7 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.subjects.Subject;
-import nz.co.codebros.quakesnz.core.model.Feature;
+import nz.co.codebros.quakesnz.core.data.Feature;
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor;
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor;
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl;

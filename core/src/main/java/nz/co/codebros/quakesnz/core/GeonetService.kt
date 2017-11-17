@@ -1,7 +1,7 @@
 package nz.co.codebros.quakesnz.core
 
 import io.reactivex.Single
-import nz.co.codebros.quakesnz.core.model.FeatureCollection
+import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

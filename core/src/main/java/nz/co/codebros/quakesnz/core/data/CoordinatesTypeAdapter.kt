@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.core.model
+package nz.co.codebros.quakesnz.core.data
 
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader

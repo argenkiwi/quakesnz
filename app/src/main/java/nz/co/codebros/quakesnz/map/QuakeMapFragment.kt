@@ -4,10 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 
-import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -18,8 +15,6 @@ import javax.inject.Inject
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
-import nz.co.codebros.quakesnz.core.model.Coordinates
-import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.repository.FeatureRepository
 
 /**

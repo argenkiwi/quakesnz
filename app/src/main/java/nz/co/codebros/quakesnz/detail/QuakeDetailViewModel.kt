@@ -1,15 +1,12 @@
 package nz.co.codebros.quakesnz.detail
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 
-import javax.inject.Inject
-
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
-import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.repository.FeatureRepository
 
 /**

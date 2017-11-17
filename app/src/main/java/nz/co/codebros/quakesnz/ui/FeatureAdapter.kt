@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.core.model.Feature
+import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.QuakesUtils
 import java.util.*
 import javax.inject.Inject
