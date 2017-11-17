@@ -8,6 +8,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.repository.FeatureRepository
+import javax.inject.Inject
 
 /**
  * Created by Leandro on 27/10/2017.
@@ -27,8 +28,10 @@ internal class QuakeDetailViewModel(private val repository: FeatureRepository) :
         disposable?.dispose()
     }
 
-    internal class Factory(private val repository: FeatureRepository) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+    internal class Factory @Inject constructor(
+            private val repository: FeatureRepository
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>) =
                 QuakeDetailViewModel(repository) as T
     }
 }
