@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 class FeatureAdapter @Inject constructor(
         private val listener: Listener
 ) : RecyclerView.Adapter<FeatureAdapter.ViewHolder>() {
-    val features: MutableList<Feature> = ArrayList()
+    private val features: MutableList<Feature> = ArrayList()
 
     private var selectedPosition: Int = -1
         set(value) {
@@ -79,12 +79,12 @@ class FeatureAdapter @Inject constructor(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardView = itemView as CardView
-        val txtMagnitudeBig = itemView.findViewById<TextView>(R.id.magnitude_big)
-        val txtMagnitudeSmall = itemView.findViewById<TextView>(R.id.magnitude_small)
-        val txtIntensity = itemView.findViewById<TextView>(R.id.intensity)
-        val txtLocation = itemView.findViewById<TextView>(R.id.location)
-        val txtDepth = itemView.findViewById<TextView>(R.id.depth)
-        val txtTime = itemView.findViewById<TextView>(R.id.time)
+        val txtMagnitudeBig: TextView = itemView.findViewById<TextView>(R.id.magnitude_big)
+        val txtMagnitudeSmall: TextView = itemView.findViewById<TextView>(R.id.magnitude_small)
+        val txtIntensity: TextView = itemView.findViewById<TextView>(R.id.intensity)
+        val txtLocation: TextView = itemView.findViewById<TextView>(R.id.location)
+        val txtDepth: TextView = itemView.findViewById<TextView>(R.id.depth)
+        val txtTime: TextView = itemView.findViewById<TextView>(R.id.time)
         val vTab: View = itemView.findViewById(R.id.colorTab)
     }
 }
