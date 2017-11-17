@@ -27,21 +27,26 @@ object ServicesModule {
 
     @JvmStatic
     @Provides
-    @Singleton
-    internal fun geonetService(retrofit: Retrofit) = retrofit.create(GeonetService::class.java)
+    internal fun httpLoggingInterceptor() = HttpLoggingInterceptor()
+            .setLevel(HttpLoggingInterceptor.Level.BASIC)
 
     @JvmStatic
     @Provides
-    @Singleton
+    internal fun okHttpClient(
+            @Named("cacheDir") cacheDir: File,
+            interceptor: HttpLoggingInterceptor
+    ) = OkHttpClient()
+            .newBuilder()
+            .cache(Cache(cacheDir, (2 * 1024 * 1024).toLong())) // 2Mb
+            .addInterceptor(interceptor)
+            .build()
+
+    @JvmStatic
+    @Provides
     internal fun gson() = GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
             .registerTypeAdapter(Coordinates::class.java, CoordinatesTypeAdapter())
             .create()
-
-    @JvmStatic
-    @Provides
-    internal fun httpLoggingInterceptor() = HttpLoggingInterceptor()
-            .setLevel(HttpLoggingInterceptor.Level.BASIC)
 
     @JvmStatic
     @Provides
@@ -54,12 +59,6 @@ object ServicesModule {
 
     @JvmStatic
     @Provides
-    internal fun okHttpClient(
-            @Named("cacheDir") cacheDir: File,
-            interceptor: HttpLoggingInterceptor
-    ) = OkHttpClient()
-            .newBuilder()
-            .cache(Cache(cacheDir, (2 * 1024 * 1024).toLong())) // 2Mb
-            .addInterceptor(interceptor)
-            .build()
+    @Singleton
+    internal fun geonetService(retrofit: Retrofit) = retrofit.create(GeonetService::class.java)
 }
