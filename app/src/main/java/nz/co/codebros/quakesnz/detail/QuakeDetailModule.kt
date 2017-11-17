@@ -1,11 +1,11 @@
 package nz.co.codebros.quakesnz.detail
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProviders
-
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import nz.co.codebros.quakesnz.repository.FeatureRepository
+import nz.co.codebros.quakesnz.core.data.Feature
 
 /**
  * Created by Leandro on 2/11/2017.
@@ -18,6 +18,10 @@ abstract class QuakeDetailModule {
 
     @Module
     companion object {
+
+        @JvmStatic
+        @Provides
+        internal fun featureLiveData() = MutableLiveData<Feature>()
 
         @JvmStatic
         @Provides
