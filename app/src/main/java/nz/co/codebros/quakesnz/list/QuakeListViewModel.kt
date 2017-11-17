@@ -11,6 +11,7 @@ import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
 import nz.co.codebros.quakesnz.repository.FeatureRepository
+import javax.inject.Inject
 
 /**
  * Created by Leandro on 28/10/2017.
@@ -64,7 +65,7 @@ class QuakeListViewModel(
             val error: Throwable? = null
     )
 
-    internal class Factory(
+    class Factory @Inject constructor(
             private val repository: FeatureCollectionRepository,
             private val featureRepository: FeatureRepository,
             private val interactor: LoadFeaturesInteractor,
