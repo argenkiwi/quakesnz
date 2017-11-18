@@ -22,7 +22,7 @@ class LoadFeatureInteractorImpl(
             onError: Consumer<Throwable>
     ): Disposable = service.getQuake(publicId)
             .map { (features) -> features[0] }
-            .doOnSuccess { repository.publish(it) }
+            .doOnSuccess { repository.observer.onNext(it) }
             .toCompletable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

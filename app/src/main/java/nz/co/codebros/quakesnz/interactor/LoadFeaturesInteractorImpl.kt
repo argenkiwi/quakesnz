@@ -26,8 +26,8 @@ class LoadFeaturesInteractorImpl(
 
     private fun completable(): Completable = service
             .getQuakes(Integer.parseInt(preferences.getString("pref_intensity", "3")))
-            .doOnSuccess { repository.publish(it) }
-            .toCompletable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doAfterSuccess { repository.observer.onNext(it) }
+            .toCompletable()
 }

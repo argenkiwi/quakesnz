@@ -45,22 +45,19 @@ class QuakeMapFragment : SupportMapFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        disposables.add(repository.subscribe(Consumer { (geometry) ->
-            getMapAsync { googleMap ->
-                val coordinates = geometry.coordinates
-                val latLng = LatLng(
-                        coordinates.latitude,
-                        coordinates.longitude
-                )
-                if (marker == null) {
-                    marker = googleMap.addMarker(MarkerOptions().position(latLng))
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 6f))
-                } else {
-                    marker!!.position = latLng
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-                }
-            }
-        }))
+        disposables.add(repository.observable
+                .map { it.geometry.coordinates.let { LatLng(it.latitude, it.longitude) } }
+                .subscribe({
+                    getMapAsync { googleMap ->
+                        if (marker != null) {
+                            marker?.position = it
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLng(it))
+                        } else {
+                            marker = googleMap.addMarker(MarkerOptions().position(it))
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 6f))
+                        }
+                    }
+                }))
     }
 
     override fun onDestroyView() {

@@ -17,7 +17,7 @@ internal class QuakeDetailViewModel(
         repository: FeatureRepository
 ) : ViewModel() {
 
-    private val disposable = repository.subscribe(Consumer { feature.value = it })
+    private val disposable = repository.observable.subscribe({ feature.value = it })
 
     override fun onCleared() {
         super.onCleared()

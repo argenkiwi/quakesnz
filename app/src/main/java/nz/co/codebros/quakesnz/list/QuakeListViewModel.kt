@@ -28,11 +28,11 @@ class QuakeListViewModel(
     private val disposables = CompositeDisposable()
 
     init {
-        disposables.add(repository.subscribe(Consumer {
+        disposables.add(repository.observable.subscribe({
             state.value = QuakeListViewState(false, it.features)
         }))
 
-        disposables.add(featureRepository.subscribe(Consumer {
+        disposables.add(featureRepository.observable.subscribe({
             state.value = state.value?.copy(selectedFeature = it)
         }))
     }
