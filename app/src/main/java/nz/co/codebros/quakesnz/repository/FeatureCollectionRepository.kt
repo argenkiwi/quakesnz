@@ -1,7 +1,7 @@
 package nz.co.codebros.quakesnz.repository
 
 import io.reactivex.subjects.Subject
-import nz.co.codebros.quakesnz.core.BaseBundleRepository
+import nz.co.codebros.quakesnz.core.BaseRepository
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import javax.inject.Inject
 
@@ -11,6 +11,4 @@ import javax.inject.Inject
 
 class FeatureCollectionRepository @Inject constructor(
         subject: Subject<FeatureCollection>
-) : BaseBundleRepository<FeatureCollection>(subject) {
-    override fun getKey(): String = FeatureCollection::class.java.canonicalName
-}
+) : BaseRepository<FeatureCollection>(subject)

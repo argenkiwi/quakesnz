@@ -18,27 +18,25 @@ import javax.inject.Inject
  */
 
 class QuakeListViewModel(
-        private val repository: FeatureCollectionRepository,
-        private val featureRepository: FeatureRepository,
+        repository: FeatureCollectionRepository,
+        featureRepository: FeatureRepository,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
 ) : ViewModel() {
 
-    val state: MutableLiveData<State> by lazy {
-        val state = MutableLiveData<State>()
+    val state = MutableLiveData<QuakeListViewState>()
+    private val disposables = CompositeDisposable()
 
+    init {
         disposables.add(repository.subscribe(Consumer {
-            state.value = State(false, it.features)
+            state.value = QuakeListViewState(false, it.features)
         }))
 
         disposables.add(featureRepository.subscribe(Consumer {
             state.value = state.value?.copy(selectedFeature = it)
         }))
-
-        state
     }
 
-    private val disposables = CompositeDisposable()
 
     override fun onCleared() {
         super.onCleared()
@@ -46,11 +44,11 @@ class QuakeListViewModel(
     }
 
     fun onRefresh() {
-        state.value = QuakeListViewModel.State(true)
+        state.value = QuakeListViewState(true)
         disposables.add(loadFeaturesInteractor.execute(Action {
 
         }, Consumer<Throwable> {
-            state.value = QuakeListViewModel.State(false, error = it)
+            state.value = QuakeListViewState(false, error = it)
         }))
     }
 
@@ -58,20 +56,13 @@ class QuakeListViewModel(
         selectFeatureInteractor.execute(feature)
     }
 
-    data class State(
-            val isLoading: Boolean,
-            val features: List<Feature>? = null,
-            val selectedFeature: Feature? = null,
-            val error: Throwable? = null
-    )
-
     class Factory @Inject constructor(
             private val repository: FeatureCollectionRepository,
             private val featureRepository: FeatureRepository,
             private val interactor: LoadFeaturesInteractor,
             private val selectFeatureInteractor: SelectFeatureInteractor
     ) : ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = QuakeListViewModel(
+        override fun <T : ViewModel> create(modelClass: Class<T>) = QuakeListViewModel(
                 repository, featureRepository, interactor, selectFeatureInteractor
         ) as T
     }
