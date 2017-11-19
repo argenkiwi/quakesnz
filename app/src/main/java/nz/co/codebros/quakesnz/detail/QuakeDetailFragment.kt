@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
+import dagger.android.support.AndroidSupportInjection
 import nz.co.codebros.quakesnz.QuakesUtils
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.BaseFragment
@@ -20,16 +21,10 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
-
-    @Inject
-    override lateinit var presenter: QuakeDetailPresenter
+class QuakeDetailFragment : Fragment() {
 
     @Inject
     internal lateinit var viewModel: QuakeDetailViewModel
-
-    @field:[Inject Named("app")]
-    internal lateinit var tracker: Tracker
 
     private lateinit var mMagnitudeBigView: TextView
     private lateinit var mTabView: View
@@ -42,7 +37,13 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.feature.observe(this, Observer { it?.let { showDetails(it) } })
+        AndroidSupportInjection.inject(this)
+        viewModel.feature.observe(this, Observer {
+            when (it) {
+                is Success -> showDetails(it.feature)
+                is Failure -> showLoadingError()
+            }
+        })
     }
 
     override fun onCreateView(
@@ -64,11 +65,6 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
         mShareButton = view.findViewById<View>(R.id.share_button);
     }
 
-    override fun fromArguments(bundle: Bundle): QuakeDetailProps? {
-        val publicId = bundle.getString(ARG_PUBLIC_ID)
-        return if (publicId != null) QuakeDetailProps(publicId) else null
-    }
-
     private fun showDetails(feature: Feature) {
         val properties = feature.properties
         val colorForIntensity = QuakesUtils.getColor(context!!, properties.mmi)
@@ -87,12 +83,6 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
         mShareButton.setOnClickListener({
             when (it.id) {
                 R.id.share_button -> {
-                    tracker.send(HitBuilders.EventBuilder()
-                            .setCategory("Interactions")
-                            .setAction("Share")
-                            .setLabel("Share")
-                            .build())
-
                     startActivity(Intent()
                             .setAction(Intent.ACTION_SEND)
                             .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
@@ -108,7 +98,7 @@ class QuakeDetailFragment : BaseFragment<QuakeDetailProps>(), QuakeDetailView {
         })
     }
 
-    override fun showLoadingError() {
+    private fun showLoadingError() {
         Toast.makeText(context, R.string.error_loading_feature, Toast.LENGTH_SHORT).show()
     }
 

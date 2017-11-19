@@ -5,8 +5,9 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import dagger.Provides
+import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.Coordinates
-import nz.co.codebros.quakesnz.repository.FeatureRepository
+import nz.co.codebros.quakesnz.core.data.Feature
 import javax.inject.Inject
 
 /**
@@ -15,12 +16,12 @@ import javax.inject.Inject
 internal interface QuakeMap {
 
     class ViewModel(
-            coordinates: MutableLiveData<Coordinates>,
-            repository: FeatureRepository
+            featureObservable: Observable<Feature>,
+            coordinates: MutableLiveData<Coordinates>
     ) : android.arch.lifecycle.ViewModel() {
         val coordinates: LiveData<Coordinates> = coordinates
 
-        private val disposable = repository.observable
+        private val disposable = featureObservable
                 .map { it.geometry.coordinates }
                 .subscribe({ coordinates.value = it })
 
@@ -30,11 +31,11 @@ internal interface QuakeMap {
         }
 
         class Factory @Inject constructor(
-                private val coordinates: MutableLiveData<Coordinates>,
-                private val repository: FeatureRepository
+                private val featureObservable: Observable<Feature>,
+                private val coordinates: MutableLiveData<Coordinates>
         ) : ViewModelProvider.Factory {
             override fun <T : android.arch.lifecycle.ViewModel?> create(modelClass: Class<T>) =
-                    ViewModel(coordinates, repository) as T
+                    ViewModel(featureObservable, coordinates) as T
         }
     }
 

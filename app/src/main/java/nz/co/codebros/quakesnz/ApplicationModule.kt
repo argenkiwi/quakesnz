@@ -10,7 +10,6 @@ import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.settings.SettingsActivity
 import nz.co.codebros.quakesnz.settings.SettingsActivityModule
 import nz.co.codebros.quakesnz.ui.FeatureDetailActivity
-import nz.co.codebros.quakesnz.ui.FeatureDetailActivityModule
 import nz.co.codebros.quakesnz.ui.FeatureListActivity
 import nz.co.codebros.quakesnz.ui.FeatureListActivityModule
 import java.io.File
@@ -26,7 +25,7 @@ internal abstract class ApplicationModule {
     @ContributesAndroidInjector(modules = arrayOf(FeatureListActivityModule::class))
     internal abstract fun featureListActivity(): FeatureListActivity
 
-    @ContributesAndroidInjector(modules = arrayOf(FeatureDetailActivityModule::class))
+    @ContributesAndroidInjector(modules = arrayOf(FeatureDetailActivity.Module::class))
     internal abstract fun featureDetailActivity(): FeatureDetailActivity
 
     @ContributesAndroidInjector(modules = arrayOf(SettingsActivityModule::class))

@@ -13,15 +13,12 @@ import nz.co.codebros.quakesnz.core.data.Feature
 @Module
 abstract class QuakeDetailModule {
 
-    @Binds
-    internal abstract fun quakeDetailView(fragment: QuakeDetailFragment): QuakeDetailView
-
     @Module
     companion object {
 
         @JvmStatic
         @Provides
-        internal fun featureLiveData() = MutableLiveData<Feature>()
+        internal fun viewState() = MutableLiveData<QuakeDetailViewState>()
 
         @JvmStatic
         @Provides
