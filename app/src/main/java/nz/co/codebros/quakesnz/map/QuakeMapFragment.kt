@@ -1,17 +1,15 @@
 package nz.co.codebros.quakesnz.map
 
-import android.arch.lifecycle.*
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import dagger.Provides
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.disposables.CompositeDisposable
-import nz.co.codebros.quakesnz.core.data.Coordinates
-import nz.co.codebros.quakesnz.repository.FeatureRepository
 import javax.inject.Inject
 
 /**
@@ -21,7 +19,7 @@ import javax.inject.Inject
 class QuakeMapFragment : SupportMapFragment() {
 
     @Inject
-    internal lateinit var viewModel: ViewModel
+    internal lateinit var viewModel: QuakeMap.ViewModel
 
     private var marker: Marker? = null
 
@@ -29,7 +27,7 @@ class QuakeMapFragment : SupportMapFragment() {
         super.onActivityCreated(bundle)
 
         try {
-            viewModel = ViewModelProviders.of(this).get(ViewModel::class.java)
+            viewModel = ViewModelProviders.of(this).get(QuakeMap.ViewModel::class.java)
         } catch (e: Throwable) {
             AndroidSupportInjection.inject(this)
         }
@@ -57,47 +55,5 @@ class QuakeMapFragment : SupportMapFragment() {
             it.moveCamera(CameraUpdateFactory
                     .newLatLngZoom(LatLng(-41.3090732, 175.1858282), 4.5f))
         }
-    }
-
-    internal class ViewModel(
-            coordinates: MutableLiveData<Coordinates>,
-            repository: FeatureRepository
-    ) : android.arch.lifecycle.ViewModel() {
-        val coordinates: LiveData<Coordinates> = coordinates
-
-        private val disposables = CompositeDisposable()
-
-        init {
-            disposables.add(repository.observable
-                    .map { it.geometry.coordinates }
-                    .subscribe({ coordinates.value = it }))
-        }
-
-        override fun onCleared() {
-            super.onCleared()
-            disposables.dispose()
-        }
-
-        class Factory @Inject constructor(
-                private val coordinates: MutableLiveData<Coordinates>,
-                private val repository: FeatureRepository
-        ) : ViewModelProvider.Factory {
-            override fun <T : android.arch.lifecycle.ViewModel?> create(modelClass: Class<T>) =
-                    ViewModel(coordinates, repository) as T
-        }
-    }
-
-    @dagger.Module
-    internal object Module {
-        @JvmStatic
-        @Provides
-        fun coordinatesLiveData() = MutableLiveData<Coordinates>()
-
-        @JvmStatic
-        @Provides
-        fun viewModel(
-                fragment: QuakeMapFragment,
-                factory: ViewModel.Factory
-        ) = ViewModelProviders.of(fragment, factory).get(ViewModel::class.java)
     }
 }

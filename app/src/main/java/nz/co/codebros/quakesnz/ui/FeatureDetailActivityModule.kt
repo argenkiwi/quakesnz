@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
 import nz.co.codebros.quakesnz.detail.QuakeDetailModule
+import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.module.FeatureModule
 
@@ -17,7 +18,7 @@ abstract class FeatureDetailActivityModule {
     internal abstract fun quakeDetailFragment(): QuakeDetailFragment
 
     @ContributesAndroidInjector(modules = arrayOf(
-            QuakeMapFragment.Module::class,
+            QuakeMap.Module::class,
             FeatureModule::class
     ))
     internal abstract fun quakeMapFragment(): QuakeMapFragment

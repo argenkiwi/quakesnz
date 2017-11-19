@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.list.QuakeListFragment
 import nz.co.codebros.quakesnz.list.QuakeListModule
+import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.module.FeatureCollectionModule
 import nz.co.codebros.quakesnz.module.FeatureModule
@@ -27,7 +28,7 @@ abstract class FeatureListActivityModule {
     internal abstract fun quakeListFragment(): QuakeListFragment
 
     @ContributesAndroidInjector(modules = arrayOf(
-            QuakeMapFragment.Module::class,
+            QuakeMap.Module::class,
             FeatureModule::class
     ))
     internal abstract fun quakeMapFragment(): QuakeMapFragment
