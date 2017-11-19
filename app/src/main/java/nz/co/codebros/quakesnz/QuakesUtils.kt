@@ -3,14 +3,12 @@ package nz.co.codebros.quakesnz
 import android.content.Context
 import android.support.v4.content.ContextCompat
 
-import nz.co.codebros.quakesnz.R
-
 /**
  * Created by leandro on 12/04/16.
  */
 object QuakesUtils {
 
-    fun getColor(context: Context, mmi: Int): Int = when (mmi) {
+    fun getColor(context: Context, mmi: Int) = when (mmi) {
         12, 11, 10, 9, 8, 7 -> ContextCompat.getColor(context, R.color.severe)
         6 -> ContextCompat.getColor(context, R.color.strong)
         5 -> ContextCompat.getColor(context, R.color.moderate)
