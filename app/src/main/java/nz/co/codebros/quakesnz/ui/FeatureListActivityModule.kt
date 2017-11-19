@@ -12,6 +12,7 @@ import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.module.FeatureCollectionModule
 import nz.co.codebros.quakesnz.module.FeatureModule
+import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
 import nz.co.codebros.quakesnz.repository.FeatureRepository
 
 /**
@@ -39,6 +40,12 @@ abstract class FeatureListActivityModule {
 
     @Module
     companion object {
+        @JvmStatic
+        @Provides
+        fun featuresObservable(
+                repository: FeatureCollectionRepository
+        ): Observable<List<Feature>> = repository.observable.map { it.features }
+
         @JvmStatic
         @Provides
         fun featureObservable(

@@ -3,14 +3,13 @@ package nz.co.codebros.quakesnz.list
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
-import nz.co.codebros.quakesnz.repository.FeatureCollectionRepository
-import nz.co.codebros.quakesnz.repository.FeatureRepository
 import javax.inject.Inject
 
 /**
@@ -18,8 +17,8 @@ import javax.inject.Inject
  */
 
 class QuakeListViewModel(
-        repository: FeatureCollectionRepository,
-        featureRepository: FeatureRepository,
+        featuresObservable: Observable<List<Feature>>,
+        selectedFeatureObservable: Observable<Feature>,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
 ) : ViewModel() {
@@ -28,11 +27,11 @@ class QuakeListViewModel(
     private val disposables = CompositeDisposable()
 
     init {
-        disposables.add(repository.observable.subscribe({
-            state.value = QuakeListViewState(false, it.features)
+        disposables.add(featuresObservable.subscribe({
+            state.value = QuakeListViewState(false, it)
         }))
 
-        disposables.add(featureRepository.observable.subscribe({
+        disposables.add(selectedFeatureObservable.subscribe({
             state.value = state.value?.copy(selectedFeature = it)
         }))
     }
@@ -57,13 +56,13 @@ class QuakeListViewModel(
     }
 
     class Factory @Inject constructor(
-            private val repository: FeatureCollectionRepository,
-            private val featureRepository: FeatureRepository,
+            private val featuresObservable: Observable<List<Feature>>,
+            private val selectedFeatureObservable: Observable<Feature>,
             private val interactor: LoadFeaturesInteractor,
             private val selectFeatureInteractor: SelectFeatureInteractor
     ) : ViewModelProvider.NewInstanceFactory() {
         override fun <T : ViewModel> create(modelClass: Class<T>) = QuakeListViewModel(
-                repository, featureRepository, interactor, selectFeatureInteractor
+                featuresObservable, selectedFeatureObservable, interactor, selectFeatureInteractor
         ) as T
     }
 }
