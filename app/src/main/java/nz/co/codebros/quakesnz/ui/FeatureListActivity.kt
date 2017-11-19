@@ -4,26 +4,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.google.android.gms.maps.GoogleMapOptions
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.list.QuakeListFragment
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.settings.SettingsActivity
+import javax.inject.Inject
 
-class FeatureListActivity : DaggerAppCompatActivity(), QuakeListFragment.OnFeatureClickedListener {
+class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector,
+        QuakeListFragment.OnFeatureClickedListener {
 
+    @Inject
+    internal lateinit var dispatchingSupportFragmentInjector: DispatchingAndroidInjector<Fragment>
     private var mTwoPane: Boolean = false
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
+            dispatchingSupportFragmentInjector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidInjection.inject(this)
         setContentView(R.layout.activity_feature_list)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)

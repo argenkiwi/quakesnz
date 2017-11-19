@@ -26,6 +26,9 @@ abstract class FeatureListActivityModule {
     ))
     internal abstract fun quakeListFragment(): QuakeListFragment
 
-    @ContributesAndroidInjector(modules = arrayOf(FeatureModule::class))
+    @ContributesAndroidInjector(modules = arrayOf(
+            QuakeMapFragment.Module::class,
+            FeatureModule::class
+    ))
     internal abstract fun quakeMapFragment(): QuakeMapFragment
 }
