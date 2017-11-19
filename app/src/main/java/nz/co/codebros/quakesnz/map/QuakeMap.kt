@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import dagger.Provides
-import io.reactivex.disposables.CompositeDisposable
 import nz.co.codebros.quakesnz.core.data.Coordinates
 import nz.co.codebros.quakesnz.repository.FeatureRepository
 import javax.inject.Inject
@@ -21,17 +20,13 @@ internal interface QuakeMap {
     ) : android.arch.lifecycle.ViewModel() {
         val coordinates: LiveData<Coordinates> = coordinates
 
-        private val disposables = CompositeDisposable()
-
-        init {
-            disposables.add(repository.observable
-                    .map { it.geometry.coordinates }
-                    .subscribe({ coordinates.value = it }))
-        }
+        private val disposable = repository.observable
+                .map { it.geometry.coordinates }
+                .subscribe({ coordinates.value = it })
 
         override fun onCleared() {
             super.onCleared()
-            disposables.dispose()
+            disposable.dispose()
         }
 
         class Factory @Inject constructor(
