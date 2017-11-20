@@ -1,13 +1,10 @@
 package nz.co.codebros.quakesnz.interactor
 
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
+import io.reactivex.Completable
 
 /**
  * Created by leandro on 10/06/17.
  */
 interface LoadFeaturesInteractor {
-    fun execute(onSuccess: Action, onError: Consumer<Throwable>): Disposable
-    fun execute(): Disposable
+    fun execute(): Completable
 }

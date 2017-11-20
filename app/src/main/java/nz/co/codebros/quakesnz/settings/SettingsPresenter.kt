@@ -27,6 +27,6 @@ class SettingsPresenter @Inject internal constructor(
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        addDisposable(interactor.execute())
+        addDisposable(interactor.execute().subscribe())
     }
 }

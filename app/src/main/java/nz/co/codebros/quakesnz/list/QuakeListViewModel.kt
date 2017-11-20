@@ -5,8 +5,6 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
@@ -43,9 +41,7 @@ class QuakeListViewModel(
 
     fun onRefresh() {
         state.value = QuakeListViewState(true)
-        disposables.add(loadFeaturesInteractor.execute(Action {
-
-        }, Consumer<Throwable> {
+        disposables.add(loadFeaturesInteractor.execute().subscribe({}, {
             state.value = QuakeListViewState(false, error = it)
         }))
     }
