@@ -36,7 +36,6 @@ class QuakeListViewModel(
         }))
     }
 
-
     override fun onCleared() {
         super.onCleared()
         disposables.dispose()
@@ -60,7 +59,7 @@ class QuakeListViewModel(
             private val selectedFeatureObservable: Observable<Feature>,
             private val interactor: LoadFeaturesInteractor,
             private val selectFeatureInteractor: SelectFeatureInteractor
-    ) : ViewModelProvider.NewInstanceFactory() {
+    ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>) = QuakeListViewModel(
                 featuresObservable, selectedFeatureObservable, interactor, selectFeatureInteractor
         ) as T
