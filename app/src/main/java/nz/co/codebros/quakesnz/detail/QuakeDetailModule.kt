@@ -11,20 +11,16 @@ import nz.co.codebros.quakesnz.core.data.Feature
  * Created by Leandro on 2/11/2017.
  */
 @Module
-abstract class QuakeDetailModule {
+object QuakeDetailModule {
 
-    @Module
-    companion object {
+    @JvmStatic
+    @Provides
+    internal fun viewState() = MutableLiveData<QuakeDetailViewState>()
 
-        @JvmStatic
-        @Provides
-        internal fun viewState() = MutableLiveData<QuakeDetailViewState>()
-
-        @JvmStatic
-        @Provides
-        internal fun quakeDetailViewModel(
-                fragment: QuakeDetailFragment,
-                factory: QuakeDetailViewModel.Factory
-        ) = ViewModelProviders.of(fragment, factory).get(QuakeDetailViewModel::class.java)
-    }
+    @JvmStatic
+    @Provides
+    internal fun quakeDetailViewModel(
+            fragment: QuakeDetailFragment,
+            factory: QuakeDetailViewModel.Factory
+    ) = ViewModelProviders.of(fragment, factory).get(QuakeDetailViewModel::class.java)
 }
