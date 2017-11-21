@@ -32,7 +32,7 @@ class QuakeListViewModel(
 
     init {
         val eventsObservable = events
-                .startWith(Event.LoadQuakes)
+                .startWith(Event.LoadQuakes())
                 .doOnNext({
                     when (it) {
                         is Event.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
@@ -46,7 +46,7 @@ class QuakeListViewModel(
         disposables.add(eventsObservable
                 .scan(State(false), { state, action ->
                     when (action) {
-                        is Event.LoadQuakes, Event.RefreshQuakes -> {
+                        is Event.LoadQuakes -> {
                             state.copy(isLoading = true)
                         }
                         is Event.LoadQuakesError -> {
@@ -96,8 +96,8 @@ class QuakeListViewModel(
     )
 
     sealed class Event {
-        object LoadQuakes : Event()
-        object RefreshQuakes : Event()
+        open class LoadQuakes : Event()
+        object RefreshQuakes : LoadQuakes()
         data class QuakesLoaded(val quakes: List<Feature>) : Event()
         data class QuakeSelected(val quake: Feature) : Event()
         data class LoadQuakesError(val error: Throwable) : Event()
