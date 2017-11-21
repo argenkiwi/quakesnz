@@ -3,6 +3,8 @@ package nz.co.codebros.quakesnz.list
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.Tracker
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -11,12 +13,14 @@ import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Created by Leandro on 28/10/2017.
  */
 
 class QuakeListViewModel(
+        tracker: Tracker,
         selectedFeatureObservable: Observable<Feature>,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
@@ -27,12 +31,22 @@ class QuakeListViewModel(
     private val disposables = CompositeDisposable()
 
     init {
-        val eventsObservable = events.startWith(Event.LoadQuakes)
+        val eventsObservable = events
+                .startWith(Event.LoadQuakes)
+                .doOnNext({
+                    when (it) {
+                        is Event.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
+                                .setCategory("Interactions")
+                                .setAction("Refresh")
+                                .setLabel("Refresh")
+                                .build())
+                    }
+                })
 
         disposables.add(eventsObservable
                 .scan(State(false), { state, action ->
                     when (action) {
-                        is Event.LoadQuakes -> {
+                        is Event.LoadQuakes, Event.RefreshQuakes -> {
                             state.copy(isLoading = true)
                         }
                         is Event.LoadQuakesError -> {
@@ -67,7 +81,7 @@ class QuakeListViewModel(
     }
 
     fun onRefresh() {
-        events.onNext(Event.LoadQuakes)
+        events.onNext(Event.RefreshQuakes)
     }
 
     fun onSelectFeature(feature: Feature) {
@@ -83,18 +97,20 @@ class QuakeListViewModel(
 
     sealed class Event {
         object LoadQuakes : Event()
+        object RefreshQuakes : Event()
         data class QuakesLoaded(val quakes: List<Feature>) : Event()
         data class QuakeSelected(val quake: Feature) : Event()
         data class LoadQuakesError(val error: Throwable) : Event()
     }
 
     class Factory @Inject constructor(
+            @Named("app") private val tracker: Tracker,
             private val selectedFeatureObservable: Observable<Feature>,
             private val interactor: LoadFeaturesInteractor,
             private val selectFeatureInteractor: SelectFeatureInteractor
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>) = QuakeListViewModel(
-                selectedFeatureObservable, interactor, selectFeatureInteractor
+                tracker, selectedFeatureObservable, interactor, selectFeatureInteractor
         ) as T
     }
 }

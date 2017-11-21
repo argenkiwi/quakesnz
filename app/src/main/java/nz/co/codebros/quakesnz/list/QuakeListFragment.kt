@@ -10,13 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.google.android.gms.analytics.HitBuilders
-import com.google.android.gms.analytics.Tracker
 import dagger.android.support.AndroidSupportInjection
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.ui.FeatureAdapter
 import javax.inject.Inject
-import javax.inject.Named
 
 class QuakeListFragment : Fragment() {
 
@@ -25,9 +22,6 @@ class QuakeListFragment : Fragment() {
 
     @Inject
     lateinit var listener: OnFeatureClickedListener
-
-    @field:[Inject Named("app")]
-    lateinit var tracker: Tracker
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
@@ -48,15 +42,7 @@ class QuakeListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        swipeRefreshLayout.setOnRefreshListener({
-            tracker.send(HitBuilders.EventBuilder()
-                    .setCategory("Interactions")
-                    .setAction("Refresh")
-                    .setLabel("Refresh")
-                    .build())
-
-            viewModel.onRefresh()
-        })
+        swipeRefreshLayout.setOnRefreshListener({ viewModel.onRefresh() })
 
         val featureAdapter = FeatureAdapter({ itemView, feature ->
             listener.onFeatureClicked(itemView)
