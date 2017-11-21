@@ -11,14 +11,13 @@ import nz.co.codebros.quakesnz.QuakesUtils
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
 import java.util.*
-import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 /**
  * Created by leandro on 12/07/15.
  */
-class FeatureAdapter @Inject constructor(
-        private val listener: Listener
+class FeatureAdapter(
+        private val onItemClicked: (view: View, feature: Feature) -> Unit
 ) : RecyclerView.Adapter<FeatureAdapter.ViewHolder>() {
     private val features: MutableList<Feature> = ArrayList()
 
@@ -66,16 +65,12 @@ class FeatureAdapter @Inject constructor(
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
                 .inflate(R.layout.item_summary, viewGroup, false)
-        return ViewHolder(view, { listener.onFeatureClicked(view, features[it]) })
-    }
-
-    interface Listener {
-        fun onFeatureClicked(view: View, feature: Feature)
+        return ViewHolder(view, { onItemClicked(view, features[it]) })
     }
 
     class ViewHolder(
             itemView: View,
-            onItemClicked: (position: Int) -> Unit
+            onClick: (position: Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         val cardView = itemView as CardView
         val txtMagnitudeBig: TextView = itemView.findViewById<TextView>(R.id.magnitude_big)
@@ -87,7 +82,7 @@ class FeatureAdapter @Inject constructor(
         val vTab: View = itemView.findViewById(R.id.colorTab)
 
         init {
-            itemView.setOnClickListener({ onItemClicked(adapterPosition) })
+            itemView.setOnClickListener({ onClick(adapterPosition) })
         }
     }
 }
