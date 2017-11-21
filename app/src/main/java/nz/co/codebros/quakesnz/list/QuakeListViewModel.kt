@@ -40,10 +40,11 @@ class QuakeListViewModel(
     }
 
     fun onRefresh() {
-        state.value = QuakeListViewState(true)
-        disposables.add(loadFeaturesInteractor.execute().subscribe({}, {
-            state.value = QuakeListViewState(false, error = it)
-        }))
+        disposables.add(loadFeaturesInteractor.execute()
+                .toObservable<QuakeListViewState>()
+                .startWith(QuakeListViewState(true))
+                .onErrorReturn { QuakeListViewState(false, error = it) }
+                .subscribe({ state.value = it }))
     }
 
     fun onSelectFeature(feature: Feature) {
