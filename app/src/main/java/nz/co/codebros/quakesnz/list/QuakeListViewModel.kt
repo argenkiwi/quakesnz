@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.list
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
@@ -24,14 +25,17 @@ class QuakeListViewModel(
         private val selectFeatureInteractor: SelectFeatureInteractor
 ) : ViewModel() {
 
-    val state = MutableLiveData<State>()
-    private val eventsObserver: Observer<Event>
+    val state: LiveData<State>
+
     private val disposables = CompositeDisposable()
+    private val eventsObserver: Observer<Event>
 
     init {
+        val mutableState = MutableLiveData<State>()
+        state = mutableState
+
         val eventsSubject = PublishSubject.create<Event>()
         val eventsObservable = eventsSubject.startWith(Event.LoadQuakes())
-
         eventsObserver = eventsSubject
 
         disposables.add(eventsObservable
@@ -65,7 +69,7 @@ class QuakeListViewModel(
                         }
                     }
                 })
-                .subscribe({ state.value = it }))
+                .subscribe({ mutableState.value = it }))
 
         eventsObservable.filter { it is Event.LoadQuakes }
                 .flatMap {
