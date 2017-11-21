@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import nz.co.codebros.quakesnz.QuakesUtils
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
-import nz.co.codebros.quakesnz.QuakesUtils
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -61,23 +61,22 @@ class FeatureAdapter @Inject constructor(
         viewHolder.vTab.setBackgroundColor(colorForIntensity)
 
         viewHolder.cardView.cardElevation = if (i == selectedPosition) 8.0f else 2.0f
-        viewHolder.itemView.setOnClickListener { view ->
-            selectedPosition = i
-            listener.onFeatureClicked(view, feature)
-        }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
                 .inflate(R.layout.item_summary, viewGroup, false)
-        return ViewHolder(view)
+        return ViewHolder(view, { listener.onFeatureClicked(view, features[it]) })
     }
 
     interface Listener {
         fun onFeatureClicked(view: View, feature: Feature)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(
+            itemView: View,
+            onItemClicked: (position: Int) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
         val cardView = itemView as CardView
         val txtMagnitudeBig: TextView = itemView.findViewById<TextView>(R.id.magnitude_big)
         val txtMagnitudeSmall: TextView = itemView.findViewById<TextView>(R.id.magnitude_small)
@@ -86,5 +85,9 @@ class FeatureAdapter @Inject constructor(
         val txtDepth: TextView = itemView.findViewById<TextView>(R.id.depth)
         val txtTime: TextView = itemView.findViewById<TextView>(R.id.time)
         val vTab: View = itemView.findViewById(R.id.colorTab)
+
+        init {
+            itemView.setOnClickListener({ onItemClicked(adapterPosition) })
+        }
     }
 }
