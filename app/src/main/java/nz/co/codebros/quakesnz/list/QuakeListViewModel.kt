@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
-import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import nz.co.codebros.quakesnz.core.data.Feature
@@ -28,15 +27,11 @@ class QuakeListViewModel(
     val state: LiveData<State>
 
     private val disposables = CompositeDisposable()
-    private val eventsObserver: Observer<Event>
+    private val events = PublishSubject.create<Event>()
 
     init {
-        val mutableState = MutableLiveData<State>()
-        state = mutableState
-
-        val eventsSubject = PublishSubject.create<Event>()
-        val eventsObservable = eventsSubject.startWith(Event.LoadQuakes())
-        eventsObserver = eventsSubject
+        state = MutableLiveData<State>()
+        val eventsObservable = events.startWith(Event.LoadQuakes())
 
         disposables.add(eventsObservable
                 .subscribe({
@@ -69,7 +64,7 @@ class QuakeListViewModel(
                         }
                     }
                 })
-                .subscribe({ mutableState.value = it }))
+                .subscribe({ state.value = it }))
 
         eventsObservable.filter { it is Event.LoadQuakes }
                 .flatMap {
@@ -77,7 +72,7 @@ class QuakeListViewModel(
                             .map { Event.QuakesLoaded(it.features) as Event }
                             .onErrorReturn { Event.LoadQuakesError(it) }
                 }
-                .subscribe(eventsObserver)
+                .subscribe(events)
 
         disposables.add(eventsObservable.filter { it is Event.SelectQuake }
                 .map { (it as Event.SelectQuake).quake }
@@ -87,15 +82,15 @@ class QuakeListViewModel(
     override fun onCleared() {
         super.onCleared()
         disposables.dispose()
-        eventsObserver.onComplete()
+        events.onComplete()
     }
 
     fun onRefresh() {
-        eventsObserver.onNext(Event.RefreshQuakes)
+        events.onNext(Event.RefreshQuakes)
     }
 
     fun onSelectFeature(feature: Feature) {
-        eventsObserver.onNext(Event.SelectQuake(feature))
+        events.onNext(Event.SelectQuake(feature))
     }
 
     data class State(
