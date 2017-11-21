@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.DaggerFragment
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.ui.FeatureAdapter
 import javax.inject.Inject
@@ -31,7 +30,7 @@ class QuakeListFragment : Fragment() {
     lateinit var tracker: Tracker
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    private lateinit var featureAdapter: FeatureAdapter
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -42,16 +41,7 @@ class QuakeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipeRefreshLayout = view as SwipeRefreshLayout
-
-        featureAdapter = FeatureAdapter({ itemView, feature ->
-            listener.onFeatureClicked(itemView)
-            viewModel.onSelectFeature(feature)
-        })
-
-        view.findViewById<RecyclerView>(R.id.recycler_view).let {
-            it.layoutManager = LinearLayoutManager(activity)
-            it.adapter = featureAdapter
-        }
+        recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -67,6 +57,16 @@ class QuakeListFragment : Fragment() {
 
             viewModel.onRefresh()
         })
+
+        val featureAdapter = FeatureAdapter({ itemView, feature ->
+            listener.onFeatureClicked(itemView)
+            viewModel.onSelectFeature(feature)
+        })
+
+        recyclerView.let {
+            it.layoutManager = LinearLayoutManager(context)
+            it.adapter = featureAdapter
+        }
 
         viewModel.state.observe(this, Observer {
             it?.let { swipeRefreshLayout.isRefreshing = it.isLoading }
