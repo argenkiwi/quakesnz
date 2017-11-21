@@ -10,16 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.gms.analytics.HitBuilders
-import com.google.android.gms.analytics.Tracker
 import dagger.android.support.AndroidSupportInjection
 import nz.co.codebros.quakesnz.QuakesUtils
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.core.BaseFragment
 import nz.co.codebros.quakesnz.core.data.Feature
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 
 class QuakeDetailFragment : Fragment() {
 
