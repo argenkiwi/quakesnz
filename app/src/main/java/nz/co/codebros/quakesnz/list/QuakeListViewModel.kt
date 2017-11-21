@@ -5,10 +5,9 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
-import io.reactivex.Observable
+import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
@@ -26,13 +25,17 @@ class QuakeListViewModel(
 ) : ViewModel() {
 
     val state = MutableLiveData<State>()
-    private val events: Subject<Event> = PublishSubject.create()
+    private val eventsObserver: Observer<Event>
     private val disposables = CompositeDisposable()
 
     init {
-        val eventsObservable = events
-                .startWith(Event.LoadQuakes())
-                .doOnNext({
+        val eventsSubject = PublishSubject.create<Event>()
+        val eventsObservable = eventsSubject.startWith(Event.LoadQuakes())
+
+        eventsObserver = eventsSubject
+
+        disposables.add(eventsObservable
+                .subscribe({
                     when (it) {
                         is Event.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
                                 .setCategory("Interactions")
@@ -43,7 +46,7 @@ class QuakeListViewModel(
                                 .setAction("Select quake")
                                 .build())
                     }
-                })
+                }))
 
         disposables.add(eventsObservable
                 .scan(State(false), { state, action ->
@@ -70,24 +73,25 @@ class QuakeListViewModel(
                             .map { Event.QuakesLoaded(it.features) as Event }
                             .onErrorReturn { Event.LoadQuakesError(it) }
                 }
-                .subscribe(events)
+                .subscribe(eventsObserver)
 
-        eventsObservable.filter { it is Event.SelectQuake }
+        disposables.add(eventsObservable.filter { it is Event.SelectQuake }
                 .map { (it as Event.SelectQuake).quake }
-                .subscribe({ selectFeatureInteractor.execute(it) })
+                .subscribe({ selectFeatureInteractor.execute(it) }))
     }
 
     override fun onCleared() {
         super.onCleared()
         disposables.dispose()
+        eventsObserver.onComplete()
     }
 
     fun onRefresh() {
-        events.onNext(Event.RefreshQuakes)
+        eventsObserver.onNext(Event.RefreshQuakes)
     }
 
     fun onSelectFeature(feature: Feature) {
-        events.onNext(Event.SelectQuake(feature))
+        eventsObserver.onNext(Event.SelectQuake(feature))
     }
 
     data class State(
