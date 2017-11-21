@@ -12,7 +12,6 @@ import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import javax.inject.Inject
 
-
 /**
  * Created by Leandro on 28/10/2017.
  */
@@ -24,11 +23,13 @@ class QuakeListViewModel(
 ) : ViewModel() {
 
     val state = MutableLiveData<State>()
-    private val actions: Subject<Event> = PublishSubject.create()
+    private val events: Subject<Event> = PublishSubject.create()
     private val disposables = CompositeDisposable()
 
     init {
-        disposables.add(actions
+        val eventsObservable = events.startWith(Event.LoadQuakes)
+
+        disposables.add(eventsObservable
                 .scan(State(false), { state, action ->
                     when (action) {
                         is Event.LoadQuakes -> {
@@ -47,18 +48,17 @@ class QuakeListViewModel(
                 })
                 .subscribe({ state.value = it }))
 
-        actions.startWith(Event.LoadQuakes)
-                .filter { it is Event.LoadQuakes }
+        eventsObservable.filter { it is Event.LoadQuakes }
                 .flatMap {
                     loadFeaturesInteractor.execute()
                             .map { Event.QuakesLoaded(it.features) as Event }
                             .onErrorReturn { Event.LoadQuakesError(it) }
                 }
-                .subscribe(actions)
+                .subscribe(events)
 
         selectedFeatureObservable
                 .map { Event.QuakeSelected(it) }
-                .subscribe(actions)
+                .subscribe(events)
     }
 
     override fun onCleared() {
@@ -67,7 +67,7 @@ class QuakeListViewModel(
     }
 
     fun onRefresh() {
-        actions.onNext(Event.LoadQuakes)
+        events.onNext(Event.LoadQuakes)
     }
 
     fun onSelectFeature(feature: Feature) {
