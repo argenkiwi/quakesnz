@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.core
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import retrofit2.http.GET
@@ -15,5 +16,5 @@ interface GeonetService {
     fun getQuake(@Path("publicID") publicID: String): Single<FeatureCollection>
 
     @GET("quake")
-    fun getQuakes(@Query("MMI") mmi: Int): Single<FeatureCollection>
+    fun getQuakes(@Query("MMI") mmi: Int): Observable<FeatureCollection>
 }
