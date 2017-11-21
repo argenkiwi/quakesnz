@@ -31,17 +31,6 @@ class QuakeDetailFragment : Fragment() {
     private lateinit var mDepthView: TextView
     private lateinit var mShareButton: View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AndroidSupportInjection.inject(this)
-        viewModel.feature.observe(this, Observer {
-            when (it) {
-                is Success -> showDetails(it.feature)
-                is Failure -> showLoadingError()
-            }
-        })
-    }
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -59,6 +48,17 @@ class QuakeDetailFragment : Fragment() {
         mTimeView = view.findViewById<View>(R.id.time) as TextView
         mTabView = view.findViewById<View>(R.id.colorTab)
         mShareButton = view.findViewById<View>(R.id.share_button);
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        AndroidSupportInjection.inject(this)
+        viewModel.feature.observe(this, Observer {
+            when (it) {
+                is Success -> showDetails(it.feature)
+                is Failure -> showLoadingError()
+            }
+        })
     }
 
     private fun showDetails(feature: Feature) {
