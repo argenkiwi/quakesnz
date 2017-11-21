@@ -21,7 +21,6 @@ import javax.inject.Named
 
 class QuakeListViewModel(
         tracker: Tracker,
-        selectedFeatureObservable: Observable<Feature>,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
 ) : ViewModel() {
@@ -38,7 +37,10 @@ class QuakeListViewModel(
                         is Event.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
                                 .setCategory("Interactions")
                                 .setAction("Refresh")
-                                .setLabel("Refresh")
+                                .build())
+                        is Event.SelectQuake -> tracker.send(HitBuilders.EventBuilder()
+                                .setCategory("Interactions")
+                                .setAction("Select quake")
                                 .build())
                     }
                 })
@@ -55,7 +57,7 @@ class QuakeListViewModel(
                         is Event.QuakesLoaded -> {
                             state.copy(isLoading = false, features = action.quakes)
                         }
-                        is Event.QuakeSelected -> {
+                        is Event.SelectQuake -> {
                             state.copy(selectedFeature = action.quake)
                         }
                     }
@@ -70,9 +72,9 @@ class QuakeListViewModel(
                 }
                 .subscribe(events)
 
-        selectedFeatureObservable
-                .map { Event.QuakeSelected(it) }
-                .subscribe(events)
+        eventsObservable.filter { it is Event.SelectQuake }
+                .map { (it as Event.SelectQuake).quake }
+                .subscribe({ selectFeatureInteractor.execute(it) })
     }
 
     override fun onCleared() {
@@ -85,7 +87,7 @@ class QuakeListViewModel(
     }
 
     fun onSelectFeature(feature: Feature) {
-        selectFeatureInteractor.execute(feature)
+        events.onNext(Event.SelectQuake(feature))
     }
 
     data class State(
@@ -99,18 +101,17 @@ class QuakeListViewModel(
         open class LoadQuakes : Event()
         object RefreshQuakes : LoadQuakes()
         data class QuakesLoaded(val quakes: List<Feature>) : Event()
-        data class QuakeSelected(val quake: Feature) : Event()
+        data class SelectQuake(val quake: Feature) : Event()
         data class LoadQuakesError(val error: Throwable) : Event()
     }
 
     class Factory @Inject constructor(
             @Named("app") private val tracker: Tracker,
-            private val selectedFeatureObservable: Observable<Feature>,
             private val interactor: LoadFeaturesInteractor,
             private val selectFeatureInteractor: SelectFeatureInteractor
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>) = QuakeListViewModel(
-                tracker, selectedFeatureObservable, interactor, selectFeatureInteractor
+                tracker, interactor, selectFeatureInteractor
         ) as T
     }
 }
