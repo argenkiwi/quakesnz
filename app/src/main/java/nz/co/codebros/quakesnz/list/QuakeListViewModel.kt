@@ -47,7 +47,8 @@ class QuakeListViewModel(
                 })
                 .subscribe({ state.value = it }))
 
-        actions.filter { it is Event.LoadQuakes }
+        actions.startWith(Event.LoadQuakes)
+                .filter { it is Event.LoadQuakes }
                 .flatMap {
                     loadFeaturesInteractor.execute()
                             .map { Event.QuakesLoaded(it.features) as Event }

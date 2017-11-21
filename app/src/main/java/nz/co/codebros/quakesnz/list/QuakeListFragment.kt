@@ -78,8 +78,6 @@ class QuakeListFragment : Fragment() {
                 }
             }
         })
-
-        viewModel.onRefresh()
     }
 
     interface OnFeatureClickedListener {
