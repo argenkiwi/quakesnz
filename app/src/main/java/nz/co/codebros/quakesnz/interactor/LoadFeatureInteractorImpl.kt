@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.interactor
 
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import nz.co.codebros.quakesnz.core.GeonetService
@@ -13,7 +14,7 @@ class LoadFeatureInteractorImpl(
         private val service: GeonetService,
         private val repository: FeatureRepository
 ) : LoadFeatureInteractor {
-    override fun execute(publicId: String) = service.getQuake(publicId)
+    override fun execute(publicId: String): Completable = service.getQuake(publicId)
             .map { (features) -> features[0] }
             .doOnSuccess { repository.observer.onNext(it) }
             .toCompletable()
