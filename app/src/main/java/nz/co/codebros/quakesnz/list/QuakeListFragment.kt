@@ -54,7 +54,7 @@ class QuakeListFragment : Fragment() {
             it.adapter = featureAdapter
         }
 
-        viewModel.state.observe(this, Observer {
+        viewModel.liveState.observe(this, Observer {
             it?.let { (isLoading, features, selectedFeature, error) ->
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }

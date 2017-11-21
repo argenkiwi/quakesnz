@@ -6,8 +6,9 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
+import io.reactivex.Observable
+import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.PublishSubject
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
@@ -21,17 +22,35 @@ import javax.inject.Named
 class QuakeListViewModel(
         tracker: Tracker,
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
-        private val selectFeatureInteractor: SelectFeatureInteractor
+        private val selectFeatureInteractor: SelectFeatureInteractor,
+        mutableState: MutableLiveData<State>,
+        private val eventObserver: Observer<Event>,
+        eventObservable: Observable<Event>
 ) : ViewModel() {
 
-    val state: LiveData<State>
+    val liveState: LiveData<State> = mutableState
 
     private val disposables = CompositeDisposable()
-    private val events = PublishSubject.create<Event>()
+
+    private val reducer: (State, Event) -> State = { state, event ->
+        when (event) {
+            is Event.LoadQuakes -> {
+                state.copy(isLoading = true)
+            }
+            is Event.LoadQuakesError -> {
+                state.copy(isLoading = false, error = event.error)
+            }
+            is Event.QuakesLoaded -> {
+                state.copy(isLoading = false, features = event.quakes)
+            }
+            is Event.SelectQuake -> {
+                state.copy(selectedFeature = event.quake)
+            }
+        }
+    }
 
     init {
-        state = MutableLiveData<State>()
-        val eventsObservable = events.startWith(Event.LoadQuakes())
+        val eventsObservable = eventObservable.startWith(Event.LoadQuakes())
 
         disposables.add(eventsObservable
                 .subscribe({
@@ -48,23 +67,8 @@ class QuakeListViewModel(
                 }))
 
         disposables.add(eventsObservable
-                .scan(State(false), { state, action ->
-                    when (action) {
-                        is Event.LoadQuakes -> {
-                            state.copy(isLoading = true)
-                        }
-                        is Event.LoadQuakesError -> {
-                            state.copy(isLoading = false, error = action.error)
-                        }
-                        is Event.QuakesLoaded -> {
-                            state.copy(isLoading = false, features = action.quakes)
-                        }
-                        is Event.SelectQuake -> {
-                            state.copy(selectedFeature = action.quake)
-                        }
-                    }
-                })
-                .subscribe({ state.value = it }))
+                .scan(State(false), reducer)
+                .subscribe({ mutableState.value = it }))
 
         eventsObservable.filter { it is Event.LoadQuakes }
                 .flatMap {
@@ -72,7 +76,7 @@ class QuakeListViewModel(
                             .map { Event.QuakesLoaded(it.features) as Event }
                             .onErrorReturn { Event.LoadQuakesError(it) }
                 }
-                .subscribe(events)
+                .subscribe(eventObserver)
 
         disposables.add(eventsObservable.filter { it is Event.SelectQuake }
                 .map { (it as Event.SelectQuake).quake }
@@ -82,15 +86,15 @@ class QuakeListViewModel(
     override fun onCleared() {
         super.onCleared()
         disposables.dispose()
-        events.onComplete()
+        eventObserver.onComplete()
     }
 
     fun onRefresh() {
-        events.onNext(Event.RefreshQuakes)
+        eventObserver.onNext(Event.RefreshQuakes)
     }
 
     fun onSelectFeature(feature: Feature) {
-        events.onNext(Event.SelectQuake(feature))
+        eventObserver.onNext(Event.SelectQuake(feature))
     }
 
     data class State(
@@ -111,10 +115,13 @@ class QuakeListViewModel(
     class Factory @Inject constructor(
             @Named("app") private val tracker: Tracker,
             private val interactor: LoadFeaturesInteractor,
-            private val selectFeatureInteractor: SelectFeatureInteractor
+            private val selectFeatureInteractor: SelectFeatureInteractor,
+            private val mutableState: MutableLiveData<State>,
+            private val eventObserver: Observer<Event>,
+            private val eventObservable: Observable<Event>
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>) = QuakeListViewModel(
-                tracker, interactor, selectFeatureInteractor
+                tracker, interactor, selectFeatureInteractor, mutableState, eventObserver, eventObservable
         ) as T
     }
 }
