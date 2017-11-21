@@ -53,20 +53,6 @@ class QuakeListViewModel(
         val eventsObservable = eventObservable.startWith(Event.LoadQuakes())
 
         disposables.add(eventsObservable
-                .subscribe({
-                    when (it) {
-                        is Event.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
-                                .setCategory("Interactions")
-                                .setAction("Refresh")
-                                .build())
-                        is Event.SelectQuake -> tracker.send(HitBuilders.EventBuilder()
-                                .setCategory("Interactions")
-                                .setAction("Select quake")
-                                .build())
-                    }
-                }))
-
-        disposables.add(eventsObservable
                 .scan(State(false), reducer)
                 .subscribe({ mutableState.value = it }))
 
@@ -81,6 +67,20 @@ class QuakeListViewModel(
         disposables.add(eventsObservable.filter { it is Event.SelectQuake }
                 .map { (it as Event.SelectQuake).quake }
                 .subscribe({ selectFeatureInteractor.execute(it) }))
+
+        disposables.add(eventsObservable
+                .subscribe({
+                    when (it) {
+                        is Event.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
+                                .setCategory("Interactions")
+                                .setAction("Refresh")
+                                .build())
+                        is Event.SelectQuake -> tracker.send(HitBuilders.EventBuilder()
+                                .setCategory("Interactions")
+                                .setAction("Select quake")
+                                .build())
+                    }
+                }))
     }
 
     override fun onCleared() {
