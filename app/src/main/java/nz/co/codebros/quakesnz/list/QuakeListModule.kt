@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import nz.co.codebros.quakesnz.FragmentScope
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl
@@ -38,6 +39,7 @@ abstract class QuakeListModule {
 
         @JvmStatic
         @Provides
+        @FragmentScope
         internal fun eventSubject(): Subject<QuakeListViewModel.Event> =
                 PublishSubject.create<QuakeListViewModel.Event>()
 

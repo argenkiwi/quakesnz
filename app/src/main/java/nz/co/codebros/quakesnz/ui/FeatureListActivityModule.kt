@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
+import nz.co.codebros.quakesnz.FragmentScope
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.list.QuakeListFragment
 import nz.co.codebros.quakesnz.list.QuakeListModule
@@ -24,6 +25,7 @@ abstract class FeatureListActivityModule {
     internal abstract fun onFeatureClickedListener(activity: FeatureListActivity)
             : QuakeListFragment.OnFeatureClickedListener
 
+    @FragmentScope
     @ContributesAndroidInjector(modules = arrayOf(
             QuakeListModule::class,
             FeatureCollectionModule::class,
@@ -31,6 +33,7 @@ abstract class FeatureListActivityModule {
     ))
     internal abstract fun quakeListFragment(): QuakeListFragment
 
+    @FragmentScope
     @ContributesAndroidInjector(modules = arrayOf(
             QuakeMap.Module::class,
             FeatureModule::class
