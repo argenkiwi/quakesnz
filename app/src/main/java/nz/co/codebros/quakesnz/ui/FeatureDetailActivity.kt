@@ -52,7 +52,12 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     companion object {
-        fun newIntent(context: Context) = Intent(context, FeatureDetailActivity::class.java)
+        private val EXTRA_FEATURE = "extra_feature"
+        fun newIntent(
+                context: Context,
+                feature: Feature
+        ): Intent = Intent(context, FeatureDetailActivity::class.java)
+                .putExtra(EXTRA_FEATURE, feature)
     }
 
     internal class ViewModel(

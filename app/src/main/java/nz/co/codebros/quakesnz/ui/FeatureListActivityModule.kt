@@ -1,10 +1,12 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.arch.lifecycle.ViewModelProviders
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
+import io.reactivex.functions.Consumer
 import nz.co.codebros.quakesnz.FragmentScope
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.list.QuakeListFragment
@@ -20,10 +22,6 @@ import nz.co.codebros.quakesnz.repository.FeatureRepository
  */
 @Module
 abstract class FeatureListActivityModule {
-
-    @Binds
-    internal abstract fun onFeatureClickedListener(activity: FeatureListActivity)
-            : QuakeListFragment.OnFeatureClickedListener
 
     @FragmentScope
     @ContributesAndroidInjector(modules = arrayOf(
@@ -47,5 +45,12 @@ abstract class FeatureListActivityModule {
         fun featureObservable(
                 repository: FeatureRepository
         ): Observable<Feature> = repository.observable
+
+        @JvmStatic
+        @Provides
+        fun viewModel(
+                activity: FeatureListActivity,
+                factory: FeatureListActivityViewModel.Factory
+        ) = ViewModelProviders.of(activity, factory).get(FeatureListActivityViewModel::class.java)
     }
 }

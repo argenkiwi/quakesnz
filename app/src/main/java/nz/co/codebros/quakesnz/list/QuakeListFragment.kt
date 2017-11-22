@@ -20,9 +20,6 @@ class QuakeListFragment : Fragment() {
     @Inject
     internal lateinit var viewModel: QuakeListViewModel
 
-    @Inject
-    lateinit var listener: OnFeatureClickedListener
-
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
 
@@ -44,8 +41,7 @@ class QuakeListFragment : Fragment() {
 
         swipeRefreshLayout.setOnRefreshListener({ viewModel.onRefresh() })
 
-        val featureAdapter = FeatureAdapter({ itemView, feature ->
-            listener.onFeatureClicked(itemView)
+        val featureAdapter = FeatureAdapter({ _, feature ->
             viewModel.onSelectFeature(feature)
         })
 

@@ -1,9 +1,9 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -12,27 +12,31 @@ import android.view.MenuItem
 import android.view.View
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.list.QuakeListFragment
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.settings.SettingsActivity
 import javax.inject.Inject
 
-class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector,
-        QuakeListFragment.OnFeatureClickedListener {
+class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
-    internal lateinit var dispatchingSupportFragmentInjector: DispatchingAndroidInjector<Fragment>
-    private var mTwoPane: Boolean = false
+    internal lateinit var viewModel: FeatureListActivityViewModel
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
-            dispatchingSupportFragmentInjector
+    private var mTwoPane = false
+    private var featureId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
+        try {
+            viewModel = ViewModelProviders.of(this)
+                    .get(FeatureListActivityViewModel::class.java)
+        } catch (t: Throwable) {
+            AndroidInjection.inject(this)
+        }
+
+        featureId = savedInstanceState?.getString("featureId")
+
         setContentView(R.layout.activity_feature_list)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -45,15 +49,15 @@ class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector,
                     .add(R.id.map_container, QuakeMapFragment())
                     .commit()
         }
-    }
 
-    override fun onFeatureClicked(view: View) {
-        if (!mTwoPane) {
-            val intent = FeatureDetailActivity.newIntent(this)
-            val activityOptionsCompat = ActivityOptionsCompat
-                    .makeSceneTransitionAnimation(this, view, getString(R.string.transition_name))
-            ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle())
-        }
+        viewModel.liveFeature.observe(this, Observer {
+            it?.let {
+                if (it.properties.publicId != featureId) {
+                    featureId = it.properties.publicId
+                    if (!mTwoPane) startActivity(FeatureDetailActivity.newIntent(this, it))
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -72,4 +76,12 @@ class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector,
         }
         else -> super.onOptionsItemSelected(item)
     }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString("featureId", featureId)
+    }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> =
+            viewModel.dispatchingSupportFragmentInjector
 }
