@@ -11,6 +11,8 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.FragmentScope
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractorImpl
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl
 
@@ -29,6 +31,11 @@ abstract class QuakeListModule {
     abstract fun eventObservable(
             eventSubject: Subject<QuakeListViewModel.Event>
     ): Observable<QuakeListViewModel.Event>
+
+    @Binds
+    abstract fun loadFeaturesInteractor(
+            loadFeaturesInteractorImpl: LoadFeaturesInteractorImpl
+    ): LoadFeaturesInteractor
 
     @Module
     companion object {

@@ -7,8 +7,6 @@ import com.google.android.gms.analytics.Tracker
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import nz.co.codebros.quakesnz.settings.SettingsActivity
-import nz.co.codebros.quakesnz.settings.SettingsActivityModule
 import nz.co.codebros.quakesnz.ui.FeatureDetailActivity
 import nz.co.codebros.quakesnz.ui.FeatureListActivity
 import nz.co.codebros.quakesnz.ui.FeatureListActivityModule
@@ -29,10 +27,6 @@ internal abstract class ApplicationModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = arrayOf(FeatureDetailActivity.Module::class))
     internal abstract fun featureDetailActivity(): FeatureDetailActivity
-
-    @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(SettingsActivityModule::class))
-    internal abstract fun settingsActivity(): SettingsActivity
 
     @Module
     companion object {

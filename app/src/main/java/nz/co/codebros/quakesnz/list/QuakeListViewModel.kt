@@ -58,7 +58,7 @@ class QuakeListViewModel(
 
         eventsObservable.filter { it is Event.LoadQuakes }
                 .flatMap {
-                    loadFeaturesInteractor.execute()
+                    loadFeaturesInteractor.execute(3)
                             .map { Event.QuakesLoaded(it.features) as Event }
                             .onErrorReturn { Event.LoadQuakesError(it) }
                 }

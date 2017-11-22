@@ -14,33 +14,8 @@ import nz.co.codebros.quakesnz.R
  * Created by leandro on 29/06/17.
  */
 
-class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
-
-    @Inject
-    internal lateinit var presenter: SettingsPresenter
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
-    }
-
+class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        presenter.onDestroyView()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        presenter.onSaveState(outState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if (savedInstanceState != null) presenter.onRestoreState(savedInstanceState)
-        presenter.onViewCreated()
     }
 }

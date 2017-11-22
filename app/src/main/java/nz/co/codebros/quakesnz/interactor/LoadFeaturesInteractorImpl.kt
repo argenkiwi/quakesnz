@@ -4,16 +4,17 @@ import android.content.SharedPreferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import nz.co.codebros.quakesnz.core.GeonetService
+import javax.inject.Inject
 
 /**
  * Created by leandro on 2/04/16.
  */
-class LoadFeaturesInteractorImpl(
+class LoadFeaturesInteractorImpl @Inject constructor(
         private val preferences: SharedPreferences,
         private val service: GeonetService
 ) : LoadFeaturesInteractor {
-    override fun execute() = service
-            .getQuakes(Integer.parseInt(preferences.getString("pref_intensity", "3")))
+    override fun execute(mmi: Int) = service
+            .getQuakes(mmi)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 }
