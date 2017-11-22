@@ -52,7 +52,7 @@ class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
         viewModel.liveFeature.observe(this, Observer {
             it?.let {
-                if (it.properties.publicId != featureId) {
+                if (featureId != it.properties.publicId) {
                     featureId = it.properties.publicId
                     if (!mTwoPane) startActivity(FeatureDetailActivity.newIntent(this, it))
                 }
