@@ -19,8 +19,6 @@ import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
 import nz.co.codebros.quakesnz.detail.QuakeDetailModule
 import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
-import nz.co.codebros.quakesnz.module.FeatureModule
-import nz.co.codebros.quakesnz.repository.FeatureRepository
 import javax.inject.Inject
 
 class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -75,14 +73,12 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @dagger.Module
     internal abstract class Module {
         @ContributesAndroidInjector(modules = arrayOf(
-                QuakeDetailModule::class,
-                FeatureModule::class
+                QuakeDetailModule::class
         ))
         internal abstract fun quakeDetailFragment(): QuakeDetailFragment
 
         @ContributesAndroidInjector(modules = arrayOf(
-                QuakeMap.Module::class,
-                FeatureModule::class
+                QuakeMap.Module::class
         ))
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
@@ -91,8 +87,9 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             @JvmStatic
             @Provides
             fun featureObservable(
-                    repository: FeatureRepository
-            ): Observable<Feature> = repository.observable
+                    activity: FeatureDetailActivity
+            ): Observable<Feature> = Observable
+                    .just(activity.intent.getParcelableExtra<Feature>(EXTRA_FEATURE))
 
             @JvmStatic
             @Provides

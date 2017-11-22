@@ -22,12 +22,15 @@ import javax.inject.Singleton
 @Module
 internal abstract class ApplicationModule {
 
+    @ActivityScope
     @ContributesAndroidInjector(modules = arrayOf(FeatureListActivityModule::class))
     internal abstract fun featureListActivity(): FeatureListActivity
 
+    @ActivityScope
     @ContributesAndroidInjector(modules = arrayOf(FeatureDetailActivity.Module::class))
     internal abstract fun featureDetailActivity(): FeatureDetailActivity
 
+    @ActivityScope
     @ContributesAndroidInjector(modules = arrayOf(SettingsActivityModule::class))
     internal abstract fun settingsActivity(): SettingsActivity
 

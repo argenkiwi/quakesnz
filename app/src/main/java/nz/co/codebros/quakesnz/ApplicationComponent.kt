@@ -5,7 +5,6 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import nz.co.codebros.quakesnz.core.ServicesModule
-import nz.co.codebros.quakesnz.module.SubjectsModule
 import javax.inject.Singleton
 
 /**
@@ -16,8 +15,7 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         AndroidSupportInjectionModule::class,
         ApplicationModule::class,
-        ServicesModule::class,
-        SubjectsModule::class
+        ServicesModule::class
 ))
 internal interface ApplicationComponent : AndroidInjector<QuakesNZApplication> {
 
