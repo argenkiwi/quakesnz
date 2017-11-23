@@ -54,12 +54,12 @@
 
                 <data
                     android:host="www.geonet.org.nz"
-                    android:pathPrefix="/earthquake"
+                    android:pathPrefix="/earthquake/"
                     android:scheme="http" />
 
                 <data
                     android:host="www.geonet.org.nz"
-                    android:pathPrefix="/earthquake"
+                    android:pathPrefix="/earthquake/"
                     android:scheme="https" />
 
                 <data
