@@ -14,8 +14,9 @@ import javax.inject.Inject
 class LoadFeatureInteractorImpl @Inject constructor(
         private val service: GeonetService
 ) : LoadFeatureInteractor {
-    override fun execute(publicId: String): Observable<Feature> = service.getQuake(publicId)
-            .map { (features) -> features[0] }
+    override fun execute(publicId: String): Observable<Result<Feature>> = service.getQuake(publicId)
+            .map { (features) -> Result.Success(features.first()) as Result<Feature> }
+            .onErrorReturn { Result.Failure(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 }

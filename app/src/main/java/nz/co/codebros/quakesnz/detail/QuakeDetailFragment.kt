@@ -97,20 +97,4 @@ class QuakeDetailFragment : Fragment() {
     private fun showLoadingError() {
         Toast.makeText(context, R.string.error_loading_feature, Toast.LENGTH_SHORT).show()
     }
-
-    companion object {
-
-        private val ARG_PUBLIC_ID = "arg_public_id"
-
-        fun newInstance() = QuakeDetailFragment()
-
-        fun newInstance(publicID: String): Fragment {
-            val args = Bundle()
-            args.putString(ARG_PUBLIC_ID, publicID)
-
-            val fragment = newInstance()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

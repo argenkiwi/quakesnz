@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import dagger.Binds
 import dagger.Provides
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -17,6 +18,9 @@ import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
 import nz.co.codebros.quakesnz.detail.QuakeDetailModule
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
+import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl
+import nz.co.codebros.quakesnz.interactor.Result
 import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import javax.inject.Inject
@@ -37,16 +41,9 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             AndroidInjection.inject(this)
         }
 
-        if (savedInstanceState == null) {
-            val fragment: Fragment = when {
-                intent.data != null -> QuakeDetailFragment.newInstance(intent.data.lastPathSegment)
-                else -> QuakeDetailFragment.newInstance()
-            }
-
-            supportFragmentManager.beginTransaction()
-                    .add(android.R.id.content, fragment)
-                    .commit()
-        }
+        if (savedInstanceState == null) supportFragmentManager.beginTransaction()
+                .add(android.R.id.content, QuakeDetailFragment())
+                .commit()
     }
 
     companion object {
@@ -82,14 +79,35 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         ))
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
+
+        @Binds
+        abstract fun loadFeatureInteractor(
+                loadFeatureInteractorImpl: LoadFeatureInteractorImpl
+        ): LoadFeatureInteractor
+
         @dagger.Module
         internal companion object {
             @JvmStatic
             @Provides
+            fun featureResultObservable(
+                    activity: FeatureDetailActivity,
+                    loadFeatureInteractor: LoadFeatureInteractor
+            ): Observable<Result<Feature>> = activity.intent.let {
+                when {
+                    it.data != null -> loadFeatureInteractor.execute(it.data.lastPathSegment)
+                    else -> Observable.just(it.getParcelableExtra<Feature>(EXTRA_FEATURE))
+                            .map { Result.Success(it) }
+                }
+            }
+
+            @JvmStatic
+            @Provides
             fun featureObservable(
-                    activity: FeatureDetailActivity
-            ): Observable<Feature> = Observable
-                    .just(activity.intent.getParcelableExtra<Feature>(EXTRA_FEATURE))
+                    featureResultObservable: Observable<Result<Feature>>
+            ): Observable<Feature> = featureResultObservable
+                    .filter({ it is Result.Success })
+                    .map { it as Result.Success }
+                    .map { it.value }
 
             @JvmStatic
             @Provides
