@@ -1,6 +1,5 @@
 package nz.co.codebros.quakesnz.ui
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.support.v4.app.Fragment
@@ -15,18 +14,8 @@ import javax.inject.Inject
  */
 class FeatureListActivityViewModel(
         val dispatchingSupportFragmentInjector: DispatchingAndroidInjector<Fragment>,
-        featureObservable: Observable<Feature>
+        val featureObservable: Observable<Feature>
 ) : ViewModel() {
-    val liveFeature = MutableLiveData<Feature>()
-    private val disposable = featureObservable.subscribe({
-        liveFeature.value = it
-    })
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
-    }
-
     class Factory @Inject constructor(
             private val dispatchingSupportFragmentInjector: DispatchingAndroidInjector<Fragment>,
             private val featureObservable: Observable<Feature>
