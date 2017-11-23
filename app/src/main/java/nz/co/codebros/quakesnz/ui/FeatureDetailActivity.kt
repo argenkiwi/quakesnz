@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.NavUtils
+import android.support.v4.app.TaskStackBuilder
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import dagger.Binds
 import dagger.Provides
 import dagger.android.AndroidInjection
@@ -34,6 +37,7 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         try {
             viewModel = ViewModelProviders.of(this).get(ViewModel::class.java)
@@ -45,6 +49,23 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 .add(android.R.id.content, QuakeDetailFragment())
                 .commit()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        android.R.id.home -> {
+            NavUtils.getParentActivityIntent(this)?.let {
+                when {
+                    NavUtils.shouldUpRecreateTask(this, it) ->
+                        TaskStackBuilder.create(this)
+                                .addNextIntentWithParentStack(it)
+                                .startActivities()
+                    else -> NavUtils.navigateUpTo(this, it)
+                }
+            }
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
+
 
     companion object {
         private val EXTRA_FEATURE = "extra_feature"
