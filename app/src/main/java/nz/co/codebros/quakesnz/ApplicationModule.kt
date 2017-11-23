@@ -7,6 +7,7 @@ import com.google.android.gms.analytics.Tracker
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import nz.co.codebros.quakesnz.scope.ActivityScope
 import nz.co.codebros.quakesnz.ui.FeatureDetailActivity
 import nz.co.codebros.quakesnz.ui.FeatureListActivity
 import nz.co.codebros.quakesnz.ui.FeatureListActivityModule

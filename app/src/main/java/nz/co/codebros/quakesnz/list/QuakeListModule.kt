@@ -9,7 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import nz.co.codebros.quakesnz.FragmentScope
+import nz.co.codebros.quakesnz.scope.FragmentScope
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractorImpl

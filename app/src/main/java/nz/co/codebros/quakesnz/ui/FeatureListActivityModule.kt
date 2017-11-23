@@ -8,8 +8,8 @@ import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import nz.co.codebros.quakesnz.ActivityScope
-import nz.co.codebros.quakesnz.FragmentScope
+import nz.co.codebros.quakesnz.scope.ActivityScope
+import nz.co.codebros.quakesnz.scope.FragmentScope
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import nz.co.codebros.quakesnz.list.QuakeListFragment
