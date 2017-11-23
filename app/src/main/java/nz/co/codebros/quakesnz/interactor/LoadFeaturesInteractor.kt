@@ -7,5 +7,5 @@ import nz.co.codebros.quakesnz.core.data.FeatureCollection
  * Created by leandro on 10/06/17.
  */
 interface LoadFeaturesInteractor {
-    fun execute(mmi: Int): Observable<FeatureCollection>
+    fun execute(): Observable<FeatureCollection>
 }
