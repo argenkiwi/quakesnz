@@ -103,7 +103,7 @@ class QuakeListViewModel(
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
         when (key) {
-            "pref_intensity" -> eventObserver.onNext(Event.RefreshQuakes)
+            "pref_intensity" -> eventObserver.onNext(Event.LoadQuakes())
         }
     }
 
