@@ -6,16 +6,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import nz.co.codebros.quakesnz.scope.ActivityScope
-import nz.co.codebros.quakesnz.scope.FragmentScope
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import nz.co.codebros.quakesnz.list.QuakeListFragment
 import nz.co.codebros.quakesnz.list.QuakeListModule
 import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
+import nz.co.codebros.quakesnz.scope.ActivityScope
+import nz.co.codebros.quakesnz.scope.FragmentScope
 
 /**
  * Created by leandro on 3/07/17.
@@ -24,15 +24,11 @@ import nz.co.codebros.quakesnz.map.QuakeMapFragment
 abstract class FeatureListActivityModule {
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = arrayOf(
-            QuakeListModule::class
-    ))
+    @ContributesAndroidInjector(modules = arrayOf(QuakeListModule::class))
     internal abstract fun quakeListFragment(): QuakeListFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = arrayOf(
-            QuakeMap.Module::class
-    ))
+    @ContributesAndroidInjector(modules = arrayOf(QuakeMap.Module::class))
     internal abstract fun quakeMapFragment(): QuakeMapFragment
 
     @Binds
@@ -43,12 +39,12 @@ abstract class FeatureListActivityModule {
         @JvmStatic
         @Provides
         @ActivityScope
-        internal fun featureCollectionSubject(): Subject<FeatureCollection> = BehaviorSubject.create()
+        internal fun featureCollectionSubject(): Subject<FeatureCollection> = PublishSubject.create()
 
         @JvmStatic
         @Provides
         @ActivityScope
-        internal fun featureSubject(): Subject<Feature> = BehaviorSubject.create()
+        internal fun featureSubject(): Subject<Feature> = PublishSubject.create()
 
         @JvmStatic
         @Provides
