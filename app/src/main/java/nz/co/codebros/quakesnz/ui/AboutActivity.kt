@@ -11,7 +11,7 @@ class AboutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
-        Linkify.addLinks(findViewById(R.id.about_body) as TextView, Linkify.ALL)
-        Linkify.addLinks(findViewById(R.id.acknowledgements_body) as TextView, Linkify.ALL)
+        Linkify.addLinks(findViewById<TextView>(R.id.about_body), Linkify.ALL)
+        Linkify.addLinks(findViewById<TextView>(R.id.acknowledgements_body), Linkify.ALL)
     }
 }

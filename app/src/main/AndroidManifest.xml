@@ -54,12 +54,12 @@
 
                 <data
                     android:host="www.geonet.org.nz"
-                    android:pathPrefix="/earthquake"
+                    android:pathPrefix="/earthquake/"
                     android:scheme="http" />
 
                 <data
                     android:host="www.geonet.org.nz"
-                    android:pathPrefix="/earthquake"
+                    android:pathPrefix="/earthquake/"
                     android:scheme="https" />
 
                 <data
@@ -70,14 +70,6 @@
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/about"
-            android:parentActivityName=".ui.FeatureListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
-        </activity>
-        <activity
-            android:name=".ui.InfoActivity"
-            android:label="@string/emergency_advice"
             android:parentActivityName=".ui.FeatureListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

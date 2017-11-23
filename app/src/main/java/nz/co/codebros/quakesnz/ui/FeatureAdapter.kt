@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.core.model.Feature
 import nz.co.codebros.quakesnz.QuakesUtils
+import nz.co.codebros.quakesnz.R
+import nz.co.codebros.quakesnz.core.data.Feature
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -17,16 +17,11 @@ import kotlin.collections.ArrayList
  * Created by leandro on 12/07/15.
  */
 class FeatureAdapter(
-        private val listener: Listener
+        private val onItemClicked: (view: View, feature: Feature) -> Unit
 ) : RecyclerView.Adapter<FeatureAdapter.ViewHolder>() {
-    var features: MutableList<Feature> = ArrayList()
-        set(value) {
-            field.clear()
-            field.addAll(value)
-            notifyDataSetChanged()
-        }
+    private val features: MutableList<Feature> = ArrayList()
 
-    var selectedPosition: Int = -1
+    private var selectedPosition: Int = -1
         set(value) {
             if (value != field) {
                 notifyItemChanged(selectedPosition)
@@ -34,6 +29,12 @@ class FeatureAdapter(
                 notifyItemChanged(selectedPosition)
             }
         }
+
+    fun setFeatures(features: List<Feature>) {
+        this.features.clear()
+        this.features.addAll(features)
+        notifyDataSetChanged()
+    }
 
     fun setSelectedFeature(feature: Feature) {
         selectedPosition = features.indexOf(feature)
@@ -59,30 +60,29 @@ class FeatureAdapter(
         viewHolder.vTab.setBackgroundColor(colorForIntensity)
 
         viewHolder.cardView.cardElevation = if (i == selectedPosition) 8.0f else 2.0f
-        viewHolder.itemView.setOnClickListener { view ->
-            selectedPosition = i
-            listener.onFeatureClicked(view, feature)
-        }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
                 .inflate(R.layout.item_summary, viewGroup, false)
-        return ViewHolder(view)
+        return ViewHolder(view, { onItemClicked(view, features[it]) })
     }
 
-    interface Listener {
-        fun onFeatureClicked(view: View, feature: Feature)
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(
+            itemView: View,
+            onClick: (position: Int) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
         val cardView = itemView as CardView
-        val txtMagnitudeBig = itemView.findViewById(R.id.magnitude_big) as TextView
-        val txtMagnitudeSmall = itemView.findViewById(R.id.magnitude_small) as TextView
-        val txtIntensity = itemView.findViewById(R.id.intensity) as TextView
-        val txtLocation = itemView.findViewById(R.id.location) as TextView
-        val txtDepth = itemView.findViewById(R.id.depth) as TextView
-        val txtTime = itemView.findViewById(R.id.time) as TextView
+        val txtMagnitudeBig: TextView = itemView.findViewById<TextView>(R.id.magnitude_big)
+        val txtMagnitudeSmall: TextView = itemView.findViewById<TextView>(R.id.magnitude_small)
+        val txtIntensity: TextView = itemView.findViewById<TextView>(R.id.intensity)
+        val txtLocation: TextView = itemView.findViewById<TextView>(R.id.location)
+        val txtDepth: TextView = itemView.findViewById<TextView>(R.id.depth)
+        val txtTime: TextView = itemView.findViewById<TextView>(R.id.time)
         val vTab: View = itemView.findViewById(R.id.colorTab)
+
+        init {
+            itemView.setOnClickListener({ onClick(adapterPosition) })
+        }
     }
 }

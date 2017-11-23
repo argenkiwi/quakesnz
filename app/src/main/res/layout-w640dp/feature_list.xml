@@ -19,19 +19,8 @@
         android:layout_height="match_parent"
         android:layout_weight="3"
         app:cardBackgroundColor="@android:color/white"
+        app:cardElevation="3dp"
         app:cardUseCompatPadding="true"
-        app:contentPadding="4dp"
-        app:cardElevation="3dp">
-
-        <fragment
-            android:id="@+id/map"
-            android:name="nz.co.codebros.quakesnz.map.QuakeMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cameraTargetLat="-41.3090732"
-            app:cameraTargetLng="175.1858282"
-            app:cameraZoom="4.5"/>
-
-    </android.support.v7.widget.CardView>
+        app:contentPadding="4dp" />
 
 </LinearLayout>

@@ -5,10 +5,6 @@
         android:title="@string/settings"
         qnz:showAsAction="never"/>
     <item
-        android:id="@+id/action_info"
-        android:title="@string/emergency_advice"
-        qnz:showAsAction="never"/>
-    <item
         android:id="@+id/action_about"
         android:title="@string/about"
         qnz:showAsAction="never"/>
