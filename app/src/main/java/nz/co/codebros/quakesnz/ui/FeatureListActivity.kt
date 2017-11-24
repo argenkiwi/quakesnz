@@ -48,7 +48,9 @@ class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     .commit()
         }
 
-        disposable = viewModel.featureObservable.subscribe({
+        val connectableObservable = viewModel.featureObservable.publish()
+        connectableObservable.connect()
+        disposable = connectableObservable.subscribe({
             if (!mTwoPane) startActivity(FeatureDetailActivity.newIntent(this, it))
         })
     }
