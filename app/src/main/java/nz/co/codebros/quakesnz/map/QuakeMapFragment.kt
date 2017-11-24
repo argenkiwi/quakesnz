@@ -1,7 +1,6 @@
 package nz.co.codebros.quakesnz.map
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -32,10 +31,9 @@ class QuakeMapFragment : SupportMapFragment() {
             AndroidSupportInjection.inject(this)
         }
 
-        Transformations.map(viewModel.coordinates, {
-            LatLng(it.latitude, it.longitude)
-        }).observe(this, Observer {
-            it?.let { latLng ->
+        viewModel.liveState.observe(this, Observer {
+            it?.coordinates?.apply {
+                val latLng = LatLng(latitude, longitude)
                 getMapAsync {
                     when (marker) {
                         null -> {
