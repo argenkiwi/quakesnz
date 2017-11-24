@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.core.data.Feature
@@ -44,7 +45,7 @@ abstract class FeatureListActivityModule {
         @JvmStatic
         @Provides
         @ActivityScope
-        internal fun featureSubject(): Subject<Feature> = PublishSubject.create()
+        internal fun featureSubject(): Subject<Feature> = BehaviorSubject.create()
 
         @JvmStatic
         @Provides

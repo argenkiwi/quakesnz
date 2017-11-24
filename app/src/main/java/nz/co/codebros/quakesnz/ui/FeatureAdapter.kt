@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
@@ -19,7 +20,7 @@ import kotlin.collections.ArrayList
 class FeatureAdapter(
         private val onItemClicked: (view: View, feature: Feature) -> Unit
 ) : RecyclerView.Adapter<FeatureAdapter.ViewHolder>() {
-    private val features: MutableList<Feature> = ArrayList()
+    private var features: List<Feature> = ArrayList()
 
     private var selectedPosition: Int = -1
         set(value) {
@@ -31,9 +32,10 @@ class FeatureAdapter(
         }
 
     fun setFeatures(features: List<Feature>) {
-        this.features.clear()
-        this.features.addAll(features)
-        notifyDataSetChanged()
+        DiffUtil.calculateDiff(DiffCallback(this.features, features))
+                .dispatchUpdatesTo(this)
+
+        this.features = features
     }
 
     fun setSelectedFeature(feature: Feature) {
@@ -84,5 +86,20 @@ class FeatureAdapter(
         init {
             itemView.setOnClickListener({ onClick(adapterPosition) })
         }
+    }
+
+    private class DiffCallback(
+            private val oldFeatures: List<Feature>,
+            private val newFeatures: List<Feature>
+    ) : DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldFeatures[oldItemPosition].properties.publicId == newFeatures[newItemPosition].properties.publicId
+
+        override fun getOldListSize() = oldFeatures.size
+
+        override fun getNewListSize() = newFeatures.size
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                oldFeatures[oldItemPosition] == newFeatures[newItemPosition]
     }
 }
