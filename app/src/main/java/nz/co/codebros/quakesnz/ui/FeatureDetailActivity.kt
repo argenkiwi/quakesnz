@@ -19,8 +19,8 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.detail.QuakeDetail
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
-import nz.co.codebros.quakesnz.detail.QuakeDetailModule
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl
 import nz.co.codebros.quakesnz.interactor.Result
@@ -91,7 +91,7 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @dagger.Module
     internal abstract class Module {
         @ContributesAndroidInjector(modules = arrayOf(
-                QuakeDetailModule::class
+                QuakeDetail.Module::class
         ))
         internal abstract fun quakeDetailFragment(): QuakeDetailFragment
 

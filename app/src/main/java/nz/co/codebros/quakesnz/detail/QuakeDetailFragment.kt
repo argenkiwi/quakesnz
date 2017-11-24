@@ -20,7 +20,7 @@ import javax.inject.Inject
 class QuakeDetailFragment : Fragment() {
 
     @Inject
-    internal lateinit var viewModel: QuakeDetailViewModel
+    internal lateinit var viewModel: QuakeDetail.ViewModel
 
     private lateinit var mMagnitudeBigView: TextView
     private lateinit var mTabView: View
@@ -53,10 +53,10 @@ class QuakeDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        viewModel.feature.observe(this, Observer {
-            when (it) {
-                is Success -> showDetails(it.feature)
-                is Failure -> showLoadingError()
+        viewModel.liveState.observe(this, Observer {
+            it?.apply {
+                feature?.let { showDetails(it) }
+                throwable?.let { showLoadingError() }
             }
         })
     }
