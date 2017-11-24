@@ -11,8 +11,8 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
+import nz.co.codebros.quakesnz.list.QuakeList
 import nz.co.codebros.quakesnz.list.QuakeListFragment
-import nz.co.codebros.quakesnz.list.QuakeListModule
 import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.scope.ActivityScope
@@ -25,7 +25,7 @@ import nz.co.codebros.quakesnz.scope.FragmentScope
 abstract class FeatureListActivityModule {
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = arrayOf(QuakeListModule::class))
+    @ContributesAndroidInjector(modules = arrayOf(QuakeList.Module::class))
     internal abstract fun quakeListFragment(): QuakeListFragment
 
     @FragmentScope

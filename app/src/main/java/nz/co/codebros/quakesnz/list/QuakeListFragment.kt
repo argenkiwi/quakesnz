@@ -18,7 +18,7 @@ import javax.inject.Inject
 class QuakeListFragment : Fragment() {
 
     @Inject
-    internal lateinit var viewModel: QuakeListViewModel
+    internal lateinit var viewModel: QuakeList.ViewModel
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
@@ -39,10 +39,12 @@ class QuakeListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
 
-        swipeRefreshLayout.setOnRefreshListener({ viewModel.onRefresh() })
+        swipeRefreshLayout.setOnRefreshListener({
+            viewModel.events.onNext(QuakeList.Event.RefreshQuakes)
+        })
 
         val featureAdapter = FeatureAdapter({ _, feature ->
-            viewModel.onSelectFeature(feature)
+            viewModel.events.onNext(QuakeList.Event.SelectQuake(feature))
         })
 
         recyclerView.let {
@@ -51,7 +53,7 @@ class QuakeListFragment : Fragment() {
         }
 
         viewModel.liveState.observe(this, Observer {
-            it?.let { (isLoading, features, selectedFeature, error) ->
+            it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }
                 selectedFeature?.let { featureAdapter.setSelectedFeature(it) }
@@ -60,9 +62,5 @@ class QuakeListFragment : Fragment() {
                 }
             }
         })
-    }
-
-    interface OnFeatureClickedListener {
-        fun onFeatureClicked(view: View)
     }
 }
