@@ -19,6 +19,28 @@ interface QuakeDetail {
             val throwable: Throwable? = null
     )
 
+    class ViewModel(
+            featureObservable: Observable<Result<Feature>>
+    ) : ReducerViewModel<State, Result<Feature>>(State(), { state, result ->
+        when (result) {
+            is Result.Success -> state.copy(feature = result.value)
+            is Result.Failure -> state.copy(throwable = result.throwable)
+        }
+    }) {
+
+        init {
+            featureObservable.subscribe(events)
+        }
+
+        internal class Factory @Inject constructor(
+                private val featureObservable: Observable<Result<Feature>>
+        ) : ViewModelProvider.Factory {
+
+            override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
+                    ViewModel(featureObservable) as T
+        }
+    }
+
     interface View {
         fun showDetails(feature: Feature)
         fun showLoadingError()
@@ -30,26 +52,6 @@ interface QuakeDetail {
                 feature?.let { view.showDetails(it) }
                 throwable?.let { view.showLoadingError() }
             }
-        }
-    }
-
-    class ViewModel(
-            featureObservable: Observable<Result<Feature>>
-    ) : ReducerViewModel<State, Result<Feature>>(State(), { state, result ->
-        when (result) {
-            is Result.Success -> state.copy(feature = result.value)
-            is Result.Failure -> state.copy(throwable = result.throwable)
-        }
-    }) {
-        init {
-            featureObservable.subscribe(events)
-        }
-
-        internal class Factory @Inject constructor(
-                private val featureObservable: Observable<Result<Feature>>
-        ) : ViewModelProvider.Factory {
-            override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
-                    ViewModel(featureObservable) as T
         }
     }
 
