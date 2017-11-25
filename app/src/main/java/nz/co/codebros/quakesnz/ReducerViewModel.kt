@@ -24,8 +24,7 @@ abstract class ReducerViewModel<State, Event>(
         liveState = MutableLiveData<State>()
         events = PublishSubject.create()
         eventsObservable = events
-        disposable = events.scan(state, reducer)
-                .subscribe({ liveState.value = it })
+        disposable = events.scan(state, reducer).subscribe({ liveState.value = it })
     }
 
     override fun onCleared() {

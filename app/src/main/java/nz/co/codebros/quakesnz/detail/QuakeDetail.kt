@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import dagger.Provides
 import io.reactivex.Observable
+import nz.co.codebros.quakesnz.BasePresenter
 import nz.co.codebros.quakesnz.ReducerViewModel
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.Result
@@ -17,6 +18,20 @@ interface QuakeDetail {
             val feature: Feature? = null,
             val throwable: Throwable? = null
     )
+
+    interface View {
+        fun showDetails(feature: Feature)
+        fun showLoadingError()
+    }
+
+    class Presenter(view: View) : BasePresenter<State, View>(view) {
+        override fun onChanged(state: State?) {
+            state?.apply {
+                feature?.let { view.showDetails(it) }
+                throwable?.let { view.showLoadingError() }
+            }
+        }
+    }
 
     class ViewModel(
             featureObservable: Observable<Result<Feature>>

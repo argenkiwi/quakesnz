@@ -1,6 +1,5 @@
 package nz.co.codebros.quakesnz.detail
 
-import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -17,7 +16,7 @@ import nz.co.codebros.quakesnz.core.data.Feature
 import java.util.*
 import javax.inject.Inject
 
-class QuakeDetailFragment : Fragment() {
+class QuakeDetailFragment : Fragment(), QuakeDetail.View {
 
     @Inject
     internal lateinit var viewModel: QuakeDetail.ViewModel
@@ -53,15 +52,10 @@ class QuakeDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        viewModel.liveState.observe(this, Observer {
-            it?.apply {
-                feature?.let { showDetails(it) }
-                throwable?.let { showLoadingError() }
-            }
-        })
+        viewModel.liveState.observe(this, QuakeDetail.Presenter(this))
     }
 
-    private fun showDetails(feature: Feature) {
+    override fun showDetails(feature: Feature) {
         val properties = feature.properties
         val colorForIntensity = QuakesUtils.getColor(context!!, properties.mmi)
         val magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.magnitude)
@@ -94,7 +88,7 @@ class QuakeDetailFragment : Fragment() {
         })
     }
 
-    private fun showLoadingError() {
+    override fun showLoadingError() {
         Toast.makeText(context, R.string.error_loading_feature, Toast.LENGTH_SHORT).show()
     }
 }
