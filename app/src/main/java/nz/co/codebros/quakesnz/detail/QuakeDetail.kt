@@ -2,10 +2,9 @@ package nz.co.codebros.quakesnz.detail
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import ar.soflete.cycler.ReactiveViewModel
 import dagger.Provides
 import io.reactivex.Observable
-import nz.co.codebros.quakesnz.BasePresenter
-import nz.co.codebros.quakesnz.ReducerViewModel
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.Result
 import javax.inject.Inject
@@ -21,21 +20,15 @@ interface QuakeDetail {
 
     class ViewModel(
             featureObservable: Observable<Result<Feature>>
-    ) : ReducerViewModel<State, Result<Feature>>(State(), { state, result ->
-        when (result) {
-            is Result.Success -> state.copy(feature = result.value)
-            is Result.Failure -> state.copy(throwable = result.throwable)
-        }
-    }) {
+    ) : ReactiveViewModel<State, Result<Feature>>(State(), QuakeDetailReducer) {
 
         init {
-            featureObservable.subscribe(events)
+            subscribe(featureObservable)
         }
 
         internal class Factory @Inject constructor(
                 private val featureObservable: Observable<Result<Feature>>
         ) : ViewModelProvider.Factory {
-
             override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
                     ViewModel(featureObservable) as T
         }
@@ -46,7 +39,7 @@ interface QuakeDetail {
         fun showLoadingError()
     }
 
-    class Presenter(view: View) : BasePresenter<State, View>(view) {
+    class Presenter(view: View) : ar.soflete.cycler.Presenter<State, View>(view) {
         override fun onChanged(state: State?) {
             state?.apply {
                 feature?.let { view.showDetails(it) }

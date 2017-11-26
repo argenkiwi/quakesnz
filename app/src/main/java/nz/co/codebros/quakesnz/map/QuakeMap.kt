@@ -2,9 +2,9 @@ package nz.co.codebros.quakesnz.map
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import ar.soflete.cycler.ReactiveViewModel
 import dagger.Provides
 import io.reactivex.Observable
-import nz.co.codebros.quakesnz.ReducerViewModel
 import nz.co.codebros.quakesnz.core.data.Coordinates
 import nz.co.codebros.quakesnz.core.data.Feature
 import javax.inject.Inject
@@ -12,19 +12,15 @@ import javax.inject.Inject
 /**
  * Created by Leandro on 20/11/2017.
  */
-internal interface QuakeMap {
+interface QuakeMap {
 
     data class State(val coordinates: Coordinates? = null)
 
     class ViewModel(
             featureObservable: Observable<Feature>
-    ) : ReducerViewModel<State, Coordinates>(State(), { state, coordinates ->
-        state.copy(coordinates = coordinates)
-    }) {
+    ) : ReactiveViewModel<State, Coordinates>(State(), QuakeMapReducer) {
         init {
-            featureObservable
-                    .map { it.geometry.coordinates }
-                    .subscribe(events)
+            subscribe(featureObservable.map { it.geometry.coordinates })
         }
 
         class Factory @Inject constructor(

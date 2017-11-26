@@ -31,7 +31,7 @@ class QuakeMapFragment : SupportMapFragment() {
             AndroidSupportInjection.inject(this)
         }
 
-        viewModel.liveState.observe(this, Observer {
+        viewModel.state.observe(this, Observer {
             it?.coordinates?.apply {
                 val latLng = LatLng(latitude, longitude)
                 getMapAsync {

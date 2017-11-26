@@ -52,7 +52,7 @@ class QuakeDetailFragment : Fragment(), QuakeDetail.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        viewModel.liveState.observe(this, QuakeDetail.Presenter(this))
+        viewModel.state.observe(this, QuakeDetail.Presenter(this))
     }
 
     override fun showDetails(feature: Feature) {
