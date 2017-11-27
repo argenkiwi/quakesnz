@@ -35,7 +35,7 @@ abstract class QuakeListModule {
         @Provides
         internal fun viewModel(
                 fragment: QuakeListFragment,
-                factory: QuakeListEvent.ViewModel.Factory
-        ) = ViewModelProviders.of(fragment, factory).get(QuakeListEvent.ViewModel::class.java)
+                factory: QuakeListViewModel.Factory
+        ) = ViewModelProviders.of(fragment, factory).get(QuakeListViewModel::class.java)
     }
 }
