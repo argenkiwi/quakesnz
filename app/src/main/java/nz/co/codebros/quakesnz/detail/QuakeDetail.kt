@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import ar.soflete.cycler.ReactiveViewModel
 import dagger.Provides
 import io.reactivex.Observable
+import nz.co.codebros.quakesnz.BasePresenter
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.Result
 import javax.inject.Inject
@@ -20,7 +21,7 @@ interface QuakeDetail {
 
     class ViewModel(
             featureObservable: Observable<Result<Feature>>
-    ) : ReactiveViewModel<State, Result<Feature>>(State(), QuakeDetailReducer) {
+    ) : ReactiveViewModel<State, Result<Feature>>(State(), QuakeDetailReducer::reduce) {
 
         init {
             subscribe(featureObservable)
@@ -39,7 +40,7 @@ interface QuakeDetail {
         fun showLoadingError()
     }
 
-    class Presenter(view: View) : ar.soflete.cycler.Presenter<State, View>(view) {
+    class Presenter(view: View) : BasePresenter<State, View>(view) {
         override fun onChanged(state: State?) {
             state?.apply {
                 feature?.let { view.showDetails(it) }

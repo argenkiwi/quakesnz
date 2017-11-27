@@ -1,12 +1,10 @@
 package nz.co.codebros.quakesnz.list
 
-import ar.soflete.cycler.Reducer
-
 /**
  * Created by Leandro on 27/11/2017.
  */
-object QuakeListReducer : Reducer<QuakeListState, QuakeListEvent> {
-    override fun reduce(state: QuakeListState, event: QuakeListEvent) = when (event) {
+object QuakeListReducer {
+    fun reduce(state: QuakeListState, event: QuakeListEvent) = when (event) {
         is QuakeListEvent.LoadQuakes -> {
             state.copy(isLoading = true)
         }

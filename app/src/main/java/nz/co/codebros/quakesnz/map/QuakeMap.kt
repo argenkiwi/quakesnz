@@ -18,7 +18,7 @@ interface QuakeMap {
 
     class ViewModel(
             featureObservable: Observable<Feature>
-    ) : ReactiveViewModel<State, Coordinates>(State(), QuakeMapReducer) {
+    ) : ReactiveViewModel<State, Coordinates>(State(), QuakeMapReducer::reduce) {
         init {
             subscribe(featureObservable.map { it.geometry.coordinates })
         }

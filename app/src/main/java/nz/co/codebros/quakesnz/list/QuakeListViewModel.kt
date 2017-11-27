@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import ar.soflete.cycler.ReactiveViewModel
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
+import io.reactivex.disposables.CompositeDisposable
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import javax.inject.Inject
@@ -19,8 +20,10 @@ class QuakeListViewModel(
         private val loadFeaturesInteractor: LoadFeaturesInteractor,
         private val selectFeatureInteractor: SelectFeatureInteractor
 ) : ReactiveViewModel<QuakeListState, QuakeListEvent>(
-        QuakeListState(false), QuakeListReducer
+        QuakeListState(false), QuakeListReducer::reduce
 ), SharedPreferences.OnSharedPreferenceChangeListener {
+    private val disposables = CompositeDisposable()
+
     init {
         subscribe(events
                 .startWith(QuakeListEvent.LoadQuakes())
@@ -31,12 +34,12 @@ class QuakeListViewModel(
                             .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
                 })
 
-        collect(events
+        disposables.add(events
                 .filter { it is QuakeListEvent.SelectQuake }
                 .map { (it as QuakeListEvent.SelectQuake).quake }
                 .subscribe({ selectFeatureInteractor.execute(it) }))
 
-        collect(events.subscribe({
+        disposables.add(events.subscribe({
             when (it) {
                 is QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
                         .setCategory("Interactions")

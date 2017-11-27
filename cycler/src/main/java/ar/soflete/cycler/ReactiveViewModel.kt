@@ -4,8 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
@@ -14,7 +12,7 @@ import io.reactivex.subjects.Subject
  */
 abstract class ReactiveViewModel<State, Event>(
         state: State,
-        reducer: Reducer<State, Event>
+        reducer: (State, Event) -> State
 ) : ViewModel() {
     private val _state = MutableLiveData<State>()
     val state: LiveData<State> = _state
@@ -22,11 +20,7 @@ abstract class ReactiveViewModel<State, Event>(
     private val _events: Subject<Event> = PublishSubject.create()
     protected val events: Observable<Event> = _events
 
-    private val _disposables = CompositeDisposable()
-
-    init {
-        collect(_events.scan(state, reducer::reduce).subscribe({ _state.value = it }))
-    }
+    private val _disposable = _events.scan(state, reducer).subscribe({ _state.value = it })
 
     fun publish(event: Event) {
         _events.onNext(event)
@@ -36,13 +30,9 @@ abstract class ReactiveViewModel<State, Event>(
         observable.subscribe(_events)
     }
 
-    protected fun collect(disposable: Disposable) {
-        _disposables.add(disposable)
-    }
-
     override fun onCleared() {
         super.onCleared()
         _events.onComplete()
-        _disposables.dispose()
+        _disposable.dispose()
     }
 }
