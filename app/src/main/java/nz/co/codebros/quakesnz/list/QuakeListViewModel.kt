@@ -1,8 +1,8 @@
 package nz.co.codebros.quakesnz.list
 
+import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.SharedPreferences
-import ar.soflete.cycler.ReactiveViewModel
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import io.reactivex.disposables.CompositeDisposable
@@ -15,42 +15,42 @@ import javax.inject.Named
  * Created by Leandro on 27/11/2017.
  */
 class QuakeListViewModel(
-        tracker: Tracker,
+        val quakeListModel: QuakeListModel,
         private val sharedPreferences: SharedPreferences,
-        private val loadFeaturesInteractor: LoadFeaturesInteractor,
-        private val selectFeatureInteractor: SelectFeatureInteractor
-) : ReactiveViewModel<QuakeListState, QuakeListEvent>(
-        QuakeListState(false), QuakeListReducer::reduce
-), SharedPreferences.OnSharedPreferenceChangeListener {
+        loadFeaturesInteractor: LoadFeaturesInteractor,
+        selectFeatureInteractor: SelectFeatureInteractor,
+        tracker: Tracker
+) : ViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val disposables = CompositeDisposable()
 
     init {
-        subscribe(events
-                .startWith(QuakeListEvent.LoadQuakes())
-                .filter { it is QuakeListEvent.LoadQuakes }
-                .flatMap {
-                    loadFeaturesInteractor.execute()
-                            .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
-                            .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
+        disposables.addAll(
+                quakeListModel.init(QuakeListState(false)),
+                quakeListModel.events
+                        .startWith(QuakeListEvent.LoadQuakes())
+                        .filter { it is QuakeListEvent.LoadQuakes }
+                        .flatMap {
+                            loadFeaturesInteractor.execute()
+                                    .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
+                                    .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
+                        }
+                        .subscribe { quakeListModel.events.onNext(it) },
+                quakeListModel.events
+                        .filter { it is QuakeListEvent.SelectQuake }
+                        .map { (it as QuakeListEvent.SelectQuake).quake }
+                        .subscribe { selectFeatureInteractor.execute(it) },
+                quakeListModel.events.subscribe {
+                    when (it) {
+                        QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
+                                .setCategory("Interactions")
+                                .setAction("Refresh")
+                                .build())
+                        is QuakeListEvent.SelectQuake -> tracker.send(HitBuilders.EventBuilder()
+                                .setCategory("Interactions")
+                                .setAction("Select quake")
+                                .build())
+                    }
                 })
-
-        disposables.add(events
-                .filter { it is QuakeListEvent.SelectQuake }
-                .map { (it as QuakeListEvent.SelectQuake).quake }
-                .subscribe({ selectFeatureInteractor.execute(it) }))
-
-        disposables.add(events.subscribe({
-            when (it) {
-                is QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
-                        .setCategory("Interactions")
-                        .setAction("Refresh")
-                        .build())
-                is QuakeListEvent.SelectQuake -> tracker.send(HitBuilders.EventBuilder()
-                        .setCategory("Interactions")
-                        .setAction("Select quake")
-                        .build())
-            }
-        }))
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
@@ -62,17 +62,17 @@ class QuakeListViewModel(
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
         when (key) {
-            "pref_intensity" -> publish(QuakeListEvent.LoadQuakes())
+            "pref_intensity" -> quakeListModel.events.onNext(QuakeListEvent.LoadQuakes())
         }
     }
 
     class Factory @Inject constructor(
-            @Named("app") private val tracker: Tracker,
             private val sharedPreferences: SharedPreferences,
             private val interactor: LoadFeaturesInteractor,
-            private val selectFeatureInteractor: SelectFeatureInteractor
+            private val selectFeatureInteractor: SelectFeatureInteractor,
+            @Named("app") private val tracker: Tracker
     ) : ViewModelProvider.Factory {
         override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
-                QuakeListViewModel(tracker, sharedPreferences, interactor, selectFeatureInteractor) as T
+                QuakeListViewModel(QuakeListModel, sharedPreferences, interactor, selectFeatureInteractor, tracker) as T
     }
 }
