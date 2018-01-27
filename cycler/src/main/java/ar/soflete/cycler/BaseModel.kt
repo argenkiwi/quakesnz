@@ -2,6 +2,7 @@ package ar.soflete.cycler
 
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
@@ -10,7 +11,7 @@ import io.reactivex.subjects.Subject
  */
 abstract class BaseModel<S, E>(
         initialState: S,
-        reducer: (state: S, event: E) -> S
+        reducer: BiFunction<S, in E, S>
 ) : Model<S, E> {
     private val _events: Subject<E> = PublishSubject.create()
 

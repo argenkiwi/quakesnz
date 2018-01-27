@@ -27,7 +27,7 @@ class QuakeListViewModel(
 
     private val disposables = CompositeDisposable()
     private val quakeListModel = QuakeListModel()
-    private val onSharePreferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { preferences, key ->
+    private val onSharePreferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         when (key) {
             "pref_intensity" -> quakeListModel.publish(QuakeListEvent.RefreshQuakes)
         }
