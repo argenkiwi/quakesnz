@@ -5,9 +5,9 @@ import ar.soflete.cycler.BaseModel
 /**
  * Created by Leandro on 27/01/2018.
  */
-object QuakeListModel : BaseModel<QuakeListState, QuakeListEvent>() {
-    override val reducer: (state: QuakeListState, event: QuakeListEvent) -> QuakeListState
-        get() = { state, event ->
+class QuakeListModel : BaseModel<QuakeListState, QuakeListEvent>(
+        QuakeListState(false),
+        { state, event ->
             when (event) {
                 is QuakeListEvent.LoadQuakes -> {
                     state.copy(isLoading = true)
@@ -23,4 +23,4 @@ object QuakeListModel : BaseModel<QuakeListState, QuakeListEvent>() {
                 }
             }
         }
-}
+)

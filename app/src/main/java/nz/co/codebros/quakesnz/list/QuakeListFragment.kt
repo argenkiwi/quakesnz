@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.list
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -37,22 +38,22 @@ class QuakeListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        AndroidSupportInjection.inject(this)
 
-        swipeRefreshLayout.setOnRefreshListener({
-            viewModel.quakeListModel.events.onNext(QuakeListEvent.RefreshQuakes)
-        })
+        try {
+            viewModel = ViewModelProviders.of(this).get(QuakeListViewModel::class.java)
+        } catch (t: Throwable) {
+            AndroidSupportInjection.inject(this)
+        }
 
-        val featureAdapter = FeatureAdapter({ _, feature ->
-            viewModel.quakeListModel.events.onNext(QuakeListEvent.SelectQuake(feature))
-        })
+        swipeRefreshLayout.setOnRefreshListener { viewModel.onRefreshQuakes() }
 
+        val featureAdapter = FeatureAdapter({ _, feature -> viewModel.onSelectQuake(feature) })
         recyclerView.let {
             it.layoutManager = LinearLayoutManager(context)
             it.adapter = featureAdapter
         }
 
-        viewModel.quakeListModel.state.observe(this, Observer {
+        viewModel.liveQuakeListState.observe(this, Observer {
             it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }
