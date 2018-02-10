@@ -24,6 +24,6 @@ ext {
     build_tools_version = '26.0.2'
 
     // Dependencies versions
-    support_library_version = '27.0.1'
+    support_library_version = '27.0.2'
     dagger_version = '2.13'
 }
