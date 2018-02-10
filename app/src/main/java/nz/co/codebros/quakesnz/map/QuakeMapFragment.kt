@@ -14,7 +14,6 @@ import javax.inject.Inject
 /**
  * Created by Leandro on 9/11/2017.
  */
-
 class QuakeMapFragment : SupportMapFragment() {
 
     @Inject

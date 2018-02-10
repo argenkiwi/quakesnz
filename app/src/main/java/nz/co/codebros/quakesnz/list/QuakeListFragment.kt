@@ -63,9 +63,12 @@ class QuakeListFragment : Fragment() {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }
                 selectedFeature?.let { featureAdapter.setSelectedFeature(it) }
-                error?.let {
-                    Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
-                }
+            }
+        })
+
+        viewModel.errorModel.liveEvent.observe(this, Observer {
+            it?.apply {
+                Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
             }
         })
     }

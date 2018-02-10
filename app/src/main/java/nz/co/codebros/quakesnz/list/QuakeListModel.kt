@@ -21,31 +21,31 @@ class QuakeListModel @Inject constructor(
 ) {
     init {
         // Bind side-effects to events
-        disposables.addAll(
-                publish(eventObservable
-                        .startWith(QuakeListEvent.LoadQuakes())
-                        .filter { it is QuakeListEvent.LoadQuakes }
-                        .flatMap {
-                            loadFeaturesInteractor.execute()
-                                    .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
-                                    .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
-                        }),
-                eventObservable
-                        .filter { it is QuakeListEvent.SelectQuake }
-                        .map { (it as QuakeListEvent.SelectQuake).quake }
-                        .subscribe { selectFeatureInteractor.execute(it) },
-                eventObservable.subscribe {
-                    when (it) {
-                        QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
-                                .setCategory("Interactions")
-                                .setAction("Refresh")
-                                .build())
-                        is QuakeListEvent.SelectQuake -> tracker.send(HitBuilders.EventBuilder()
-                                .setCategory("Interactions")
-                                .setAction("Select quake")
-                                .build())
-                    }
-                }
-        )
+        publish(eventObservable
+                .startWith(QuakeListEvent.LoadQuakes())
+                .filter { it is QuakeListEvent.LoadQuakes }
+                .flatMap {
+                    loadFeaturesInteractor.execute()
+                            .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
+                            .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
+                })
+
+        eventObservable
+                .filter { it is QuakeListEvent.SelectQuake }
+                .map { (it as QuakeListEvent.SelectQuake).quake }
+                .subscribe { selectFeatureInteractor.execute(it) }
+
+        eventObservable.subscribe {
+            when (it) {
+                QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
+                        .setCategory("Interactions")
+                        .setAction("Refresh")
+                        .build())
+                is QuakeListEvent.SelectQuake -> tracker.send(HitBuilders.EventBuilder()
+                        .setCategory("Interactions")
+                        .setAction("Select quake")
+                        .build())
+            }
+        }
     }
 }

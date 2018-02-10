@@ -7,17 +7,9 @@ import ar.soflete.cycler.Reducer
  */
 class QuakeListReducer : Reducer<QuakeListState, QuakeListEvent> {
     override fun apply(state: QuakeListState, event: QuakeListEvent) = when (event) {
-        is QuakeListEvent.LoadQuakes -> {
-            state.copy(isLoading = true)
-        }
-        is QuakeListEvent.LoadQuakesError -> {
-            state.copy(isLoading = false, error = event.error)
-        }
-        is QuakeListEvent.QuakesLoaded -> {
-            state.copy(isLoading = false, features = event.quakes)
-        }
-        is QuakeListEvent.SelectQuake -> {
-            state.copy(selectedFeature = event.quake)
-        }
+        is QuakeListEvent.LoadQuakes -> state.copy(isLoading = true)
+        is QuakeListEvent.LoadQuakesError -> state.copy(isLoading = false)
+        is QuakeListEvent.QuakesLoaded -> state.copy(isLoading = false, features = event.quakes)
+        is QuakeListEvent.SelectQuake -> state.copy(selectedFeature = event.quake)
     }
 }

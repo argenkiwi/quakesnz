@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import ar.soflete.cycler.StateEventModel
 import dagger.Provides
 import io.reactivex.Observable
-import nz.co.codebros.quakesnz.BasePresenter
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.Result
 import javax.inject.Inject
@@ -20,12 +19,6 @@ interface QuakeDetail {
     )
 
     class ViewModel(val model: Model) : android.arch.lifecycle.ViewModel() {
-
-        override fun onCleared() {
-            super.onCleared()
-            model.dispose()
-        }
-
         internal class Factory @Inject constructor(
                 private val model: Model
         ) : ViewModelProvider.Factory {
@@ -50,11 +43,11 @@ interface QuakeDetail {
             featureObservable: Observable<Result<Feature>>
     ) : StateEventModel<State, Result<Feature>>(State(), Reducer) {
         init {
-            disposables.add(publish(featureObservable))
+            publish(featureObservable)
         }
     }
 
-    class Presenter(view: View) : BasePresenter<State, View>(view) {
+    class Presenter(override val view: View) : nz.co.codebros.quakesnz.Presenter<View, State> {
         override fun onChanged(state: State?) {
             state?.apply {
                 feature?.let { view.showDetails(it) }

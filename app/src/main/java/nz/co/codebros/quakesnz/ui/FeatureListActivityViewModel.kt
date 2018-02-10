@@ -8,7 +8,6 @@ import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.Feature
 import javax.inject.Inject
 
-
 /**
  * Created by Leandro on 23/11/2017.
  */

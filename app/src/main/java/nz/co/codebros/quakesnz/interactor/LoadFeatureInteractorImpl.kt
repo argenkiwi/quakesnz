@@ -10,7 +10,6 @@ import javax.inject.Inject
 /**
  * Created by leandro on 18/06/17.
  */
-
 class LoadFeatureInteractorImpl @Inject constructor(
         private val service: GeonetService
 ) : LoadFeatureInteractor {

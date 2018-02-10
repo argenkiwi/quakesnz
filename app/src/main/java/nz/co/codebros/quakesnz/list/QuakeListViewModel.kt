@@ -3,7 +3,8 @@ package nz.co.codebros.quakesnz.list
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.SharedPreferences
-import io.reactivex.disposables.CompositeDisposable
+import ar.soflete.cycler.EventModel
+import nz.co.codebros.quakesnz.error.ErrorEvent
 import javax.inject.Inject
 
 /**
@@ -19,13 +20,19 @@ class QuakeListViewModel(
         }
     }
 
+    val errorModel = EventModel<ErrorEvent>()
+
     init {
+        errorModel.publish(quakeListModel.eventObservable
+                .filter { it is QuakeListEvent.LoadQuakesError }
+                .map { it as QuakeListEvent.LoadQuakesError }
+                .map { ErrorEvent(it.error) })
+
         sharedPreferences.registerOnSharedPreferenceChangeListener(onSharePreferencesChangeListener)
     }
 
     override fun onCleared() {
         super.onCleared()
-        quakeListModel.dispose()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharePreferencesChangeListener)
     }
 

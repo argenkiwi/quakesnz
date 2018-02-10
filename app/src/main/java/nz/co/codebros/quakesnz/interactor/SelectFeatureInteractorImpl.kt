@@ -6,7 +6,6 @@ import nz.co.codebros.quakesnz.core.data.Feature
 /**
  * Created by leandro on 19/06/17.
  */
-
 class SelectFeatureInteractorImpl(
         private val featureObserver: Observer<Feature>
 ) : SelectFeatureInteractor {
