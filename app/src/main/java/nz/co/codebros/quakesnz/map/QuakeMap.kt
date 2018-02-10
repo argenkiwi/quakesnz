@@ -2,7 +2,7 @@ package nz.co.codebros.quakesnz.map
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import ar.soflete.cycler.ReactiveViewModel
+import ar.soflete.cycler.StateEventModel
 import dagger.Provides
 import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.Coordinates
@@ -17,17 +17,31 @@ interface QuakeMap {
     data class State(val coordinates: Coordinates? = null)
 
     class ViewModel(
-            featureObservable: Observable<Feature>
-    ) : ReactiveViewModel<State, Coordinates>(State(), QuakeMapReducer::reduce) {
-        init {
-            subscribe(featureObservable.map { it.geometry.coordinates })
+            val model: Model
+    ) : android.arch.lifecycle.ViewModel() {
+
+        override fun onCleared() {
+            super.onCleared()
+            model.dispose()
         }
 
         class Factory @Inject constructor(
-                private val featureObservable: Observable<Feature>
+                private val model: Model
         ) : ViewModelProvider.Factory {
             override fun <T : android.arch.lifecycle.ViewModel?> create(modelClass: Class<T>) =
-                    ViewModel(featureObservable) as T
+                    ViewModel(model) as T
+        }
+    }
+
+    object Reducer : ar.soflete.cycler.Reducer<State, Coordinates> {
+        override fun apply(state: State, event: Coordinates) = state.copy(coordinates = event)
+    }
+
+    class Model @Inject constructor(
+            featureObservable: Observable<Feature>
+    ) : StateEventModel<State, Coordinates>(State(), Reducer) {
+        init {
+            publish(featureObservable.map { it.geometry.coordinates })
         }
     }
 
