@@ -50,7 +50,7 @@ interface QuakeDetail {
             featureObservable: Observable<Result<Feature>>
     ) : StateEventModel<State, Result<Feature>>(State(), Reducer) {
         init {
-            publish(featureObservable)
+            disposables.add(publish(featureObservable))
         }
     }
 

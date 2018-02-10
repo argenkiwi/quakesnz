@@ -16,15 +16,12 @@ interface QuakeMap {
 
     data class State(val coordinates: Coordinates? = null)
 
-    class ViewModel(
-            val model: Model
-    ) : android.arch.lifecycle.ViewModel() {
+    class ViewModel(val model: Model) : android.arch.lifecycle.ViewModel() {
 
         override fun onCleared() {
             super.onCleared()
             model.dispose()
         }
-
         class Factory @Inject constructor(
                 private val model: Model
         ) : ViewModelProvider.Factory {
@@ -41,7 +38,7 @@ interface QuakeMap {
             featureObservable: Observable<Feature>
     ) : StateEventModel<State, Coordinates>(State(), Reducer) {
         init {
-            publish(featureObservable.map { it.geometry.coordinates })
+           disposables.add(publish(featureObservable.map { it.geometry.coordinates }))
         }
     }
 

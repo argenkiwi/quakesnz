@@ -13,7 +13,6 @@ class QuakeListViewModel(
         private val sharedPreferences: SharedPreferences,
         val quakeListModel: QuakeListModel
 ) : ViewModel() {
-    private val disposables = CompositeDisposable()
     private val onSharePreferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         when (key) {
             "pref_intensity" -> quakeListModel.publish(QuakeListEvent.RefreshQuakes)
@@ -21,14 +20,12 @@ class QuakeListViewModel(
     }
 
     init {
-        // Bind state observable to live data
-        disposables.add(quakeListModel)
         sharedPreferences.registerOnSharedPreferenceChangeListener(onSharePreferencesChangeListener)
     }
 
     override fun onCleared() {
         super.onCleared()
-        disposables.dispose()
+        quakeListModel.dispose()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharePreferencesChangeListener)
     }
 

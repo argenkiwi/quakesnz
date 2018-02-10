@@ -36,7 +36,7 @@ class QuakeListModel @Inject constructor(
                         .subscribe { selectFeatureInteractor.execute(it) },
                 eventObservable.subscribe {
                     when (it) {
-                        is QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
+                        QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
                                 .setCategory("Interactions")
                                 .setAction("Refresh")
                                 .build())
