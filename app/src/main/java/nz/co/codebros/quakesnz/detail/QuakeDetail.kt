@@ -2,7 +2,7 @@ package nz.co.codebros.quakesnz.detail
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import ar.soflete.cycler.ReactiveViewModel
+import ar.soflete.cycler.StateEventModel
 import dagger.Provides
 import io.reactivex.Observable
 import nz.co.codebros.quakesnz.BasePresenter
@@ -19,25 +19,39 @@ interface QuakeDetail {
             val throwable: Throwable? = null
     )
 
-    class ViewModel(
-            featureObservable: Observable<Result<Feature>>
-    ) : ReactiveViewModel<State, Result<Feature>>(State(), QuakeDetailReducer::reduce) {
+    class ViewModel(val model: Model) : android.arch.lifecycle.ViewModel() {
 
-        init {
-            subscribe(featureObservable)
+        override fun onCleared() {
+            super.onCleared()
+            model.dispose()
         }
 
         internal class Factory @Inject constructor(
-                private val featureObservable: Observable<Result<Feature>>
+                private val model: Model
         ) : ViewModelProvider.Factory {
             override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
-                    ViewModel(featureObservable) as T
+                    ViewModel(model) as T
         }
     }
 
     interface View {
         fun showDetails(feature: Feature)
         fun showLoadingError()
+    }
+
+    object Reducer : ar.soflete.cycler.Reducer<State, Result<Feature>> {
+        override fun apply(state: State, event: Result<Feature>) = when (event) {
+            is Result.Success -> state.copy(feature = event.value)
+            is Result.Failure -> state.copy(throwable = event.throwable)
+        }
+    }
+
+    class Model @Inject constructor(
+            featureObservable: Observable<Result<Feature>>
+    ) : StateEventModel<State, Result<Feature>>(State(), Reducer) {
+        init {
+            publish(featureObservable)
+        }
     }
 
     class Presenter(view: View) : BasePresenter<State, View>(view) {
