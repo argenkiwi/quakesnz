@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.list
 
+import ar.soflete.cycler.Reducer
 import ar.soflete.cycler.StateEventModel
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
@@ -15,10 +16,7 @@ class QuakeListModel @Inject constructor(
         loadFeaturesInteractor: LoadFeaturesInteractor,
         selectFeatureInteractor: SelectFeatureInteractor,
         @Named("app") tracker: Tracker
-) : StateEventModel<QuakeListState, QuakeListEvent>(
-        QuakeListState(false),
-        QuakeListReducer()
-) {
+) : StateEventModel<QuakeListState, QuakeListEvent>(QuakeListState(false), Companion) {
     init {
         // Bind side-effects to events
         publish(eventObservable
@@ -46,6 +44,15 @@ class QuakeListModel @Inject constructor(
                         .setAction("Select quake")
                         .build())
             }
+        }
+    }
+
+    companion object : Reducer<QuakeListState, QuakeListEvent> {
+        override fun apply(state: QuakeListState, event: QuakeListEvent) = when (event) {
+            is QuakeListEvent.LoadQuakes -> state.copy(isLoading = true)
+            is QuakeListEvent.LoadQuakesError -> state.copy(isLoading = false)
+            is QuakeListEvent.QuakesLoaded -> state.copy(isLoading = false, features = event.quakes)
+            is QuakeListEvent.SelectQuake -> state.copy(selectedFeature = event.quake)
         }
     }
 }

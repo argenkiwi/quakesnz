@@ -2,6 +2,7 @@ package nz.co.codebros.quakesnz.detail
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import ar.soflete.cycler.Reducer
 import ar.soflete.cycler.StateEventModel
 import dagger.Provides
 import io.reactivex.Observable
@@ -32,18 +33,18 @@ interface QuakeDetail {
         fun showLoadingError()
     }
 
-    object Reducer : ar.soflete.cycler.Reducer<State, Result<Feature>> {
-        override fun apply(state: State, event: Result<Feature>) = when (event) {
-            is Result.Success -> state.copy(feature = event.value)
-            is Result.Failure -> state.copy(throwable = event.throwable)
-        }
-    }
-
     class Model @Inject constructor(
             featureObservable: Observable<Result<Feature>>
-    ) : StateEventModel<State, Result<Feature>>(State(), Reducer) {
+    ) : StateEventModel<State, Result<Feature>>(State(), Companion) {
         init {
             publish(featureObservable)
+        }
+
+        companion object : Reducer<State, Result<Feature>> {
+            override fun apply(state: State, event: Result<Feature>) = when (event) {
+                is Result.Success -> state.copy(feature = event.value)
+                is Result.Failure -> state.copy(throwable = event.throwable)
+            }
         }
     }
 
