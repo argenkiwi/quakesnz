@@ -1,11 +1,11 @@
 package nz.co.codebros.quakesnz.list
 
-import io.reactivex.functions.BiFunction
+import ar.soflete.cycler.Reducer
 
 /**
  * Created by Leandro on 28/01/2018.
  */
-class QuakeListReducer : BiFunction<QuakeListState, QuakeListEvent, QuakeListState> {
+class QuakeListReducer : Reducer<QuakeListState, QuakeListEvent> {
     override fun apply(state: QuakeListState, event: QuakeListEvent) = when (event) {
         is QuakeListEvent.LoadQuakes -> {
             state.copy(isLoading = true)

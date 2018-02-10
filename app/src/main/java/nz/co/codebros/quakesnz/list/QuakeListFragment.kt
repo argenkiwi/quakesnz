@@ -45,15 +45,20 @@ class QuakeListFragment : Fragment() {
             AndroidSupportInjection.inject(this)
         }
 
-        swipeRefreshLayout.setOnRefreshListener { viewModel.onRefreshQuakes() }
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.quakeListModel.publish(QuakeListEvent.RefreshQuakes)
+        }
 
-        val featureAdapter = FeatureAdapter({ _, feature -> viewModel.onSelectQuake(feature) })
+        val featureAdapter = FeatureAdapter({ _, feature ->
+            viewModel.quakeListModel.publish(QuakeListEvent.SelectQuake(feature))
+        })
+
         recyclerView.let {
             it.layoutManager = LinearLayoutManager(context)
             it.adapter = featureAdapter
         }
 
-        viewModel.liveQuakeListState.observe(this, Observer {
+        viewModel.quakeListModel.liveState.observe(this, Observer {
             it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }
