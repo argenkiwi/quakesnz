@@ -2,8 +2,8 @@ package nz.co.codebros.quakesnz.detail
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import ar.soflete.cycler.DisposableStateEventModel
 import ar.soflete.cycler.Reducer
-import ar.soflete.cycler.StateEventModel
 import dagger.Provides
 import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.Feature
@@ -19,28 +19,31 @@ interface QuakeDetail {
             val throwable: Throwable? = null
     )
 
-    class ViewModel(featureObservable: Observable<Result<Feature>>) : android.arch.lifecycle.ViewModel() {
-        val model = StateEventModel<State, Result<Feature>>(State(), Companion)
-
-        private val disposables = model.publish(featureObservable)
-
-        override fun onCleared() {
-            super.onCleared()
-            disposables.dispose()
-        }
-
-        internal class Factory @Inject constructor(
-                private val featureObservable: Observable<Result<Feature>>
-        ) : ViewModelProvider.Factory {
-            override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
-                    ViewModel(featureObservable) as T
-        }
+    class Model @Inject constructor(
+            featureObservable: Observable<Result<Feature>>
+    ) : DisposableStateEventModel<State, Result<Feature>>(State(), Companion) {
+        override val disposable = publish(featureObservable)
 
         companion object : Reducer<State, Result<Feature>> {
             override fun apply(state: State, event: Result<Feature>) = when (event) {
                 is Result.Success -> state.copy(feature = event.value)
                 is Result.Failure -> state.copy(throwable = event.throwable)
             }
+        }
+    }
+
+    class ViewModel(val model: Model) : android.arch.lifecycle.ViewModel() {
+
+        override fun onCleared() {
+            super.onCleared()
+            model.dispose()
+        }
+
+        internal class Factory @Inject constructor(
+                private val model: Model
+        ) : ViewModelProvider.Factory {
+            override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
+                    ViewModel(model) as T
         }
     }
 

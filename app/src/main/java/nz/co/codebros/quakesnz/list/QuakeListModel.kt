@@ -5,6 +5,7 @@ import ar.soflete.cycler.Reducer
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.ofType
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class QuakeListModel @Inject constructor(
     override val disposable = CompositeDisposable().apply {
         add(publish(eventObservable
                 .startWith(QuakeListEvent.LoadQuakes())
-                .filter { it is QuakeListEvent.LoadQuakes }
+                .ofType<QuakeListEvent.LoadQuakes>()
                 .flatMap {
                     loadFeaturesInteractor.execute()
                             .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
@@ -29,8 +30,8 @@ class QuakeListModel @Inject constructor(
                 }))
 
         add(eventObservable
-                .filter { it is QuakeListEvent.SelectQuake }
-                .map { (it as QuakeListEvent.SelectQuake).quake }
+                .ofType<QuakeListEvent.SelectQuake>()
+                .map { it.quake }
                 .subscribe { selectFeatureInteractor.execute(it) })
 
         add(eventObservable.subscribe {

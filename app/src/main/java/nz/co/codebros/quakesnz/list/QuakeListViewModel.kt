@@ -3,9 +3,9 @@ package nz.co.codebros.quakesnz.list
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.SharedPreferences
-import android.util.EventLog
 import ar.soflete.cycler.EventModel
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.ofType
 import nz.co.codebros.quakesnz.error.ErrorEvent
 import javax.inject.Inject
 
@@ -21,8 +21,7 @@ class QuakeListViewModel(
     private val disposables = CompositeDisposable().apply {
         add(quakeListModel)
         add(errorModel.publish(quakeListModel.eventObservable
-                .filter { it is QuakeListEvent.LoadQuakesError }
-                .map { it as QuakeListEvent.LoadQuakesError }
+                .ofType<QuakeListEvent.LoadQuakesError>()
                 .map { ErrorEvent(it.error) }))
     }
 
