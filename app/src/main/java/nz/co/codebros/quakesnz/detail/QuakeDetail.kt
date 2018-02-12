@@ -19,25 +19,21 @@ interface QuakeDetail {
             val throwable: Throwable? = null
     )
 
-    class ViewModel(val model: Model) : android.arch.lifecycle.ViewModel() {
+    class ViewModel(featureObservable: Observable<Result<Feature>>) : android.arch.lifecycle.ViewModel() {
+        val model = StateEventModel<State, Result<Feature>>(State(), Companion)
+
+        private val disposables = model.publish(featureObservable)
+
+        override fun onCleared() {
+            super.onCleared()
+            disposables.dispose()
+        }
+
         internal class Factory @Inject constructor(
-                private val model: Model
+                private val featureObservable: Observable<Result<Feature>>
         ) : ViewModelProvider.Factory {
             override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
-                    ViewModel(model) as T
-        }
-    }
-
-    interface View {
-        fun showDetails(feature: Feature)
-        fun showLoadingError()
-    }
-
-    class Model @Inject constructor(
-            featureObservable: Observable<Result<Feature>>
-    ) : StateEventModel<State, Result<Feature>>(State(), Companion) {
-        init {
-            publish(featureObservable)
+                    ViewModel(featureObservable) as T
         }
 
         companion object : Reducer<State, Result<Feature>> {
@@ -46,6 +42,11 @@ interface QuakeDetail {
                 is Result.Failure -> state.copy(throwable = event.throwable)
             }
         }
+    }
+
+    interface View {
+        fun showDetails(feature: Feature)
+        fun showLoadingError()
     }
 
     class Presenter(override val view: View) : nz.co.codebros.quakesnz.Presenter<View, State> {

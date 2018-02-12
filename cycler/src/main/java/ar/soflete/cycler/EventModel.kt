@@ -10,17 +10,15 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Leandro on 10/02/2018.
  */
-
 open class EventModel<E> {
     private val eventSubject: Subject<E> = PublishSubject.create()
     val eventObservable: Observable<E> = eventSubject
-    val liveEvent
-        get() = LiveDataReactiveStreams.fromPublisher(eventSubject.toFlowable(BackpressureStrategy.LATEST))
+    val eventLiveData
+        get() = LiveDataReactiveStreams.fromPublisher(eventObservable.toFlowable(BackpressureStrategy.LATEST))
 
     fun publish(event: E) {
         eventSubject.onNext(event)
     }
 
-    fun publish(eventObservable: Observable<E>): Disposable =
-            eventObservable.subscribe { publish(it) }
+    fun publish(eventObservable: Observable<E>): Disposable = eventObservable.subscribe { publish(it) }
 }

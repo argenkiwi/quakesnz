@@ -8,12 +8,12 @@ import io.reactivex.subjects.Subject
 /**
  * Created by Leandro on 10/02/2018.
  */
-abstract class StateEventModel<S, E>(
+open class StateEventModel<S, E>(
         initialState: S,
         reducer: Reducer<S, E>
 ) : EventModel<E>() {
     private val stateSubject: Subject<S> = BehaviorSubject.create()
-    val liveState = LiveDataReactiveStreams.fromPublisher(stateSubject.toFlowable(BackpressureStrategy.LATEST))
+    val stateLiveData = LiveDataReactiveStreams.fromPublisher(stateSubject.toFlowable(BackpressureStrategy.LATEST))
 
     init {
         eventObservable.scan(initialState, reducer).subscribe(stateSubject)

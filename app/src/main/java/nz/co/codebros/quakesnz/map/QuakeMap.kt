@@ -14,23 +14,24 @@ import javax.inject.Inject
  * Created by Leandro on 20/11/2017.
  */
 interface QuakeMap {
-
     data class State(val coordinates: Coordinates? = null)
 
-    class ViewModel(val model: Model) : android.arch.lifecycle.ViewModel() {
+    class ViewModel(featureObservable: Observable<Feature>) : android.arch.lifecycle.ViewModel() {
+
+        val model = StateEventModel<State, Coordinates>(State(), Companion)
+
+        private val disposable = model.publish(featureObservable.map { it.geometry.coordinates })
+
+        override fun onCleared() {
+            super.onCleared()
+            disposable.dispose()
+        }
+
         class Factory @Inject constructor(
-                private val model: Model
+                private val featureObservable: Observable<Feature>
         ) : ViewModelProvider.Factory {
             override fun <T : android.arch.lifecycle.ViewModel?> create(modelClass: Class<T>) =
-                    ViewModel(model) as T
-        }
-    }
-
-    class Model @Inject constructor(
-            featureObservable: Observable<Feature>
-    ) : StateEventModel<State, Coordinates>(State(), Companion) {
-        init {
-            publish(featureObservable.map { it.geometry.coordinates })
+                    ViewModel(featureObservable) as T
         }
 
         companion object : Reducer<State, Coordinates> {
