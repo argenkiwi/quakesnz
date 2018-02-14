@@ -1,7 +1,6 @@
 package ar.soflete.cycler
 
-import android.arch.lifecycle.LiveDataReactiveStreams
-import io.reactivex.BackpressureStrategy
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
@@ -13,7 +12,7 @@ open class StateEventModel<S, E>(
         reducer: Reducer<S, E>
 ) : EventModel<E>() {
     private val stateSubject: Subject<S> = BehaviorSubject.create()
-    val stateLiveData = LiveDataReactiveStreams.fromPublisher(stateSubject.toFlowable(BackpressureStrategy.LATEST))
+    val stateObservable: Observable<S> = stateSubject
 
     init {
         eventObservable.scan(initialState, reducer).subscribe(stateSubject)

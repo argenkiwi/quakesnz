@@ -1,11 +1,14 @@
 package nz.co.codebros.quakesnz.detail
 
+import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import ar.soflete.cycler.DisposableStateEventModel
 import ar.soflete.cycler.Reducer
 import dagger.Provides
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.Result
 import javax.inject.Inject
@@ -22,7 +25,7 @@ interface QuakeDetail {
     class Model @Inject constructor(
             featureObservable: Observable<Result<Feature>>
     ) : DisposableStateEventModel<State, Result<Feature>>(State(), Companion) {
-        override val disposable = publish(featureObservable)
+        override val disposable: Disposable = publish(featureObservable)
 
         companion object : Reducer<State, Result<Feature>> {
             override fun apply(state: State, event: Result<Feature>) = when (event) {
@@ -32,7 +35,11 @@ interface QuakeDetail {
         }
     }
 
-    class ViewModel(val model: Model) : android.arch.lifecycle.ViewModel() {
+    class ViewModel(private val model: Model) : android.arch.lifecycle.ViewModel() {
+
+        val stateLiveData = LiveDataReactiveStreams.fromPublisher(
+                model.stateObservable.toFlowable(BackpressureStrategy.LATEST)
+        )
 
         override fun onCleared() {
             super.onCleared()

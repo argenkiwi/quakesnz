@@ -1,9 +1,11 @@
 package nz.co.codebros.quakesnz.list
 
+import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.SharedPreferences
 import ar.soflete.cycler.EventModel
+import io.reactivex.BackpressureStrategy
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
 import nz.co.codebros.quakesnz.error.ErrorEvent
@@ -17,6 +19,14 @@ class QuakeListViewModel(
         val quakeListModel: QuakeListModel,
         val errorModel: EventModel<ErrorEvent>
 ) : ViewModel() {
+
+    val stateLiveData = LiveDataReactiveStreams.fromPublisher(
+            quakeListModel.stateObservable.toFlowable(BackpressureStrategy.LATEST)
+    )
+
+    val eventLiveData = LiveDataReactiveStreams.fromPublisher(
+            errorModel.eventObservable.toFlowable(BackpressureStrategy.LATEST)
+    )
 
     private val disposables = CompositeDisposable().apply {
         add(quakeListModel)
