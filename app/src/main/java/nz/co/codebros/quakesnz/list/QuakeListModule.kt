@@ -4,12 +4,8 @@ import android.arch.lifecycle.ViewModelProviders
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import io.reactivex.subjects.Subject
-import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractorImpl
-import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractor
-import nz.co.codebros.quakesnz.interactor.SelectFeatureInteractorImpl
 
 /**
  * Created by Leandro on 27/11/2017.
@@ -24,12 +20,6 @@ abstract class QuakeListModule {
 
     @Module
     companion object {
-
-        @JvmStatic
-        @Provides
-        internal fun selectFeatureInteractor(
-                featureSubject: Subject<Feature>
-        ): SelectFeatureInteractor = SelectFeatureInteractorImpl(featureSubject)
 
         @JvmStatic
         @Provides

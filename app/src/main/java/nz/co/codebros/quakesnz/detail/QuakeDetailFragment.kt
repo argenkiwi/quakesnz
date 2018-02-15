@@ -16,10 +16,10 @@ import nz.co.codebros.quakesnz.core.data.Feature
 import java.util.*
 import javax.inject.Inject
 
-class QuakeDetailFragment : Fragment(), QuakeDetail.View {
+class QuakeDetailFragment : Fragment(), QuakeDetailView {
 
     @Inject
-    internal lateinit var viewModel: QuakeDetail.ViewModel
+    internal lateinit var viewModel: QuakeDetailViewModel
 
     private lateinit var mMagnitudeBigView: TextView
     private lateinit var mTabView: View
@@ -52,10 +52,11 @@ class QuakeDetailFragment : Fragment(), QuakeDetail.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        viewModel.stateLiveData.observe(this, QuakeDetail.Presenter(this))
+        viewModel.stateLiveData.observe(this, QuakeDetailStatePresenter(this))
+        viewModel.eventLiveData.observe(this, QuakeDetailEventPresenter(this))
     }
 
-    override fun showDetails(feature: Feature) {
+    override fun updateFeature(feature: Feature) {
         val properties = feature.properties
         val colorForIntensity = QuakesUtils.getColor(context!!, properties.mmi)
         val magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.magnitude)

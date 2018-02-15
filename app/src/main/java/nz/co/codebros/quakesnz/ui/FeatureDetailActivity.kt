@@ -18,14 +18,17 @@ import dagger.android.ContributesAndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import nz.co.codebros.quakesnz.core.data.Feature
-import nz.co.codebros.quakesnz.detail.QuakeDetail
+import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
+import nz.co.codebros.quakesnz.detail.QuakeDetailModel
+import nz.co.codebros.quakesnz.detail.QuakeDetailModule
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl
 import nz.co.codebros.quakesnz.interactor.Result
-import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
+import nz.co.codebros.quakesnz.map.QuakeMapModule
 import javax.inject.Inject
 
 class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -45,9 +48,20 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             AndroidInjection.inject(this)
         }
 
-        if (savedInstanceState == null) supportFragmentManager.beginTransaction()
-                .add(android.R.id.content, QuakeDetailFragment())
-                .commit()
+        when (savedInstanceState) {
+            null -> {
+                supportFragmentManager.beginTransaction()
+                        .add(android.R.id.content, QuakeDetailFragment())
+                        .commit()
+
+                intent.let {
+                    when {
+                        it.data != null -> viewModel.loadFeature(it.data.lastPathSegment)
+                        else -> viewModel.loadFeature(it.getParcelableExtra<Feature>(EXTRA_FEATURE))
+                    }
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
@@ -77,58 +91,48 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
     }
 
     internal class ViewModel(
-            val fragmentInjector: DispatchingAndroidInjector<Fragment>
+            val fragmentInjector: DispatchingAndroidInjector<Fragment>,
+            private val quakeDetailModel: QuakeDetailModel
     ) : android.arch.lifecycle.ViewModel() {
 
         class Factory @Inject constructor(
-                private val fragmentInjector: DispatchingAndroidInjector<Fragment>
+                private val fragmentInjector: DispatchingAndroidInjector<Fragment>,
+                private val quakeDetailModel: QuakeDetailModel
         ) : ViewModelProvider.Factory {
             override fun <T : android.arch.lifecycle.ViewModel?> create(modelClass: Class<T>) =
-                    ViewModel(fragmentInjector) as T
+                    ViewModel(fragmentInjector, quakeDetailModel) as T
+        }
+
+        fun loadFeature(feature: Feature) {
+            quakeDetailModel.publish(QuakeDetailEvent.LoadQuakeComplete(Result.Success(feature)))
+        }
+
+        fun loadFeature(publicId: String) {
+            quakeDetailModel.publish(QuakeDetailEvent.LoadQuake(publicId))
         }
     }
 
     @dagger.Module
     internal abstract class Module {
-        @ContributesAndroidInjector(modules = arrayOf(
-                QuakeDetail.Module::class
-        ))
+        @ContributesAndroidInjector(modules = [QuakeDetailModule::class])
         internal abstract fun quakeDetailFragment(): QuakeDetailFragment
 
-        @ContributesAndroidInjector(modules = arrayOf(
-                QuakeMap.Module::class
-        ))
+        @ContributesAndroidInjector(modules = [QuakeMapModule::class])
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
-
         @Binds
-        abstract fun loadFeatureInteractor(
+        internal abstract fun loadFeatureInteractor(
                 loadFeatureInteractorImpl: LoadFeatureInteractorImpl
         ): LoadFeatureInteractor
 
         @dagger.Module
         internal companion object {
-            @JvmStatic
-            @Provides
-            fun featureResultObservable(
-                    activity: FeatureDetailActivity,
-                    loadFeatureInteractor: LoadFeatureInteractor
-            ): Observable<Result<Feature>> = activity.intent.let {
-                when {
-                    it.data != null -> loadFeatureInteractor.execute(it.data.lastPathSegment)
-                    else -> Observable.just(it.getParcelableExtra<Feature>(EXTRA_FEATURE))
-                            .map { Result.Success(it) }
-                }
-            }
 
             @JvmStatic
             @Provides
             fun featureObservable(
-                    featureResultObservable: Observable<Result<Feature>>
-            ): Observable<Feature> = featureResultObservable
-                    .filter({ it is Result.Success })
-                    .map { it as Result.Success }
-                    .map { it.value }
+                    quakeDetailModel: QuakeDetailModel
+            ): Observable<Feature> = quakeDetailModel.stateObservable.map { it.feature }
 
             @JvmStatic
             @Provides

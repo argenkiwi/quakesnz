@@ -17,7 +17,7 @@ import javax.inject.Inject
 class QuakeMapFragment : SupportMapFragment() {
 
     @Inject
-    internal lateinit var viewModel: QuakeMap.ViewModel
+    internal lateinit var viewModel: QuakeMapViewModel
 
     private var marker: Marker? = null
 
@@ -25,7 +25,7 @@ class QuakeMapFragment : SupportMapFragment() {
         super.onActivityCreated(bundle)
 
         try {
-            viewModel = ViewModelProviders.of(this).get(QuakeMap.ViewModel::class.java)
+            viewModel = ViewModelProviders.of(this).get(QuakeMapViewModel::class.java)
         } catch (e: Throwable) {
             AndroidSupportInjection.inject(this)
         }

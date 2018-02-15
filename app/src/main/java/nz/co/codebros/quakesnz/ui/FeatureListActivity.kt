@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -12,8 +13,8 @@ import android.view.View
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.disposables.Disposable
 import nz.co.codebros.quakesnz.R
+import nz.co.codebros.quakesnz.list.QuakeListEvent
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.settings.SettingsActivity
 import javax.inject.Inject
@@ -24,17 +25,9 @@ class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector {
     internal lateinit var viewModel: FeatureListActivityViewModel
 
     private var mTwoPane = false
-    private lateinit var disposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
-            viewModel = ViewModelProviders.of(this)
-                    .get(FeatureListActivityViewModel::class.java)
-        } catch (t: Throwable) {
-            AndroidInjection.inject(this)
-        }
-
         setContentView(R.layout.activity_feature_list)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -48,16 +41,20 @@ class FeatureListActivity : AppCompatActivity(), HasSupportFragmentInjector {
                     .commit()
         }
 
-        val connectableObservable = viewModel.featureObservable.publish()
-        connectableObservable.connect()
-        disposable = connectableObservable.subscribe({
-            if (!mTwoPane) startActivity(FeatureDetailActivity.newIntent(this, it))
-        })
-    }
+        try {
+            viewModel = ViewModelProviders.of(this)
+                    .get(FeatureListActivityViewModel::class.java)
+        } catch (t: Throwable) {
+            AndroidInjection.inject(this)
+        }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
+        viewModel.eventLiveData.observe(this, Observer {
+            when (it) {
+                is QuakeListEvent.SelectQuake -> when {
+                    !mTwoPane -> startActivity(FeatureDetailActivity.newIntent(this, it.quake))
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -24,9 +24,10 @@ class QuakeListViewModel(
             quakeListModel.stateObservable.toFlowable(BackpressureStrategy.LATEST)
     )
 
-    val eventLiveData = LiveDataReactiveStreams.fromPublisher(
-            errorModel.eventObservable.toFlowable(BackpressureStrategy.LATEST)
-    )
+    val eventLiveData
+        get() = LiveDataReactiveStreams.fromPublisher(
+                errorModel.eventObservable.toFlowable(BackpressureStrategy.LATEST)
+        )
 
     private val disposables = CompositeDisposable().apply {
         add(quakeListModel)

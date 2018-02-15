@@ -1,11 +1,12 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.support.v4.app.Fragment
 import dagger.android.DispatchingAndroidInjector
-import io.reactivex.Observable
-import nz.co.codebros.quakesnz.core.data.Feature
+import io.reactivex.BackpressureStrategy
+import nz.co.codebros.quakesnz.list.QuakeListModel
 import javax.inject.Inject
 
 /**
@@ -13,15 +14,20 @@ import javax.inject.Inject
  */
 class FeatureListActivityViewModel(
         val dispatchingSupportFragmentInjector: DispatchingAndroidInjector<Fragment>,
-        val featureObservable: Observable<Feature>
+        private val quakeListModel: QuakeListModel
 ) : ViewModel() {
+
+    val eventLiveData
+        get() = LiveDataReactiveStreams.fromPublisher(
+                quakeListModel.eventObservable.toFlowable(BackpressureStrategy.LATEST)
+        )
+
     class Factory @Inject constructor(
             private val dispatchingSupportFragmentInjector: DispatchingAndroidInjector<Fragment>,
-            private val featureObservable: Observable<Feature>
+            private val quakeListModel: QuakeListModel
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>) = FeatureListActivityViewModel(
-                dispatchingSupportFragmentInjector,
-                featureObservable
+                dispatchingSupportFragmentInjector, quakeListModel
         ) as T
     }
 }

@@ -6,16 +6,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import nz.co.codebros.quakesnz.core.data.Feature
-import nz.co.codebros.quakesnz.core.data.FeatureCollection
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
+import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractorImpl
 import nz.co.codebros.quakesnz.list.QuakeListFragment
+import nz.co.codebros.quakesnz.list.QuakeListModel
 import nz.co.codebros.quakesnz.list.QuakeListModule
-import nz.co.codebros.quakesnz.map.QuakeMap
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
-import nz.co.codebros.quakesnz.scope.ActivityScope
+import nz.co.codebros.quakesnz.map.QuakeMapModule
 import nz.co.codebros.quakesnz.scope.FragmentScope
 
 /**
@@ -25,27 +23,26 @@ import nz.co.codebros.quakesnz.scope.FragmentScope
 abstract class FeatureListActivityModule {
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = arrayOf(QuakeListModule::class))
+    @ContributesAndroidInjector(modules = [QuakeListModule::class])
     internal abstract fun quakeListFragment(): QuakeListFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = arrayOf(QuakeMap.Module::class))
+    @ContributesAndroidInjector(modules = [QuakeMapModule::class])
     internal abstract fun quakeMapFragment(): QuakeMapFragment
 
     @Binds
-    internal abstract fun featureObservable(subject: Subject<Feature>): Observable<Feature>
+    internal abstract fun loadFeaturesInteractor(
+            loadFeaturesInteractorImpl: LoadFeaturesInteractorImpl
+    ): LoadFeaturesInteractor
 
     @Module
     companion object {
-        @JvmStatic
-        @Provides
-        @ActivityScope
-        internal fun featureCollectionSubject(): Subject<FeatureCollection> = PublishSubject.create()
 
         @JvmStatic
         @Provides
-        @ActivityScope
-        internal fun featureSubject(): Subject<Feature> = BehaviorSubject.create()
+        internal fun featureObservable(
+                quakeListModel: QuakeListModel
+        ): Observable<Feature> = quakeListModel.stateObservable.map { it.selectedFeature }
 
         @JvmStatic
         @Provides
