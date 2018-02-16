@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz
+package ar.soflete.daggerlifecycle
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

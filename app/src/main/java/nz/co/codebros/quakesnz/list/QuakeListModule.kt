@@ -1,9 +1,7 @@
 package nz.co.codebros.quakesnz.list
 
-import android.arch.lifecycle.ViewModelProviders
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
 import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractorImpl
 
@@ -17,15 +15,4 @@ abstract class QuakeListModule {
     abstract fun loadFeaturesInteractor(
             loadFeaturesInteractorImpl: LoadFeaturesInteractorImpl
     ): LoadFeaturesInteractor
-
-    @Module
-    companion object {
-
-        @JvmStatic
-        @Provides
-        internal fun viewModel(
-                fragment: QuakeListFragment,
-                factory: QuakeListViewModel.Factory
-        ) = ViewModelProviders.of(fragment, factory).get(QuakeListViewModel::class.java)
-    }
 }

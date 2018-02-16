@@ -1,23 +1,17 @@
 package nz.co.codebros.quakesnz.ui
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.app.NavUtils
 import android.support.v4.app.TaskStackBuilder
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import ar.soflete.daggerlifecycle.DaggerViewModel
 import dagger.Binds
 import dagger.Provides
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
 import dagger.android.ContributesAndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.Observable
+import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
@@ -26,25 +20,16 @@ import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
 import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl
 import nz.co.codebros.quakesnz.interactor.Result
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
-import nz.co.codebros.quakesnz.map.QuakeMapModule
 import javax.inject.Inject
 
-class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
 
-    @Inject
-    internal lateinit var viewModel: ViewModel
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = viewModel.fragmentInjector
+    override val viewModelClass: Class<ViewModel>
+        get() = ViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        try {
-            viewModel = ViewModelProviders.of(this).get(ViewModel::class.java)
-        } catch (e: Throwable) {
-            AndroidInjection.inject(this)
-        }
 
         when (savedInstanceState) {
             null -> {
@@ -80,7 +65,7 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
 
     companion object {
-        private val EXTRA_FEATURE = "extra_feature"
+        private const val EXTRA_FEATURE = "extra_feature"
         fun newIntent(
                 context: Context,
                 feature: Feature
@@ -88,18 +73,9 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 .putExtra(EXTRA_FEATURE, feature)
     }
 
-    internal class ViewModel(
-            val fragmentInjector: DispatchingAndroidInjector<Fragment>,
+    class ViewModel @Inject constructor(
             private val quakeDetailModel: QuakeDetailModel
-    ) : android.arch.lifecycle.ViewModel() {
-
-        class Factory @Inject constructor(
-                private val fragmentInjector: DispatchingAndroidInjector<Fragment>,
-                private val quakeDetailModel: QuakeDetailModel
-        ) : ViewModelProvider.Factory {
-            override fun <T : android.arch.lifecycle.ViewModel?> create(modelClass: Class<T>) =
-                    ViewModel(fragmentInjector, quakeDetailModel) as T
-        }
+    ) : DaggerViewModel() {
 
         fun loadFeature(feature: Feature) {
             quakeDetailModel.publish(QuakeDetailEvent.LoadQuakeComplete(Result.Success(feature)))
@@ -115,7 +91,7 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
         @ContributesAndroidInjector
         internal abstract fun quakeDetailFragment(): QuakeDetailFragment
 
-        @ContributesAndroidInjector(modules = [QuakeMapModule::class])
+        @ContributesAndroidInjector
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
         @Binds
@@ -131,11 +107,6 @@ class FeatureDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
             fun featureObservable(
                     quakeDetailModel: QuakeDetailModel
             ): Observable<Feature> = quakeDetailModel.stateObservable.map { it.feature }
-
-            @JvmStatic
-            @Provides
-            fun viewModel(activity: FeatureDetailActivity, factory: ViewModel.Factory) =
-                    ViewModelProviders.of(activity, factory).get(ViewModel::class.java)
         }
     }
 }

@@ -1,6 +1,7 @@
 package ar.soflete.cycler
 
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
@@ -15,5 +16,5 @@ open class EventModel<E> {
         eventSubject.onNext(event)
     }
 
-    fun publish(eventObservable: Observable<E>) = eventObservable.subscribe { publish(it) }
+    fun publish(eventObservable: Observable<E>): Disposable = eventObservable.subscribe { publish(it) }
 }

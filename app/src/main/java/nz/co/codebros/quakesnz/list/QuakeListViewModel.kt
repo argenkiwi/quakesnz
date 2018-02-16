@@ -2,7 +2,6 @@ package nz.co.codebros.quakesnz.list
 
 import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
 import android.content.SharedPreferences
 import ar.soflete.cycler.EventModel
 import io.reactivex.BackpressureStrategy
@@ -14,11 +13,12 @@ import javax.inject.Inject
 /**
  * Created by Leandro on 27/11/2017.
  */
-class QuakeListViewModel(
+class QuakeListViewModel @Inject constructor(
         private val sharedPreferences: SharedPreferences,
-        val quakeListModel: QuakeListModel,
-        val errorModel: EventModel<ErrorEvent>
+        val quakeListModel: QuakeListModel
 ) : ViewModel() {
+
+    private val errorModel = EventModel<ErrorEvent>()
 
     val stateLiveData = LiveDataReactiveStreams.fromPublisher(
             quakeListModel.stateObservable.toFlowable(BackpressureStrategy.LATEST)
@@ -29,12 +29,12 @@ class QuakeListViewModel(
                 errorModel.eventObservable.toFlowable(BackpressureStrategy.LATEST)
         )
 
-    private val disposables = CompositeDisposable().apply {
-        add(quakeListModel)
-        add(errorModel.publish(quakeListModel.eventObservable
-                .ofType<QuakeListEvent.LoadQuakesError>()
-                .map { ErrorEvent(it.error) }))
-    }
+    private val disposables = CompositeDisposable(
+            quakeListModel,
+            errorModel.publish(quakeListModel.eventObservable
+                    .ofType<QuakeListEvent.LoadQuakesError>()
+                    .map { ErrorEvent(it.error) })
+    )
 
     private val onSharePreferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         when (key) {
@@ -50,13 +50,5 @@ class QuakeListViewModel(
         super.onCleared()
         disposables.dispose()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharePreferencesChangeListener)
-    }
-
-    class Factory @Inject constructor(
-            private val sharedPreferences: SharedPreferences,
-            private val quakeListModel: QuakeListModel
-    ) : ViewModelProvider.Factory {
-        override fun <T : android.arch.lifecycle.ViewModel> create(modelClass: Class<T>) =
-                QuakeListViewModel(sharedPreferences, quakeListModel, EventModel<ErrorEvent>()) as T
     }
 }

@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.android.support.AndroidSupportInjection
+import ar.soflete.daggerlifecycle.ViewModelFactory
 import javax.inject.Inject
 
 /**
@@ -17,18 +18,16 @@ import javax.inject.Inject
 class QuakeMapFragment : SupportMapFragment() {
 
     @Inject
-    internal lateinit var viewModel: QuakeMapViewModel
+    internal lateinit var viewModelFactory: ViewModelFactory<QuakeMapViewModel>
+    private lateinit var viewModel: QuakeMapViewModel
 
     private var marker: Marker? = null
 
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
-
-        try {
-            viewModel = ViewModelProviders.of(this).get(QuakeMapViewModel::class.java)
-        } catch (e: Throwable) {
-            AndroidSupportInjection.inject(this)
-        }
+        AndroidSupportInjection.inject(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(QuakeMapViewModel::class.java)
 
         viewModel.stateLiveData.observe(this, Observer {
             it?.coordinates?.apply {

@@ -1,6 +1,5 @@
 package nz.co.codebros.quakesnz.ui
 
-import android.arch.lifecycle.ViewModelProviders
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -13,7 +12,6 @@ import nz.co.codebros.quakesnz.list.QuakeListFragment
 import nz.co.codebros.quakesnz.list.QuakeListModel
 import nz.co.codebros.quakesnz.list.QuakeListModule
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
-import nz.co.codebros.quakesnz.map.QuakeMapModule
 import nz.co.codebros.quakesnz.scope.FragmentScope
 
 /**
@@ -27,7 +25,7 @@ abstract class FeatureListActivityModule {
     internal abstract fun quakeListFragment(): QuakeListFragment
 
     @FragmentScope
-    @ContributesAndroidInjector(modules = [QuakeMapModule::class])
+    @ContributesAndroidInjector
     internal abstract fun quakeMapFragment(): QuakeMapFragment
 
     @Binds
@@ -42,13 +40,8 @@ abstract class FeatureListActivityModule {
         @Provides
         internal fun featureObservable(
                 quakeListModel: QuakeListModel
-        ): Observable<Feature> = quakeListModel.stateObservable.map { it.selectedFeature }
-
-        @JvmStatic
-        @Provides
-        fun viewModel(
-                activity: FeatureListActivity,
-                factory: FeatureListActivityViewModel.Factory
-        ) = ViewModelProviders.of(activity, factory).get(FeatureListActivityViewModel::class.java)
+        ): Observable<Feature> = quakeListModel.stateObservable
+                .filter { it.selectedFeature != null }
+                .map { it.selectedFeature }
     }
 }

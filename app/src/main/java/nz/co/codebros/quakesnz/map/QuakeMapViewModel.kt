@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * Created by Leandro on 16/02/2018.
  */
-class QuakeMapViewModel(
+class QuakeMapViewModel @Inject constructor(
         private val model: QuakeMapModel
 ) : ViewModel() {
 

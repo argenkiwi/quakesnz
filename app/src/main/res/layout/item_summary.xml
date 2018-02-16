@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/magnitude_big"
+            android:id="@+id/magnitudeBigTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -29,67 +29,67 @@
             tools:text="8" />
 
         <TextView
-            android:id="@+id/magnitude_small"
+            android:id="@+id/magnitudeSmallTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textColor="@color/severe"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/magnitude_big"
-            app:layout_constraintTop_toTopOf="@id/magnitude_big"
+            app:layout_constraintStart_toEndOf="@id/magnitudeBigTextView"
+            app:layout_constraintTop_toTopOf="@id/magnitudeBigTextView"
             tools:text=".4" />
 
         <TextView
-            android:id="@+id/intensity"
+            android:id="@+id/intensityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/magnitude_small"
-            app:layout_constraintTop_toTopOf="@id/magnitude_small"
+            app:layout_constraintStart_toEndOf="@id/magnitudeSmallTextView"
+            app:layout_constraintTop_toTopOf="@id/magnitudeSmallTextView"
             tools:text="Severe" />
 
         <TextView
-            android:id="@+id/location"
+            android:id="@+id/locationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@id/intensity"
-            app:layout_constraintTop_toBottomOf="@id/intensity"
+            app:layout_constraintStart_toStartOf="@id/intensityTextView"
+            app:layout_constraintTop_toBottomOf="@id/intensityTextView"
             tools:text="20km south east of Wellington" />
 
         <TextView
-            android:id="@+id/depth"
+            android:id="@+id/depthTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:fontFamily="sans-serif-light"
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@id/location"
-            app:layout_constraintTop_toBottomOf="@id/location"
+            app:layout_constraintStart_toStartOf="@id/locationTextView"
+            app:layout_constraintTop_toBottomOf="@id/locationTextView"
             tools:text="Depth: 159km" />
 
         <View
-            android:id="@+id/colorTab"
+            android:id="@+id/colorTabView"
             android:layout_width="4dp"
             android:layout_height="0dp"
             android:background="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="@id/magnitude_big"
+            app:layout_constraintBottom_toBottomOf="@id/magnitudeBigTextView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/magnitude_big" />
+            app:layout_constraintTop_toTopOf="@id/magnitudeBigTextView" />
 
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/timeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/magnitude_big"
-            app:layout_constraintEnd_toStartOf="@id/colorTab"
+            app:layout_constraintBottom_toBottomOf="@id/magnitudeBigTextView"
+            app:layout_constraintEnd_toStartOf="@id/colorTabView"
             tools:text="13:37" />
 
     </android.support.constraint.ConstraintLayout>
