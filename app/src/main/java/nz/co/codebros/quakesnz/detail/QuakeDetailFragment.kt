@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.detail
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,6 +13,7 @@ import android.widget.Toast
 import dagger.android.support.AndroidSupportInjection
 import nz.co.codebros.quakesnz.QuakesUtils
 import nz.co.codebros.quakesnz.R
+import nz.co.codebros.quakesnz.ViewModelFactory
 import nz.co.codebros.quakesnz.core.data.Feature
 import java.util.*
 import javax.inject.Inject
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class QuakeDetailFragment : Fragment(), QuakeDetailView {
 
     @Inject
-    internal lateinit var viewModel: QuakeDetailViewModel
+    internal lateinit var viewModelFactory: ViewModelFactory<QuakeDetailViewModel>
+    private lateinit var viewModel: QuakeDetailViewModel
 
     private lateinit var mMagnitudeBigView: TextView
     private lateinit var mTabView: View
@@ -52,6 +55,7 @@ class QuakeDetailFragment : Fragment(), QuakeDetailView {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(QuakeDetailViewModel::class.java)
         viewModel.stateLiveData.observe(this, QuakeDetailStatePresenter(this))
         viewModel.eventLiveData.observe(this, QuakeDetailEventPresenter(this))
     }
