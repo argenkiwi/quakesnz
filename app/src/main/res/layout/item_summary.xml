@@ -52,10 +52,13 @@
 
         <TextView
             android:id="@+id/locationTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:fontFamily="sans-serif-light"
+            android:lines="1"
             android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/colorTabView"
             app:layout_constraintStart_toStartOf="@id/intensityTextView"
             app:layout_constraintTop_toBottomOf="@id/intensityTextView"
             tools:text="20km south east of Wellington" />
@@ -73,7 +76,7 @@
             tools:text="Depth: 159km" />
 
         <View
-            android:id="@+id/colorTabView"
+            android:id="@id/colorTabView"
             android:layout_width="4dp"
             android:layout_height="0dp"
             android:background="@android:color/black"
