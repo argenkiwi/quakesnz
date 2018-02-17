@@ -75,13 +75,13 @@ class FeatureAdapter(
             onClick: (position: Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         val cardView = itemView as CardView
-        val txtMagnitudeBig: TextView = itemView.findViewById<TextView>(R.id.magnitude_big)
-        val txtMagnitudeSmall: TextView = itemView.findViewById<TextView>(R.id.magnitude_small)
-        val txtIntensity: TextView = itemView.findViewById<TextView>(R.id.intensity)
-        val txtLocation: TextView = itemView.findViewById<TextView>(R.id.location)
-        val txtDepth: TextView = itemView.findViewById<TextView>(R.id.depth)
-        val txtTime: TextView = itemView.findViewById<TextView>(R.id.time)
-        val vTab: View = itemView.findViewById(R.id.colorTab)
+        val txtMagnitudeBig: TextView = itemView.findViewById<TextView>(R.id.magnitudeBigTextView)
+        val txtMagnitudeSmall: TextView = itemView.findViewById<TextView>(R.id.magnitudeSmallTextView)
+        val txtIntensity: TextView = itemView.findViewById<TextView>(R.id.intensityTextView)
+        val txtLocation: TextView = itemView.findViewById<TextView>(R.id.locationTextView)
+        val txtDepth: TextView = itemView.findViewById<TextView>(R.id.depthTextView)
+        val txtTime: TextView = itemView.findViewById<TextView>(R.id.timeTextView)
+        val vTab: View = itemView.findViewById(R.id.colorTabView)
 
         init {
             itemView.setOnClickListener({ onClick(adapterPosition) })
