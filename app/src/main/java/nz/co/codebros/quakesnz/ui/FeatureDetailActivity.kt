@@ -112,7 +112,9 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
             @Provides
             fun featureObservable(
                     quakeDetailModel: QuakeDetailModel
-            ): Observable<Feature> = quakeDetailModel.stateObservable.map { it.feature }
+            ): Observable<Feature> = quakeDetailModel.stateObservable
+                    .filter { it.feature != null }
+                    .map { it.feature }
         }
     }
 }
