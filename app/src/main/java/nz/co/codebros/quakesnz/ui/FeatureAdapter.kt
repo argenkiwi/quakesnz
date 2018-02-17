@@ -38,7 +38,7 @@ class FeatureAdapter(
         this.features = features
     }
 
-    fun setSelectedFeature(feature: Feature) {
+    fun setSelectedFeature(feature: Feature?) {
         selectedPosition = features.indexOf(feature)
     }
 

@@ -28,18 +28,25 @@ class QuakeMapFragment : SupportMapFragment() {
 
         ViewModelProviders.of(this, viewModelFactory)
                 .get(QuakeMapViewModel::class.java)
-                .quakeMapState.liveData.observe(this, Observer {
-            it?.coordinates?.apply {
-                val latLng = LatLng(latitude, longitude)
-                getMapAsync {
-                    when (marker) {
-                        null -> {
-                            marker = it.addMarker(MarkerOptions().position(latLng))
-                            it.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 6f))
-                        }
-                        else -> {
-                            marker?.position = latLng
-                            it.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                .quakeMapStateLiveData.observe(this, Observer {
+            it?.apply {
+                when (coordinates) {
+                    null -> {
+                        marker?.remove()
+                        marker = null
+                    }
+                    else -> coordinates.run { LatLng(latitude, longitude) }.let { latLng ->
+                        getMapAsync {
+                            when (marker) {
+                                null -> {
+                                    marker = it.addMarker(MarkerOptions().position(latLng))
+                                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 6f))
+                                }
+                                else -> {
+                                    marker?.position = latLng
+                                    it.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                                }
+                            }
                         }
                     }
                 }

@@ -45,7 +45,12 @@ class QuakeListModel @Inject constructor(
         override fun apply(state: QuakeListState, event: QuakeListEvent) = when (event) {
             is QuakeListEvent.LoadQuakes -> state.copy(isLoading = true)
             is QuakeListEvent.LoadQuakesError -> state.copy(isLoading = false)
-            is QuakeListEvent.QuakesLoaded -> state.copy(isLoading = false, features = event.quakes)
+            is QuakeListEvent.QuakesLoaded -> state.run {
+                copy(isLoading = false, features = event.quakes, selectedFeature = when {
+                    event.quakes.contains(selectedFeature) -> selectedFeature
+                    else -> null
+                })
+            }
             is QuakeListEvent.SelectQuake -> state.copy(selectedFeature = event.quake)
         }
     }

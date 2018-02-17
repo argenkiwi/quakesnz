@@ -51,7 +51,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
             it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }
-                selectedFeature?.let { featureAdapter.setSelectedFeature(it) }
+                featureAdapter.setSelectedFeature(selectedFeature)
             }
         })
 
