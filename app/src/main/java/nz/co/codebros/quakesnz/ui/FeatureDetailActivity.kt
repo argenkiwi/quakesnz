@@ -7,11 +7,11 @@ import android.support.v4.app.NavUtils
 import android.support.v4.app.TaskStackBuilder
 import android.view.MenuItem
 import ar.soflete.daggerlifecycle.DaggerViewModel
+import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
 import dagger.Binds
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
-import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
@@ -27,10 +27,16 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
     override val viewModelClass: Class<ViewModel>
         get() = ViewModel::class.java
 
+    private lateinit var viewModel: FeatureDetailActivity.ViewModel
+
+    override fun onBindViewModel(viewModel: ViewModel) {
+        super.onBindViewModel(viewModel)
+        this.viewModel = viewModel
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         when (savedInstanceState) {
             null -> {
                 supportFragmentManager.beginTransaction()

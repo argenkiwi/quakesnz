@@ -14,12 +14,13 @@ abstract class ViewModelFragment<VM : ViewModel> : Fragment() {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory<VM>
-    protected lateinit var viewModel: VM
     protected abstract val viewModelClass: Class<VM>
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         AndroidSupportInjection.inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(viewModelClass)
+        onBindViewModel(ViewModelProviders.of(this, viewModelFactory).get(viewModelClass))
     }
+
+    protected abstract fun onBindViewModel(viewModel: VM)
 }

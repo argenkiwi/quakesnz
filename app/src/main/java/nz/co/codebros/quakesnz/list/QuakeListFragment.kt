@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import nz.co.codebros.quakesnz.R
 import ar.soflete.daggerlifecycle.ViewModelFragment
+import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.ui.FeatureAdapter
 
 class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
@@ -33,8 +33,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
         recyclerView = view.findViewById(R.id.recyclerView)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onBindViewModel(viewModel: QuakeListViewModel) {
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.quakeListModel.publish(QuakeListEvent.RefreshQuakes)
         }

@@ -15,12 +15,13 @@ abstract class ViewModelActivity<VM : ViewModel> : AppCompatActivity() {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory<VM>
-    protected lateinit var viewModel: VM
     protected abstract val viewModelClass: Class<VM>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(viewModelClass)
+        AndroidInjection.inject(this)
+        onBindViewModel(ViewModelProviders.of(this, viewModelFactory).get(viewModelClass))
     }
+
+    protected abstract fun onBindViewModel(viewModel: VM)
 }

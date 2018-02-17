@@ -21,11 +21,4 @@ class QuakeMapViewModel @Inject constructor(
         super.onCleared()
         model.dispose()
     }
-
-    class Factory @Inject constructor(
-            private val model: QuakeMapModel
-    ) : ViewModelProvider.Factory {
-        override fun <T : android.arch.lifecycle.ViewModel?> create(modelClass: Class<T>) =
-                QuakeMapViewModel(model) as T
-    }
 }

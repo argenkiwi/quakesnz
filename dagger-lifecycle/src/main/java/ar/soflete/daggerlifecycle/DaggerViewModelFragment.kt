@@ -7,5 +7,12 @@ import dagger.android.support.HasSupportFragmentInjector
  */
 abstract class DaggerViewModelFragment<VM : DaggerViewModel> : ViewModelFragment<VM>(),
         HasSupportFragmentInjector {
+
+    private lateinit var viewModel: VM
+
+    override fun onBindViewModel(viewModel: VM) {
+        this.viewModel = viewModel
+    }
+
     override fun supportFragmentInjector() = viewModel.supportFragmentInjector
 }

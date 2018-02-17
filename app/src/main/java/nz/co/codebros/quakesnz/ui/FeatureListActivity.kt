@@ -20,6 +20,17 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivityViewModel
 
     private var mTwoPane = false
 
+    override fun onBindViewModel(viewModel: FeatureListActivityViewModel) {
+        super.onBindViewModel(viewModel)
+        viewModel.eventLiveData.observe(this, Observer {
+            when (it) {
+                is QuakeListEvent.SelectQuake -> when {
+                    !mTwoPane -> startActivity(FeatureDetailActivity.newIntent(this, it.quake))
+                }
+            }
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feature_list)
@@ -35,14 +46,6 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivityViewModel
                     .add(R.id.map_container, QuakeMapFragment())
                     .commit()
         }
-
-        viewModel.eventLiveData.observe(this, Observer {
-            when (it) {
-                is QuakeListEvent.SelectQuake -> when {
-                    !mTwoPane -> startActivity(FeatureDetailActivity.newIntent(this, it.quake))
-                }
-            }
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

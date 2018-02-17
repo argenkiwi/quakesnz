@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import ar.soflete.daggerlifecycle.ViewModelFragment
 import kotlinx.android.synthetic.main.fragment_quake_detail.*
 import kotlinx.android.synthetic.main.item_summary.*
 import nz.co.codebros.quakesnz.QuakesUtils
 import nz.co.codebros.quakesnz.R
-import ar.soflete.daggerlifecycle.ViewModelFragment
 import nz.co.codebros.quakesnz.core.data.Feature
 import java.util.*
 
@@ -26,8 +26,7 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
             savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_quake_detail, container, false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onBindViewModel(viewModel: QuakeDetailViewModel) {
         viewModel.stateLiveData.observe(this, QuakeDetailStatePresenter(this))
         viewModel.eventLiveData.observe(this, QuakeDetailEventPresenter(this))
     }

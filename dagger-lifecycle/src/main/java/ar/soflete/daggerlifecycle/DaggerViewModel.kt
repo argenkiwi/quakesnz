@@ -9,6 +9,7 @@ import javax.inject.Inject
  * Created by Leandro on 17/02/2018.
  */
 abstract class DaggerViewModel : ViewModel() {
+
     @Inject
     internal lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
 
