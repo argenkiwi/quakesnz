@@ -8,7 +8,6 @@ import android.support.v4.app.TaskStackBuilder
 import android.view.MenuItem
 import ar.soflete.daggerlifecycle.DaggerViewModel
 import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
-import dagger.Binds
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.Observable
@@ -16,10 +15,9 @@ import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
 import nz.co.codebros.quakesnz.detail.QuakeDetailModel
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl
-import nz.co.codebros.quakesnz.interactor.Result
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
+import nz.co.codebros.quakesnz.map.QuakeMapState
+import nz.co.codebros.quakesnz.usecase.Result
 import javax.inject.Inject
 
 class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
@@ -100,21 +98,15 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         @ContributesAndroidInjector
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
-        @Binds
-        internal abstract fun loadFeatureInteractor(
-                loadFeatureInteractorImpl: LoadFeatureInteractorImpl
-        ): LoadFeatureInteractor
-
         @dagger.Module
         internal companion object {
 
             @JvmStatic
             @Provides
-            fun featureObservable(
+            fun quakeMapStateObservable(
                     quakeDetailModel: QuakeDetailModel
-            ): Observable<Feature> = quakeDetailModel.stateObservable
-                    .filter { it.feature != null }
-                    .map { it.feature }
+            ): Observable<QuakeMapState> = quakeDetailModel.stateObservable
+                    .map { QuakeMapState(it.feature?.geometry?.coordinates) }
         }
     }
 }
