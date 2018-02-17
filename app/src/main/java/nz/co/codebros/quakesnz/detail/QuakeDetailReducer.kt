@@ -1,7 +1,7 @@
 package nz.co.codebros.quakesnz.detail
 
 import ar.soflete.cycler.Reducer
-import nz.co.codebros.quakesnz.interactor.Result
+import nz.co.codebros.quakesnz.usecase.Result
 
 /**
  * Created by Leandro on 16/02/2018.

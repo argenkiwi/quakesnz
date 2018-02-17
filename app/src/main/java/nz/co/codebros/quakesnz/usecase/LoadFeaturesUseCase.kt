@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.interactor
+package nz.co.codebros.quakesnz.usecase
 
 import android.content.SharedPreferences
 import io.reactivex.Observable
@@ -11,15 +11,12 @@ import javax.inject.Inject
 /**
  * Created by leandro on 2/04/16.
  */
-class LoadFeaturesInteractorImpl @Inject constructor(
+class LoadFeaturesUseCase @Inject constructor(
         private val service: GeonetService,
         private val sharedPreferences: SharedPreferences
-) : LoadFeaturesInteractor {
-    override fun execute(): Observable<FeatureCollection> {
-        val mmi = sharedPreferences.getString("pref_intensity", "3").toInt()
-        return service
-                .getQuakes(mmi)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-    }
+) {
+    fun execute(): Observable<FeatureCollection> = service
+            .getQuakes(sharedPreferences.getString("pref_intensity", "3").toInt())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 }

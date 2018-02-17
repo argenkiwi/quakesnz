@@ -5,7 +5,7 @@ import ar.soflete.cycler.Reducer
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import io.reactivex.rxkotlin.ofType
-import nz.co.codebros.quakesnz.interactor.LoadFeaturesInteractor
+import nz.co.codebros.quakesnz.usecase.LoadFeaturesUseCase
 import nz.co.codebros.quakesnz.scope.ActivityScope
 import javax.inject.Inject
 import javax.inject.Named
@@ -15,14 +15,14 @@ import javax.inject.Named
  */
 @ActivityScope
 class QuakeListModel @Inject constructor(
-        loadFeaturesInteractor: LoadFeaturesInteractor,
+        loadFeaturesUseCase: LoadFeaturesUseCase,
         @Named("app") tracker: Tracker
 ) : DisposableStateEventModel<QuakeListState, QuakeListEvent>(QuakeListState(false), Companion) {
     override val disposable = publish(eventObservable
             .startWith(QuakeListEvent.LoadQuakes())
             .ofType<QuakeListEvent.LoadQuakes>()
             .flatMap {
-                loadFeaturesInteractor.execute()
+                loadFeaturesUseCase.execute()
                         .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
                         .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
             }
