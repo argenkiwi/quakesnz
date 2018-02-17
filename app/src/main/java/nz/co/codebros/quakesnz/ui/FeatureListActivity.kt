@@ -22,7 +22,7 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivityViewModel
 
     override fun onBindViewModel(viewModel: FeatureListActivityViewModel) {
         super.onBindViewModel(viewModel)
-        viewModel.eventLiveData.observe(this, Observer {
+        viewModel.quakeListEvents.liveData.observe(this, Observer {
             when (it) {
                 is QuakeListEvent.SelectQuake -> when {
                     !mTwoPane -> startActivity(FeatureDetailActivity.newIntent(this, it.quake))

@@ -35,11 +35,11 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
 
     override fun onBindViewModel(viewModel: QuakeListViewModel) {
         swipeRefreshLayout.setOnRefreshListener {
-            viewModel.quakeListModel.publish(QuakeListEvent.RefreshQuakes)
+            viewModel.quakeListEvents.publish(QuakeListEvent.RefreshQuakes)
         }
 
         val featureAdapter = FeatureAdapter({ _, feature ->
-            viewModel.quakeListModel.publish(QuakeListEvent.SelectQuake(feature))
+            viewModel.quakeListEvents.publish(QuakeListEvent.SelectQuake(feature))
         })
 
         recyclerView.apply {
@@ -47,7 +47,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
             adapter = featureAdapter
         }
 
-        viewModel.stateLiveData.observe(this, Observer {
+        viewModel.quakeListState.liveData.observe(this, Observer {
             it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }
@@ -55,7 +55,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
             }
         })
 
-        viewModel.eventLiveData.observe(this, Observer {
+        viewModel.errorEvents.liveData.observe(this, Observer {
             it?.apply {
                 Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
             }

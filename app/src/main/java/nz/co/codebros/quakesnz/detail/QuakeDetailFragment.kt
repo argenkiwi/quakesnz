@@ -27,8 +27,8 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
     ): View? = inflater.inflate(R.layout.fragment_quake_detail, container, false)
 
     override fun onBindViewModel(viewModel: QuakeDetailViewModel) {
-        viewModel.stateLiveData.observe(this, QuakeDetailStatePresenter(this))
-        viewModel.eventLiveData.observe(this, QuakeDetailEventPresenter(this))
+        viewModel.quakeDetailState.liveData.observe(this, QuakeDetailStatePresenter(this))
+        viewModel.quakeDetailEvents.liveData.observe(this, QuakeDetailEventPresenter(this))
     }
 
     override fun updateFeature(feature: Feature) {

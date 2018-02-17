@@ -28,7 +28,7 @@ class QuakeMapFragment : SupportMapFragment() {
 
         ViewModelProviders.of(this, viewModelFactory)
                 .get(QuakeMapViewModel::class.java)
-                .stateLiveData.observe(this, Observer {
+                .quakeMapState.liveData.observe(this, Observer {
             it?.coordinates?.apply {
                 val latLng = LatLng(latitude, longitude)
                 getMapAsync {

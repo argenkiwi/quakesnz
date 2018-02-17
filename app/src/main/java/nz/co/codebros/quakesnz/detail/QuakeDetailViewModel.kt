@@ -1,8 +1,8 @@
 package nz.co.codebros.quakesnz.detail
 
-import android.arch.lifecycle.LiveDataReactiveStreams
 import android.arch.lifecycle.ViewModel
-import io.reactivex.BackpressureStrategy
+import nz.co.codebros.quakesnz.LiveEventModel
+import nz.co.codebros.quakesnz.LiveStateModel
 import javax.inject.Inject
 
 /**
@@ -12,14 +12,8 @@ class QuakeDetailViewModel @Inject constructor(
         private val quakeDetailModel: QuakeDetailModel
 ) : ViewModel() {
 
-    val stateLiveData = LiveDataReactiveStreams.fromPublisher(
-            quakeDetailModel.stateObservable.toFlowable(BackpressureStrategy.LATEST)
-    )
-
-    val eventLiveData
-        get() = LiveDataReactiveStreams.fromPublisher(
-                quakeDetailModel.eventObservable.toFlowable(BackpressureStrategy.LATEST)
-        )
+    val quakeDetailState = LiveStateModel(quakeDetailModel)
+    val quakeDetailEvents = LiveEventModel(quakeDetailModel)
 
     override fun onCleared() {
         super.onCleared()
