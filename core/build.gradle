@@ -21,7 +21,8 @@ android {
 }
 
 dependencies {
-
+    // Kotlin
+    implementation Libraries.kotlin
     // Dagger
     implementation Libraries.dagger
     kapt Libraries.dagger_compiler
@@ -33,8 +34,6 @@ dependencies {
     api Libraries.retrofit_adapter
     // RxJava
     implementation Libraries.rxjava
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 repositories {

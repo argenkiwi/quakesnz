@@ -3,7 +3,8 @@
  */
 object Versions {
     const val lifecycle = "1.1.0"
-    const val dagger= "2.14.1"
+    const val dagger = "2.14.1"
+    const val kotlin = "1.2.21"
     const val retrofit = "2.3.0"
     const val rxjava = "2.1.9"
 }
@@ -14,6 +15,7 @@ object Libraries {
     const val dagger_android = "com.google.dagger:dagger-android:${Versions.dagger}"
     const val dagger_android_support = "com.google.dagger:dagger-android-support:${Versions.dagger}"
     const val dagger_android_processor = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
+    const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
     const val lifecycle_extensions = "android.arch.lifecycle:extensions:${Versions.lifecycle}"
     const val lifecycle_reactivestreams = "android.arch.lifecycle:reactivestreams:${Versions.lifecycle}"
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
