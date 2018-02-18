@@ -11,7 +11,7 @@ abstract class DaggerViewModelActivity<VM : DaggerViewModel> : ViewModelActivity
 
     private lateinit var viewModel: VM
 
-    override fun onBindViewModel(viewModel: VM) {
+    override fun onViewModelCreated(viewModel: VM) {
         this.viewModel = viewModel
     }
 

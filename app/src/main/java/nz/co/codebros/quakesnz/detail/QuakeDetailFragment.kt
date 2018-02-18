@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.detail
 
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -17,16 +18,16 @@ import java.util.*
 
 class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDetailView {
 
-    override val viewModelClass: Class<QuakeDetailViewModel>
-        get() = QuakeDetailViewModel::class.java
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_quake_detail, container, false)
 
-    override fun onBindViewModel(viewModel: QuakeDetailViewModel) {
+    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
+            viewModelProvider.get(QuakeDetailViewModel::class.java)
+
+    override fun onViewModelCreated(viewModel: QuakeDetailViewModel) {
         viewModel.quakeDetailState.liveData.observe(this, QuakeDetailStatePresenter(this))
         viewModel.quakeDetailEvents.liveData.observe(this, QuakeDetailEventPresenter(this))
     }

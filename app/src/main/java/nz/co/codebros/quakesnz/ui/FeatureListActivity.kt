@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.ui
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
@@ -15,13 +16,13 @@ import nz.co.codebros.quakesnz.settings.SettingsActivity
 
 class FeatureListActivity : DaggerViewModelActivity<FeatureListActivityViewModel>() {
 
-    override val viewModelClass: Class<FeatureListActivityViewModel>
-        get() = FeatureListActivityViewModel::class.java
-
     private var mTwoPane = false
 
-    override fun onBindViewModel(viewModel: FeatureListActivityViewModel) {
-        super.onBindViewModel(viewModel)
+    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
+            viewModelProvider.get(FeatureListActivityViewModel::class.java)
+
+    override fun onViewModelCreated(viewModel: FeatureListActivityViewModel) {
+        super.onViewModelCreated(viewModel)
         viewModel.quakeListEvents.liveData.observe(this, Observer {
             when (it) {
                 is QuakeListEvent.SelectQuake -> when {

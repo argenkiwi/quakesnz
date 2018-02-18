@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -22,13 +23,13 @@ import javax.inject.Inject
 
 class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
 
-    override val viewModelClass: Class<ViewModel>
-        get() = ViewModel::class.java
-
     private lateinit var viewModel: FeatureDetailActivity.ViewModel
 
-    override fun onBindViewModel(viewModel: ViewModel) {
-        super.onBindViewModel(viewModel)
+    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
+            viewModelProvider[ViewModel::class.java]
+
+    override fun onViewModelCreated(viewModel: ViewModel) {
+        super.onViewModelCreated(viewModel)
         this.viewModel = viewModel
     }
 

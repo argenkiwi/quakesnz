@@ -1,6 +1,7 @@
 package ar.soflete.daggerlifecycle
 
 import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
@@ -14,13 +15,15 @@ abstract class ViewModelActivity<VM : ViewModel> : FragmentActivity() {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory<VM>
-    protected abstract val viewModelClass: Class<VM>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AndroidInjection.inject(this)
-        onBindViewModel(ViewModelProviders.of(this, viewModelFactory).get(viewModelClass))
+        ViewModelProviders.of(this, viewModelFactory)
+                .let { viewModelProvider -> onCreateViewModel(viewModelProvider) }
+                .let { viewModel -> onViewModelCreated(viewModel) }
     }
 
-    protected abstract fun onBindViewModel(viewModel: VM)
+    protected abstract fun onCreateViewModel(viewModelProvider: ViewModelProvider): VM
+    protected abstract fun onViewModelCreated(viewModel: VM)
 }
