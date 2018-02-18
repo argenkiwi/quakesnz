@@ -33,6 +33,7 @@ dependencies {
     implementation Libraries.lifecycle_extensions
 
     testImplementation 'junit:junit:4.12'
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
