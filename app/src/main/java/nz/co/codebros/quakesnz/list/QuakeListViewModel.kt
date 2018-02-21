@@ -2,12 +2,9 @@ package nz.co.codebros.quakesnz.list
 
 import android.arch.lifecycle.ViewModel
 import android.content.SharedPreferences
-import ar.soflete.cycler.EventModel
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.ofType
-import nz.co.codebros.quakesnz.LiveEventModel
-import nz.co.codebros.quakesnz.LiveStateModel
-import nz.co.codebros.quakesnz.error.ErrorEvent
+import io.reactivex.BackpressureStrategy
+import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.util.toLiveData
 import javax.inject.Inject
 
 /**
@@ -15,34 +12,34 @@ import javax.inject.Inject
  */
 class QuakeListViewModel @Inject constructor(
         private val sharedPreferences: SharedPreferences,
-        quakeListModel: QuakeListModel
+        private val quakeListModel: QuakeListModel
 ) : ViewModel() {
 
-    val quakeListState = LiveStateModel(quakeListModel)
-    val quakeListEvents = LiveEventModel(quakeListModel)
-    val errorEvents: LiveEventModel<ErrorEvent>
+    val quakeListState = quakeListModel.stateObservable.toLiveData(BackpressureStrategy.LATEST)
+    val quakeListEvents
+        get() = quakeListModel.eventObservable.toLiveData(BackpressureStrategy.LATEST)
 
-    private val disposables = CompositeDisposable(quakeListModel)
-    private val onSharePreferencesChangeListener = SharedPreferences
-            .OnSharedPreferenceChangeListener { _, key ->
-                when (key) {
-                    "pref_intensity" -> quakeListModel.publish(QuakeListEvent.RefreshQuakes)
-                }
-            }
+    private val preferencesChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        when (key) {
+            "pref_intensity" -> quakeListModel.publish(QuakeListEvent.RefreshQuakes)
+        }
+    }
 
     init {
-        val errorModel = EventModel<ErrorEvent>()
-        this.errorEvents = LiveEventModel(errorModel)
-        disposables.add(errorModel
-                .publish(quakeListModel.eventObservable
-                        .ofType<QuakeListEvent.LoadQuakesError>()
-                        .map { ErrorEvent(it.error) }))
-        sharedPreferences.registerOnSharedPreferenceChangeListener(onSharePreferencesChangeListener)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesChangeListener)
     }
 
     override fun onCleared() {
         super.onCleared()
-        disposables.dispose()
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(onSharePreferencesChangeListener)
+        quakeListModel.dispose()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferencesChangeListener)
+    }
+
+    fun refreshQuakes() {
+        quakeListModel.publish(QuakeListEvent.RefreshQuakes)
+    }
+
+    fun selectQuake(feature: Feature) {
+        quakeListModel.publish(QuakeListEvent.SelectQuake(feature))
     }
 }

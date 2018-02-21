@@ -3,12 +3,13 @@ package nz.co.codebros.quakesnz.ui
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import io.reactivex.Observable
+import io.reactivex.BackpressureStrategy
+import nz.co.codebros.quakesnz.detail.QuakeDetailModel
 import nz.co.codebros.quakesnz.list.QuakeListFragment
-import nz.co.codebros.quakesnz.list.QuakeListModel
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.map.QuakeMapState
 import nz.co.codebros.quakesnz.scope.FragmentScope
+import nz.co.codebros.quakesnz.util.toLiveData
 
 /**
  * Created by leandro on 3/07/17.
@@ -29,9 +30,10 @@ abstract class FeatureListActivityModule {
 
         @JvmStatic
         @Provides
-        internal fun quakeMapStateObservable(
-                quakeListModel: QuakeListModel
-        ): Observable<QuakeMapState> = quakeListModel.stateObservable
-                .map { QuakeMapState(it.selectedFeature?.geometry?.coordinates) }
+        fun quakeMapState(
+                quakeDetailModel: QuakeDetailModel
+        ) = quakeDetailModel.stateObservable
+                .map { QuakeMapState(it.feature?.geometry?.coordinates) }
+                .toLiveData(BackpressureStrategy.LATEST)
     }
 }

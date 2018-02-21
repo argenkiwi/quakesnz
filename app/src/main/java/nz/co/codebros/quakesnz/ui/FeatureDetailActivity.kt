@@ -11,7 +11,7 @@ import ar.soflete.daggerlifecycle.DaggerViewModel
 import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import io.reactivex.Observable
+import io.reactivex.BackpressureStrategy
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
@@ -19,6 +19,7 @@ import nz.co.codebros.quakesnz.detail.QuakeDetailModel
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.map.QuakeMapState
 import nz.co.codebros.quakesnz.usecase.Result
+import nz.co.codebros.quakesnz.util.toLiveData
 import javax.inject.Inject
 
 class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
@@ -104,10 +105,11 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
 
             @JvmStatic
             @Provides
-            fun quakeMapStateObservable(
+            fun quakeMapState(
                     quakeDetailModel: QuakeDetailModel
-            ): Observable<QuakeMapState> = quakeDetailModel.stateObservable
+            ) = quakeDetailModel.stateObservable
                     .map { QuakeMapState(it.feature?.geometry?.coordinates) }
+                    .toLiveData(BackpressureStrategy.LATEST)
         }
     }
 }

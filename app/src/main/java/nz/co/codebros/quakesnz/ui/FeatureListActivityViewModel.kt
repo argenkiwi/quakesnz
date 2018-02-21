@@ -1,15 +1,17 @@
 package nz.co.codebros.quakesnz.ui
 
 import ar.soflete.daggerlifecycle.DaggerViewModel
-import nz.co.codebros.quakesnz.LiveEventModel
+import io.reactivex.BackpressureStrategy
 import nz.co.codebros.quakesnz.list.QuakeListModel
+import nz.co.codebros.quakesnz.util.toLiveData
 import javax.inject.Inject
 
 /**
  * Created by Leandro on 23/11/2017.
  */
 class FeatureListActivityViewModel @Inject constructor(
-        quakeListModel: QuakeListModel
+        private val quakeListModel: QuakeListModel
 ) : DaggerViewModel() {
-    val quakeListEvents = LiveEventModel(quakeListModel)
+    val quakeListEvents
+        get() = quakeListModel.eventObservable.toLiveData(BackpressureStrategy.LATEST)
 }

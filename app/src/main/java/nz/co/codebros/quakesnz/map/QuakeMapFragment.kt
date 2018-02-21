@@ -28,7 +28,7 @@ class QuakeMapFragment : SupportMapFragment() {
 
         ViewModelProviders.of(this, viewModelFactory)
                 .get(QuakeMapViewModel::class.java)
-                .quakeMapStateLiveData.observe(this, Observer {
+                .quakeMapState.observe(this, Observer {
             it?.apply {
                 when (coordinates) {
                     null -> {
