@@ -10,9 +10,9 @@ import io.reactivex.subjects.Subject
 open class StateEventModel<S, E>(
         initialState: S,
         reducer: Reducer<S, E>
-) : EventModel<E>(), StateModel<S> {
+) : EventModel<E>() {
     private val stateSubject: Subject<S> = BehaviorSubject.create()
-    override val stateObservable: Observable<S> = stateSubject
+    val stateObservable: Observable<S> = stateSubject
 
     init {
         eventObservable.scan(initialState, reducer).subscribe(stateSubject)

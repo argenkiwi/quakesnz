@@ -44,7 +44,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
             adapter = featureAdapter
         }
 
-        viewModel.quakeListState.observe(this, Observer {
+        viewModel.quakeListModel.state.observe(this, Observer {
             it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.let { featureAdapter.setFeatures(it) }
@@ -52,7 +52,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
             }
         })
 
-        viewModel.quakeListEvents.observe(this, Observer {
+        viewModel.quakeListModel.events.observe(this, Observer {
             when (it) {
                 is QuakeListEvent.LoadQuakesError -> {
                     Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()

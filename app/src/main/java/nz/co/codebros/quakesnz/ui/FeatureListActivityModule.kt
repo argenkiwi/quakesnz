@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.arch.lifecycle.Transformations
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
@@ -32,8 +33,8 @@ abstract class FeatureListActivityModule {
         @Provides
         fun quakeMapState(
                 quakeDetailModel: QuakeDetailModel
-        ) = quakeDetailModel.stateObservable
-                .map { QuakeMapState(it.feature?.geometry?.coordinates) }
-                .toLiveData(BackpressureStrategy.LATEST)
+        ) = Transformations.map(quakeDetailModel.state, {
+            QuakeMapState(it.feature?.geometry?.coordinates)
+        })
     }
 }

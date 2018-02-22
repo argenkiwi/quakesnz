@@ -28,8 +28,8 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
             viewModelProvider.get(QuakeDetailViewModel::class.java)
 
     override fun onViewModelCreated(viewModel: QuakeDetailViewModel) {
-        viewModel.quakeDetailState.observe(this, QuakeDetailStatePresenter(this))
-        viewModel.quakeDetailEvents.observe(this, QuakeDetailEventPresenter(this))
+        viewModel.quakeDetailModel.state.observe(this, QuakeDetailStatePresenter(this))
+        viewModel.quakeDetailModel.events.observe(this, QuakeDetailEventPresenter(this))
     }
 
     override fun updateFeature(feature: Feature) {

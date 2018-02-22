@@ -16,5 +16,6 @@ open class EventModel<E> {
         eventSubject.onNext(event)
     }
 
-    fun publish(eventObservable: Observable<E>): Disposable = eventObservable.subscribe { publish(it) }
+    fun publish(eventObservable: Observable<E>): Disposable =
+            eventObservable.subscribe { publish(it) }
 }
