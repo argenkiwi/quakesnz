@@ -7,6 +7,7 @@ import dagger.android.ContributesAndroidInjector
 import io.reactivex.BackpressureStrategy
 import nz.co.codebros.quakesnz.detail.QuakeDetailModel
 import nz.co.codebros.quakesnz.list.QuakeListFragment
+import nz.co.codebros.quakesnz.list.QuakeListModel
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.map.QuakeMapState
 import nz.co.codebros.quakesnz.scope.FragmentScope
@@ -32,9 +33,9 @@ abstract class FeatureListActivityModule {
         @JvmStatic
         @Provides
         fun quakeMapState(
-                quakeDetailModel: QuakeDetailModel
-        ) = Transformations.map(quakeDetailModel.state, {
-            QuakeMapState(it.feature?.geometry?.coordinates)
+                quakeListModel: QuakeListModel
+        ) = Transformations.map(quakeListModel.state, {
+            QuakeMapState(it.selectedFeature?.geometry?.coordinates)
         })
     }
 }
