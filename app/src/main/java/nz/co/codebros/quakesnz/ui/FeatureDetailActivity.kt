@@ -8,8 +8,6 @@ import android.os.Bundle
 import android.support.v4.app.NavUtils
 import android.support.v4.app.TaskStackBuilder
 import android.view.MenuItem
-import ar.soflete.daggerlifecycle.DaggerViewModel
-import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.core.data.Feature
@@ -19,6 +17,8 @@ import nz.co.codebros.quakesnz.detail.QuakeDetailModel
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.map.QuakeMapState
 import nz.co.codebros.quakesnz.usecase.Result
+import nz.co.vilemob.daggerviewmodel.DaggerViewModel
+import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
 import javax.inject.Inject
 
 class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {

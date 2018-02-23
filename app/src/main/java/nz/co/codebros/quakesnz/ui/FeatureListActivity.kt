@@ -8,11 +8,11 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.list.QuakeListEvent
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.settings.SettingsActivity
+import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
 
 class FeatureListActivity : DaggerViewModelActivity<FeatureListActivityViewModel>() {
 

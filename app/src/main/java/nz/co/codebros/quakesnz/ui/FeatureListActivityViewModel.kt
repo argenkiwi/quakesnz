@@ -1,9 +1,9 @@
 package nz.co.codebros.quakesnz.ui
 
-import ar.soflete.daggerlifecycle.DaggerViewModel
 import io.reactivex.BackpressureStrategy
 import nz.co.codebros.quakesnz.list.QuakeListModel
 import nz.co.codebros.quakesnz.util.toLiveData
+import nz.co.vilemob.daggerviewmodel.DaggerViewModel
 import javax.inject.Inject
 
 /**

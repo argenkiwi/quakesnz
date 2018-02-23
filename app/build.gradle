@@ -62,7 +62,6 @@ dependencies {
     // Modules
     implementation project(':core')
     implementation project(':cycler')
-    implementation project(':dagger-lifecycle')
     // Support
     implementation "com.android.support:cardview-v7:$support_library_version"
     implementation "com.android.support:design:$support_library_version"
@@ -90,6 +89,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     // Kotlin
     implementation Libraries.kotlin
+    // Dagger ViewModel
+    implementation 'com.github.argenkiwi:dagger-viewmodel:v1.0.5'
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'

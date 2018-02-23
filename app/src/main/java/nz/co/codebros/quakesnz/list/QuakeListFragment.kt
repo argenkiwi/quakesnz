@@ -10,9 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import ar.soflete.daggerlifecycle.ViewModelFragment
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.ui.FeatureAdapter
+import nz.co.vilemob.daggerviewmodel.ViewModelFragment
 
 class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
 

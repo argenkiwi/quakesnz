@@ -3,13 +3,13 @@ package nz.co.codebros.quakesnz.map
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import ar.soflete.daggerlifecycle.ViewModelFactory
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.android.support.AndroidSupportInjection
+import nz.co.vilemob.daggerviewmodel.ViewModelFactory
 import javax.inject.Inject
 
 /**
