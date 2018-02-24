@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.list
 
+import android.content.SharedPreferences
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import io.reactivex.disposables.CompositeDisposable
@@ -7,6 +8,7 @@ import io.reactivex.rxkotlin.ofType
 import nz.co.codebros.quakesnz.scope.ActivityScope
 import nz.co.codebros.quakesnz.usecase.LoadFeaturesUseCase
 import nz.co.codebros.quakesnz.util.BaseModel
+import nz.co.codebros.quakesnz.util.changes
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -15,6 +17,7 @@ import javax.inject.Named
  */
 @ActivityScope
 class QuakeListModel @Inject constructor(
+        private val sharedPreferences: SharedPreferences,
         private val loadFeaturesUseCase: LoadFeaturesUseCase,
         @Named("app") private val tracker: Tracker
 ) : BaseModel<QuakeListState, QuakeListEvent>(
@@ -22,6 +25,9 @@ class QuakeListModel @Inject constructor(
         QuakeListReducer
 ) {
     override fun subscribe() = CompositeDisposable(
+            publish(sharedPreferences.changes()
+                    .filter { it == "pref_intensity" }
+                    .map { QuakeListEvent.RefreshQuakes as QuakeListEvent }),
             publish(eventObservable
                     .startWith(QuakeListEvent.LoadQuakes())
                     .ofType<QuakeListEvent.LoadQuakes>()
