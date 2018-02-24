@@ -71,9 +71,6 @@ dependencies {
     // Play Services
     implementation "com.google.android.gms:play-services-analytics:$play_services_version"
     implementation "com.google.android.gms:play-services-maps:$play_services_version"
-    // Architecture Components
-    implementation Libraries.lifecycle_extensions
-    implementation Libraries.lifecycle_reactivestreams
     // Dagger
     implementation Libraries.dagger
     kapt Libraries.dagger_compiler
@@ -81,6 +78,11 @@ dependencies {
     implementation Libraries.dagger_android
     implementation Libraries.dagger_android_support
     kapt Libraries.dagger_android_processor
+    // Architecture Components
+    implementation Libraries.lifecycle_extensions
+    implementation Libraries.lifecycle_reactivestreams
+    // Dagger ViewModel
+    implementation 'com.github.argenkiwi:dagger-viewmodel:1.0.6'
     // RxJava
     implementation Libraries.rxjava
     // RxKotlin
@@ -89,8 +91,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     // Kotlin
     implementation Libraries.kotlin
-    // Dagger ViewModel
-    implementation 'com.github.argenkiwi:dagger-viewmodel:v1.0.5'
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'
