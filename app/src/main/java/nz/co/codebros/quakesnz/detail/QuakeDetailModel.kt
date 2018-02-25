@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.detail
 
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.ofType
 import nz.co.codebros.quakesnz.scope.ActivityScope
 import nz.co.codebros.quakesnz.usecase.LoadFeatureUseCase
@@ -16,7 +17,7 @@ class QuakeDetailModel @Inject constructor(
         QuakeDetailState(false, null),
         QuakeDetailReducer
 ) {
-    override fun subscribe() = publish(eventObservable
+    override fun subscribe(): Disposable = publish(eventObservable
             .ofType<QuakeDetailEvent.LoadQuake>()
             .flatMap { loadFeatureUseCase.execute(it.publicId) }
             .map { QuakeDetailEvent.LoadQuakeComplete(it) as QuakeDetailEvent }

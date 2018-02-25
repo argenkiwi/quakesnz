@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.list
 
-import ar.soflete.cycler.Reducer
+import nz.co.vilemob.rxmodel.Reducer
 
 /**
  * Created by Leandro on 23/02/2018.
