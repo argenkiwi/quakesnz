@@ -42,13 +42,23 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
                         .add(android.R.id.content, QuakeDetailFragment())
                         .commit()
 
-                intent.let {
-                    when {
-                        it.data != null -> viewModel.loadFeature(it.data.lastPathSegment)
-                        else -> viewModel.loadFeature(it.getParcelableExtra<Feature>(EXTRA_FEATURE))
-                    }
-                }
+                intent.loadFeature()
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.apply {
+            loadFeature()
+            setIntent(this)
+        }
+    }
+
+    private fun Intent.loadFeature() {
+        when (data) {
+            null -> viewModel.loadFeature(getParcelableExtra<Feature>(EXTRA_FEATURE))
+            else -> viewModel.loadFeature(data.lastPathSegment)
         }
     }
 
@@ -67,8 +77,7 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         }
         else -> super.onOptionsItemSelected(item)
     }
-
-
+    
     companion object {
         private const val EXTRA_FEATURE = "extra_feature"
         fun newIntent(
