@@ -19,7 +19,7 @@ import javax.inject.Singleton
  * Created by Leandro on 2/11/2017.
  */
 @Module
-internal abstract class ApplicationModule {
+internal abstract class QuakesNZModule {
 
     @ActivityScope
     @ContributesAndroidInjector(modules = arrayOf(FeatureListActivityModule::class))

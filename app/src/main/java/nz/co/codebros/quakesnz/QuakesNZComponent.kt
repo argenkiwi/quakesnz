@@ -14,10 +14,10 @@ import javax.inject.Singleton
 @Component(modules = [
     AndroidInjectionModule::class,
     AndroidSupportInjectionModule::class,
-    ApplicationModule::class,
+    QuakesNZModule::class,
     ServicesModule::class
 ])
-internal interface ApplicationComponent : AndroidInjector<QuakesNZApplication> {
+internal interface QuakesNZComponent : AndroidInjector<QuakesNZApplication> {
 
     @Component.Builder
     abstract class Builder : AndroidInjector.Builder<QuakesNZApplication>()

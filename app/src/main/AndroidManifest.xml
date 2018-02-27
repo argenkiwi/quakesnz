@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="nz.co.codebros.quakesnz">
 
     <uses-feature
@@ -42,29 +43,32 @@
             android:name=".ui.FeatureDetailActivity"
             android:label="@string/quake_details"
             android:parentActivityName=".ui.FeatureListActivity">
+            <tools:validation testUrl="http://www.geonet.org.nz/earthquake/2018p154140" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nz.co.codebros.quakesnz.ui.FeatureListActivity" />
 
-            <intent-filter android:label="@string/app_name">
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
+                    android:scheme="http"
                     android:host="www.geonet.org.nz"
-                    android:pathPrefix="/earthquake/"
-                    android:scheme="http" />
+                    android:pathPattern="/earthquake/..*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
+                    android:scheme="https"
                     android:host="www.geonet.org.nz"
-                    android:pathPrefix="/earthquake/"
-                    android:scheme="https" />
-
-                <data
-                    android:host="details"
-                    android:scheme="quakesnz" />
+                    android:pathPattern="/earthquake/..*" />
             </intent-filter>
         </activity>
         <activity

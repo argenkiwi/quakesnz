@@ -3,10 +3,11 @@ package nz.co.codebros.quakesnz.list
 import android.content.SharedPreferences
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
+import nz.co.codebros.quakesnz.core.usecase.LoadFeaturesUseCase
 import nz.co.codebros.quakesnz.scope.ActivityScope
-import nz.co.codebros.quakesnz.usecase.LoadFeaturesUseCase
 import nz.co.codebros.quakesnz.util.BaseModel
 import nz.co.codebros.quakesnz.util.changes
 import javax.inject.Inject
@@ -35,6 +36,7 @@ class QuakeListModel @Inject constructor(
                         loadFeaturesUseCase.execute()
                                 .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
                                 .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
+                                .observeOn(AndroidSchedulers.mainThread())
                     }),
             eventObservable.subscribe {
                 when (it) {

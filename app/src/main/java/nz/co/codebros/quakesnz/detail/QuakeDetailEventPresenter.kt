@@ -1,7 +1,7 @@
 package nz.co.codebros.quakesnz.detail
 
 import android.arch.lifecycle.Observer
-import nz.co.codebros.quakesnz.usecase.Result
+import nz.co.codebros.quakesnz.core.usecase.Result
 
 /**
  * Created by Leandro on 16/02/2018.

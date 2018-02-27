@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.usecase
+package nz.co.codebros.quakesnz.core.usecase
 
 /**
  * Created by Leandro on 23/11/2017.

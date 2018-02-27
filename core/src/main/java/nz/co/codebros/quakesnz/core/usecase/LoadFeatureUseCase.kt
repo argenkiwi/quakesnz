@@ -1,7 +1,6 @@
-package nz.co.codebros.quakesnz.usecase
+package nz.co.codebros.quakesnz.core.usecase
 
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import nz.co.codebros.quakesnz.core.GeonetService
 import nz.co.codebros.quakesnz.core.data.Feature
@@ -17,5 +16,4 @@ class LoadFeatureUseCase @Inject constructor(
             .map { (features) -> Result.Success(features.first()) as Result<Feature> }
             .onErrorReturn { Result.Failure(it) }
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
 }

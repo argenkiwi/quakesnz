@@ -11,12 +11,12 @@ import android.view.MenuItem
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.core.usecase.Result
 import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
 import nz.co.codebros.quakesnz.detail.QuakeDetailModel
 import nz.co.codebros.quakesnz.map.QuakeMapFragment
 import nz.co.codebros.quakesnz.map.QuakeMapState
-import nz.co.codebros.quakesnz.usecase.Result
 import nz.co.vilemob.daggerviewmodel.DaggerViewModel
 import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
 import javax.inject.Inject
@@ -26,11 +26,12 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
     private lateinit var viewModel: FeatureDetailActivity.ViewModel
 
     override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
-            viewModelProvider[ViewModel::class.java]
+            viewModelProvider.get(ViewModel::class.java)
 
     override fun onViewModelCreated(viewModel: ViewModel) {
         super.onViewModelCreated(viewModel)
         this.viewModel = viewModel
+        intent.handle()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,24 +42,20 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
                 supportFragmentManager.beginTransaction()
                         .add(android.R.id.content, QuakeDetailFragment())
                         .commit()
-
-                intent.loadFeature()
             }
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.apply {
-            loadFeature()
-            setIntent(this)
-        }
+        intent.handle()
+        setIntent(intent)
     }
 
-    private fun Intent.loadFeature() {
+    private fun Intent.handle() {
         when (data) {
-            null -> viewModel.loadFeature(getParcelableExtra<Feature>(EXTRA_FEATURE))
-            else -> viewModel.loadFeature(data.lastPathSegment)
+            null -> viewModel.onFeatureLoaded(getParcelableExtra<Feature>(EXTRA_FEATURE))
+            else -> viewModel.onLoadFeature(data.lastPathSegment)
         }
     }
 
@@ -77,7 +74,7 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         }
         else -> super.onOptionsItemSelected(item)
     }
-    
+
     companion object {
         private const val EXTRA_FEATURE = "extra_feature"
         fun newIntent(
@@ -91,11 +88,18 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
             private val quakeDetailModel: QuakeDetailModel
     ) : DaggerViewModel() {
 
-        fun loadFeature(feature: Feature) {
+        private val disposable = quakeDetailModel.subscribe()
+
+        override fun onCleared() {
+            super.onCleared()
+            disposable.dispose()
+        }
+
+        fun onFeatureLoaded(feature: Feature) {
             quakeDetailModel.publish(QuakeDetailEvent.LoadQuakeComplete(Result.Success(feature)))
         }
 
-        fun loadFeature(publicId: String) {
+        fun onLoadFeature(publicId: String) {
             quakeDetailModel.publish(QuakeDetailEvent.LoadQuake(publicId))
         }
     }

@@ -8,11 +8,4 @@ import javax.inject.Inject
  */
 class QuakeDetailViewModel @Inject constructor(
         val quakeDetailModel: QuakeDetailModel
-) : ViewModel() {
-    private val disposable = quakeDetailModel.subscribe()
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
-    }
-}
+) : ViewModel()

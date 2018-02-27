@@ -3,8 +3,7 @@ package nz.co.codebros.quakesnz.core.data
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-
-import java.util.Date
+import java.util.*
 
 data class Properties(
         @SerializedName("publicID")

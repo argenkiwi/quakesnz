@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.detail
 
-import nz.co.codebros.quakesnz.usecase.Result
+import nz.co.codebros.quakesnz.core.usecase.Result
 import nz.co.vilemob.rxmodel.Reducer
 
 /**
