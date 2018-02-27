@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.ui
+package nz.co.codebros.quakesnz.list.view
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.CardView
@@ -8,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import nz.co.codebros.quakesnz.util.QuakesUtils
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.util.QuakesUtils
 import java.util.*
 import kotlin.collections.ArrayList
 

@@ -6,7 +6,6 @@ import android.os.Parcelable
 /**
  * Created by leandro on 3/07/17.
  */
-
 data class Coordinates(
         val latitude: Double,
         val longitude: Double

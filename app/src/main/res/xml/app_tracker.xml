@@ -10,7 +10,7 @@
     <screenName name="nz.co.codebros.quakesnz.ui.MainActivity">Quakes List</screenName>
     <screenName name="nz.co.codebros.quakesnz.ui.FeatureDetailActivity">Quake Detail</screenName>
     <screenName name="nz.co.codebros.quakesnz.settings.SettingsActivity">Settings</screenName>
-    <screenName name="nz.co.codebros.quakesnz.ui.AboutActivity">About</screenName>
+    <screenName name="nz.co.codebros.quakesnz.about.AboutActivity">About</screenName>
 
     <!--  The following value should be replaced with correct property id. -->
     <string name="ga_trackingId">UA-53227390-1</string>

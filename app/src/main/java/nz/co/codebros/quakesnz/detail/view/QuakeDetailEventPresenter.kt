@@ -1,7 +1,8 @@
-package nz.co.codebros.quakesnz.detail
+package nz.co.codebros.quakesnz.detail.view
 
 import android.arch.lifecycle.Observer
 import nz.co.codebros.quakesnz.core.usecase.Result
+import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
 
 /**
  * Created by Leandro on 16/02/2018.

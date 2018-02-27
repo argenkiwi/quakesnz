@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.detail
+package nz.co.codebros.quakesnz.detail.model
 
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.usecase.Result

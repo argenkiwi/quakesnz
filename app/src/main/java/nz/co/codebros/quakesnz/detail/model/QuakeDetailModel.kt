@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.detail
+package nz.co.codebros.quakesnz.detail.model
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -15,8 +15,7 @@ import javax.inject.Inject
 class QuakeDetailModel @Inject constructor(
         private val loadFeatureUseCase: LoadFeatureUseCase
 ) : BaseModel<QuakeDetailState, QuakeDetailEvent>(
-        QuakeDetailState(false, null),
-        QuakeDetailReducer
+        QuakeDetailState(false, null), QuakeDetailReducer
 ) {
     override fun subscribe(): Disposable = publish(eventObservable
             .ofType<QuakeDetailEvent.LoadQuake>()

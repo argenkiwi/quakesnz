@@ -1,8 +1,9 @@
 package nz.co.codebros.quakesnz.list
 
 import android.arch.lifecycle.ViewModel
-import android.content.SharedPreferences
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.list.model.QuakeListEvent
+import nz.co.codebros.quakesnz.list.model.QuakeListModel
 import javax.inject.Inject
 
 /**

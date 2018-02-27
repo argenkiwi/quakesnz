@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.list
+package nz.co.codebros.quakesnz.list.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -11,7 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import nz.co.codebros.quakesnz.R
-import nz.co.codebros.quakesnz.ui.FeatureAdapter
+import nz.co.codebros.quakesnz.list.QuakeListViewModel
+import nz.co.codebros.quakesnz.list.model.QuakeListEvent
 import nz.co.vilemob.daggerviewmodel.ViewModelFragment
 
 class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {

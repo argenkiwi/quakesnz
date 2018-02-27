@@ -72,7 +72,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.AboutActivity"
+            android:name=".about.AboutActivity"
             android:label="@string/about"
             android:parentActivityName=".ui.FeatureListActivity">
             <meta-data

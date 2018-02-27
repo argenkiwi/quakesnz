@@ -12,11 +12,11 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.usecase.Result
-import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
-import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
-import nz.co.codebros.quakesnz.detail.QuakeDetailModel
-import nz.co.codebros.quakesnz.map.QuakeMapFragment
-import nz.co.codebros.quakesnz.map.QuakeMapState
+import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
+import nz.co.codebros.quakesnz.detail.view.QuakeDetailFragment
+import nz.co.codebros.quakesnz.detail.model.QuakeDetailModel
+import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
+import nz.co.codebros.quakesnz.map.model.QuakeMapState
 import nz.co.vilemob.daggerviewmodel.DaggerViewModel
 import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
 import javax.inject.Inject

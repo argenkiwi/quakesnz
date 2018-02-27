@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.detail
+package nz.co.codebros.quakesnz.detail.view
 
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
@@ -10,9 +10,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_quake_detail.*
 import kotlinx.android.synthetic.main.item_summary.*
-import nz.co.codebros.quakesnz.util.QuakesUtils
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.detail.QuakeDetailViewModel
+import nz.co.codebros.quakesnz.util.QuakesUtils
 import nz.co.vilemob.daggerviewmodel.ViewModelFragment
 import java.util.*
 

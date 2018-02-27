@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/feature_list"
-        android:name="nz.co.codebros.quakesnz.list.QuakeListFragment"
+        android:name="nz.co.codebros.quakesnz.list.view.QuakeListFragment"
         android:layout_width="@dimen/item_width"
         android:layout_height="match_parent"
         tools:context=".ui.FeatureListActivity" />

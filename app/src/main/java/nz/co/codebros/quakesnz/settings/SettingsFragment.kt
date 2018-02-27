@@ -1,13 +1,7 @@
 package nz.co.codebros.quakesnz.settings
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.preference.PreferenceFragmentCompat
-import android.view.View
-
-import javax.inject.Inject
-
-import dagger.android.support.AndroidSupportInjection
 import nz.co.codebros.quakesnz.R
 
 /**

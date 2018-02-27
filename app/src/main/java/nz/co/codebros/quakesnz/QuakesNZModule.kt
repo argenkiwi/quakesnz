@@ -10,7 +10,6 @@ import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.scope.ActivityScope
 import nz.co.codebros.quakesnz.ui.FeatureDetailActivity
 import nz.co.codebros.quakesnz.ui.FeatureListActivity
-import nz.co.codebros.quakesnz.ui.FeatureListActivityModule
 import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
@@ -22,11 +21,11 @@ import javax.inject.Singleton
 internal abstract class QuakesNZModule {
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(FeatureListActivityModule::class))
+    @ContributesAndroidInjector(modules = [FeatureListActivity.Module::class])
     internal abstract fun featureListActivity(): FeatureListActivity
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = arrayOf(FeatureDetailActivity.Module::class))
+    @ContributesAndroidInjector(modules = [FeatureDetailActivity.Module::class])
     internal abstract fun featureDetailActivity(): FeatureDetailActivity
 
     @Module

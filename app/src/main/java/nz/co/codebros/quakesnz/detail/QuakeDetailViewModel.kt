@@ -1,6 +1,7 @@
 package nz.co.codebros.quakesnz.detail
 
 import android.arch.lifecycle.ViewModel
+import nz.co.codebros.quakesnz.detail.model.QuakeDetailModel
 import javax.inject.Inject
 
 /**

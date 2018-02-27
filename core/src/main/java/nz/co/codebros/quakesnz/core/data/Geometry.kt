@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by leandro on 3/07/17.
  */
-
 data class Geometry(
         @SerializedName("type")
         val type: String,

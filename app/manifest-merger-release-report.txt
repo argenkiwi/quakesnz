@@ -98,7 +98,7 @@ ADDED from AndroidManifest.xml:45:13
 		ADDED from AndroidManifest.xml:46:17
 	android:value
 		ADDED from AndroidManifest.xml:47:17
-activity#nz.co.codebros.quakesnz.ui.AboutActivity
+activity#nz.co.codebros.quakesnz.about.AboutActivity
 ADDED from AndroidManifest.xml:49:9
 	android:label
 		ADDED from AndroidManifest.xml:51:13

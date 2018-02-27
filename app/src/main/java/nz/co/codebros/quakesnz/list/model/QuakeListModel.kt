@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.list
+package nz.co.codebros.quakesnz.list.model
 
 import android.content.SharedPreferences
 import com.google.android.gms.analytics.HitBuilders

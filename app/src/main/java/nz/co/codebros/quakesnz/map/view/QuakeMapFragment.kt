@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.map
+package nz.co.codebros.quakesnz.map.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.android.support.AndroidSupportInjection
+import nz.co.codebros.quakesnz.map.QuakeMapViewModel
 import nz.co.vilemob.daggerviewmodel.ViewModelFactory
 import javax.inject.Inject
 

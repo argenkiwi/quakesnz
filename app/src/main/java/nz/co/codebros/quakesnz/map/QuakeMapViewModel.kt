@@ -2,6 +2,7 @@ package nz.co.codebros.quakesnz.map
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
+import nz.co.codebros.quakesnz.map.model.QuakeMapState
 import javax.inject.Inject
 
 /**

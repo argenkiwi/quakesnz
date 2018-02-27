@@ -8,9 +8,9 @@ import io.reactivex.Observable
 fun <T> Observable<T>.toLiveData(backpressureStrategy: BackpressureStrategy) =
         LiveDataReactiveStreams.fromPublisher(toFlowable(backpressureStrategy))
 
-fun SharedPreferences.changes(): Observable<String> = Observable.create<String>({ emitter ->
+fun SharedPreferences.changes(): Observable<String> = Observable.create<String> { emitter ->
     SharedPreferences.OnSharedPreferenceChangeListener { _, key -> emitter.onNext(key) }.let {
         emitter.setCancellable { unregisterOnSharedPreferenceChangeListener(it) }
         registerOnSharedPreferenceChangeListener(it)
     }
-})
+}
