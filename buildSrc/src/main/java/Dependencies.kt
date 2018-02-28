@@ -6,7 +6,7 @@ object Versions {
     const val dagger = "2.14.1"
     const val kotlin = "1.2.21"
     const val retrofit = "2.3.0"
-    const val rxjava = "2.1.9"
+    const val rxjava = "2.1.10"
 }
 
 object Libraries {
