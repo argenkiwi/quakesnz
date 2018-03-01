@@ -38,7 +38,7 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivity.ViewMode
         viewModel.quakeListEvents.observe(this, Observer {
             when (it) {
                 is QuakeListEvent.SelectQuake -> when {
-                    !mTwoPane -> startActivity(FeatureDetailActivity.newIntent(this, it.quake))
+                    !mTwoPane -> startActivity(FeatureDetailActivity.newIntent(this, it.feature))
                 }
             }
         })
