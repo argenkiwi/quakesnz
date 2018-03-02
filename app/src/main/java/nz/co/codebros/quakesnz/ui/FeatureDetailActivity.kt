@@ -1,5 +1,6 @@
 package nz.co.codebros.quakesnz.ui
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
@@ -13,10 +14,10 @@ import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.usecase.Result
 import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
-import nz.co.codebros.quakesnz.detail.view.QuakeDetailFragment
 import nz.co.codebros.quakesnz.detail.model.QuakeDetailModel
-import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
+import nz.co.codebros.quakesnz.detail.view.QuakeDetailFragment
 import nz.co.codebros.quakesnz.map.model.QuakeMapState
+import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
 import nz.co.vilemob.daggerviewmodel.DaggerViewModel
 import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
 import javax.inject.Inject
@@ -53,10 +54,8 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
     }
 
     private fun Intent.handle() {
-        when (data) {
-            null -> viewModel.onFeatureLoaded(getParcelableExtra<Feature>(EXTRA_FEATURE))
-            else -> viewModel.onLoadFeature(data.lastPathSegment)
-        }
+        feature?.let { viewModel.onFeatureLoaded(it) }
+        data?.apply { viewModel.onLoadFeature(lastPathSegment) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
@@ -73,15 +72,6 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
             true
         }
         else -> super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        private const val EXTRA_FEATURE = "extra_feature"
-        fun newIntent(
-                context: Context,
-                feature: Feature
-        ): Intent = Intent(context, FeatureDetailActivity::class.java)
-                .putExtra(EXTRA_FEATURE, feature)
     }
 
     class ViewModel @Inject constructor(
@@ -119,9 +109,25 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
             @Provides
             fun quakeMapState(
                     quakeDetailModel: QuakeDetailModel
-            ) = Transformations.map(quakeDetailModel.state, {
+            ): LiveData<QuakeMapState> = Transformations.map(quakeDetailModel.state, {
                 QuakeMapState(it.feature?.geometry?.coordinates)
             })
         }
+    }
+
+    companion object {
+        private const val EXTRA_FEATURE = "extra_feature"
+
+        private var Intent.feature: Feature?
+            set(value) {
+                putExtra(EXTRA_FEATURE, value)
+            }
+            get() = getParcelableExtra(EXTRA_FEATURE)
+
+        fun newIntent(
+                context: Context,
+                feature: Feature
+        ): Intent = Intent(context, FeatureDetailActivity::class.java)
+                .apply { this.feature = feature }
     }
 }
