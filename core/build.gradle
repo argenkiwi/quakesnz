@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -26,14 +27,14 @@ dependencies {
     // Dagger
     implementation Libraries.dagger
     kapt Libraries.dagger_compiler
+    // RxJava
+    implementation Libraries.rxjava
     // OkHttp
     api 'com.squareup.okhttp3:logging-interceptor:3.9.0'
     // Retrofit
     api Libraries.retrofit
     api Libraries.retrofit_converter
     api Libraries.retrofit_adapter
-    // RxJava
-    implementation Libraries.rxjava
 }
 
 repositories {
