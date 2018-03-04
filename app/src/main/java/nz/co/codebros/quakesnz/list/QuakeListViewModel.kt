@@ -12,7 +12,6 @@ import javax.inject.Inject
 class QuakeListViewModel @Inject constructor(
         val quakeListModel: QuakeListModel
 ) : ViewModel() {
-
     private val disposable = quakeListModel.subscribe()
 
     override fun onCleared() {

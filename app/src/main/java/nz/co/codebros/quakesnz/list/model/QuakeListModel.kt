@@ -26,18 +26,20 @@ class QuakeListModel @Inject constructor(
         QuakeListReducer
 ) {
     override fun subscribe() = CompositeDisposable(
-            publish(sharedPreferences.changes()
-                    .filter { it == "pref_intensity" }
-                    .map { QuakeListEvent.RefreshQuakes as QuakeListEvent }),
-            publish(eventObservable
-                    .startWith(QuakeListEvent.LoadQuakes())
-                    .ofType<QuakeListEvent.LoadQuakes>()
-                    .flatMap {
-                        loadFeaturesUseCase.execute()
-                                .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
-                                .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
-                                .observeOn(AndroidSchedulers.mainThread())
-                    }),
+            publish(
+                    eventObservable
+                            .startWith(QuakeListEvent.LoadQuakes())
+                            .ofType<QuakeListEvent.LoadQuakes>()
+                            .flatMap {
+                                loadFeaturesUseCase.execute()
+                                        .map { QuakeListEvent.QuakesLoaded(it.features) as QuakeListEvent }
+                                        .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
+                                        .observeOn(AndroidSchedulers.mainThread())
+                            },
+                    sharedPreferences.changes()
+                            .filter { it == "pref_intensity" }
+                            .map { QuakeListEvent.RefreshQuakes }
+            ),
             eventObservable.subscribe {
                 when (it) {
                     QuakeListEvent.RefreshQuakes -> tracker.send(HitBuilders.EventBuilder()
