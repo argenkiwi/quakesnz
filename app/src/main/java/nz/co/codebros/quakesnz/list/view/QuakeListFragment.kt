@@ -1,15 +1,15 @@
 package nz.co.codebros.quakesnz.list.view
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.list.QuakeListViewModel
 import nz.co.codebros.quakesnz.list.model.QuakeListEvent
@@ -38,7 +38,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
     override fun onViewModelCreated(viewModel: QuakeListViewModel) {
         swipeRefreshLayout.setOnRefreshListener { viewModel.refreshQuakes() }
 
-        val featureAdapter = FeatureAdapter({ _, feature -> viewModel.selectQuake(feature) })
+        val featureAdapter = FeatureAdapter { _, feature -> viewModel.selectQuake(feature) }
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)

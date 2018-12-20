@@ -1,14 +1,14 @@
 package nz.co.codebros.quakesnz.ui
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.NavUtils
-import android.support.v4.app.TaskStackBuilder
 import android.view.MenuItem
+import androidx.core.app.NavUtils
+import androidx.core.app.TaskStackBuilder
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModelProvider
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import nz.co.codebros.quakesnz.core.data.Feature
@@ -55,7 +55,7 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
 
     private fun Intent.handle() {
         feature?.let { viewModel.onFeatureLoaded(it) }
-        data?.apply { viewModel.onLoadFeature(lastPathSegment) }
+        data?.lastPathSegment?.let { viewModel.onLoadFeature(it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
@@ -109,9 +109,9 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
             @Provides
             fun quakeMapState(
                     quakeDetailModel: QuakeDetailModel
-            ): LiveData<QuakeMapState> = Transformations.map(quakeDetailModel.state, {
+            ): LiveData<QuakeMapState> = Transformations.map(quakeDetailModel.state) {
                 QuakeMapState(it.feature?.geometry?.coordinates)
-            })
+            }
         }
     }
 

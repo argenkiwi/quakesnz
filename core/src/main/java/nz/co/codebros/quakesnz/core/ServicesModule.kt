@@ -16,9 +16,6 @@ import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
 
-/**
- * Created by leandro on 22/07/16.
- */
 @Module
 object ServicesModule {
 

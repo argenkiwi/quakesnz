@@ -7,9 +7,6 @@ import com.google.gson.stream.JsonWriter
 
 import java.io.IOException
 
-/**
- * Created by Leandro on 02/04/2014.
- */
 class CoordinatesTypeAdapter : TypeAdapter<Coordinates>() {
 
     @Throws(IOException::class)

@@ -1,11 +1,10 @@
 package nz.co.codebros.quakesnz.list.view
 
-import android.support.v7.widget.CardView
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_summary.view.*
+import kotlinx.android.synthetic.main.item_summary.*
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.util.QuakesUtils
@@ -18,7 +17,7 @@ class FeatureViewHolder(
         private val onItemClicked: (view: View, feature: Feature) -> Unit
 ) : ViewHolder<FeatureViewHolder.Properties> {
 
-    override val view: View = LayoutInflater.from(parent.context)
+    override val containerView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_summary, parent, false)
 
     override fun bind(props: Properties) {
@@ -29,32 +28,31 @@ class FeatureViewHolder(
                     .dropLastWhile { it.isEmpty() }
                     .toTypedArray()
 
-            with(view) {
-                val colorForIntensity = QuakesUtils.getColor(context, properties.mmi)
 
-                magnitudeBigTextView.apply {
-                    text = magnitude[0]
-                    setTextColor(colorForIntensity)
-                }
+            val colorForIntensity = QuakesUtils.getColor(magnitudeBigTextView.context, properties.mmi)
 
-                magnitudeSmallTextView.apply {
-                    text = ".${magnitude[1]}"
-                    setTextColor(colorForIntensity)
-                }
-
-                intensityTextView.text = QuakesUtils.getIntensity(context, properties.mmi)
-                locationTextView.text = properties.locality
-                depthTextView.text = context.getString(R.string.depth, properties.depth)
-                timeTextView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
-                colorTabView.setBackgroundColor(colorForIntensity)
-
-                (this as CardView).cardElevation = when {
-                    selected -> 8.0f
-                    else -> 2.0f
-                }
-
-                setOnClickListener { onItemClicked(it, feature) }
+            magnitudeBigTextView.apply {
+                text = magnitude[0]
+                setTextColor(colorForIntensity)
             }
+
+            magnitudeSmallTextView.apply {
+                text = ".${magnitude[1]}"
+                setTextColor(colorForIntensity)
+            }
+
+            intensityTextView.text = QuakesUtils.getIntensity(intensityTextView.context, properties.mmi)
+            locationTextView.text = properties.locality
+            depthTextView.text = depthTextView.resources.getString(R.string.depth, properties.depth)
+            timeTextView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
+            colorTabView.setBackgroundColor(colorForIntensity)
+
+            (containerView as androidx.cardview.widget.CardView).cardElevation = when {
+                selected -> 8.0f
+                else -> 2.0f
+            }
+
+            containerView.setOnClickListener { onItemClicked(it, feature) }
         }
     }
 

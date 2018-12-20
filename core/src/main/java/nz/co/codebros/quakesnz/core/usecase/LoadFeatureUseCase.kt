@@ -6,9 +6,6 @@ import nz.co.codebros.quakesnz.core.GeonetService
 import nz.co.codebros.quakesnz.core.data.Feature
 import javax.inject.Inject
 
-/**
- * Created by leandro on 18/06/17.
- */
 class LoadFeatureUseCase @Inject constructor(
         private val service: GeonetService
 ) {

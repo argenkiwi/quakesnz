@@ -1,8 +1,8 @@
 package nz.co.codebros.quakesnz.map.view
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -13,9 +13,6 @@ import nz.co.codebros.quakesnz.map.QuakeMapViewModel
 import nz.co.vilemob.daggerviewmodel.ViewModelFactory
 import javax.inject.Inject
 
-/**
- * Created by Leandro on 9/11/2017.
- */
 class QuakeMapFragment : SupportMapFragment() {
 
     @Inject

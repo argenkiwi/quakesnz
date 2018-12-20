@@ -1,14 +1,14 @@
 package nz.co.codebros.quakesnz.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModelProvider
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import io.reactivex.BackpressureStrategy
@@ -102,9 +102,9 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivity.ViewMode
             @Provides
             fun quakeMapState(
                     quakeListModel: QuakeListModel
-            ) = Transformations.map(quakeListModel.state, {
+            ) = Transformations.map(quakeListModel.state) {
                 QuakeMapState(it.selectedFeature?.geometry?.coordinates)
-            })
+            }
         }
     }
 }

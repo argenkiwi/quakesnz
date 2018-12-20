@@ -7,9 +7,6 @@ import dagger.android.support.AndroidSupportInjectionModule
 import nz.co.codebros.quakesnz.core.ServicesModule
 import javax.inject.Singleton
 
-/**
- * Created by leandro on 9/07/15.
- */
 @Singleton
 @Component(modules = [
     AndroidInjectionModule::class,

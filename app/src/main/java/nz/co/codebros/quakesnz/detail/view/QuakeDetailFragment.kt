@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.detail.view
 
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -48,6 +48,7 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
         depthTextView.text = getString(R.string.depth, properties.depth)
         timeTextView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
         colorTabView.setBackgroundColor(colorForIntensity)
+
         shareFloatingActionButton.setOnClickListener({
             startActivity(Intent()
                     .setAction(Intent.ACTION_SEND)

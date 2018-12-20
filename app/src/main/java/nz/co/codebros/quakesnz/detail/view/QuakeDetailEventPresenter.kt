@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.detail.view
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import nz.co.codebros.quakesnz.core.usecase.Result
 import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
 

@@ -13,9 +13,6 @@ import nz.co.codebros.quakesnz.util.changes
 import javax.inject.Inject
 import javax.inject.Named
 
-/**
- * Created by Leandro on 23/02/2018.
- */
 @ActivityScope
 class QuakeListModel @Inject constructor(
         private val sharedPreferences: SharedPreferences,

@@ -14,9 +14,6 @@ import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
 
-/**
- * Created by Leandro on 2/11/2017.
- */
 @Module
 internal abstract class QuakesNZModule {
 

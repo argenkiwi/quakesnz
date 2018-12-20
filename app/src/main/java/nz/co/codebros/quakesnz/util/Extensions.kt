@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.util
 
-import android.arch.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.LiveDataReactiveStreams
 import android.content.SharedPreferences
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable

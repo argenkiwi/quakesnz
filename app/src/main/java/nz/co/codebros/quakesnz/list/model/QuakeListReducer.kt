@@ -2,9 +2,6 @@ package nz.co.codebros.quakesnz.list.model
 
 import nz.co.vilemob.rxmodel.Reducer
 
-/**
- * Created by Leandro on 23/02/2018.
- */
 object QuakeListReducer : Reducer<QuakeListState, QuakeListEvent> {
     override fun apply(state: QuakeListState, event: QuakeListEvent) = when (event) {
         is QuakeListEvent.LoadQuakes -> state.copy(isLoading = true)

@@ -1,6 +1,6 @@
 package nz.co.codebros.quakesnz.list
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.list.model.QuakeListEvent
 import nz.co.codebros.quakesnz.list.model.QuakeListModel

@@ -8,9 +8,6 @@ import nz.co.codebros.quakesnz.scope.ActivityScope
 import nz.co.codebros.quakesnz.util.BaseModel
 import javax.inject.Inject
 
-/**
- * Created by Leandro on 23/02/2018.
- */
 @ActivityScope
 class QuakeDetailModel @Inject constructor(
         private val loadFeatureUseCase: LoadFeatureUseCase
