@@ -49,7 +49,7 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
         timeTextView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
         colorTabView.setBackgroundColor(colorForIntensity)
 
-        shareFloatingActionButton.setOnClickListener({
+        shareFloatingActionButton.setOnClickListener {
             startActivity(Intent()
                     .setAction(Intent.ACTION_SEND)
                     .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
@@ -60,7 +60,7 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
                             properties.publicId
                     ))
                     .setType("text/plain"))
-        })
+        }
     }
 
     override fun showLoadingError() {

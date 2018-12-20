@@ -6,9 +6,6 @@ import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.util.BaseAdapter
 import nz.co.codebros.quakesnz.util.RecyclableViewHolder
 
-/**
- * Created by leandro on 12/07/15.
- */
 class FeatureAdapter(
         private val onItemClicked: (view: View, feature: Feature) -> Unit
 ) : BaseAdapter() {

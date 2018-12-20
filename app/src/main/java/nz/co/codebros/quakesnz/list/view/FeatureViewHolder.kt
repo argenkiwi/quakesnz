@@ -17,7 +17,7 @@ class FeatureViewHolder(
         private val onItemClicked: (view: View, feature: Feature) -> Unit
 ) : ViewHolder<FeatureViewHolder.Properties> {
 
-    override val containerView = LayoutInflater.from(parent.context)
+    override val containerView: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_summary, parent, false)
 
     override fun bind(props: Properties) {
