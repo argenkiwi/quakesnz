@@ -16,8 +16,7 @@ class FeatureAdapter(
     ) = RecyclableViewHolder(FeatureViewHolder(parent, onItemClicked))
 
     override fun onBindViewHolder(holder: RecyclableViewHolder<*>, position: Int) {
-        val item = getItem(position)
-        when(item){
+        when(val item = getItem(position)){
           is  FeatureViewHolder.Properties -> (holder as RecyclableViewHolder<FeatureViewHolder.Properties>).bind(item)
         }
     }

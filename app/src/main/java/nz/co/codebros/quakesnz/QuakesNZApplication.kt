@@ -5,5 +5,5 @@ import dagger.android.support.DaggerApplication
 
 class QuakesNZApplication : DaggerApplication() {
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
-            DaggerQuakesNZComponent.builder().create(this)
+            DaggerQuakesNZComponent.factory().create(this)
 }

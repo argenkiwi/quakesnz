@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
 
-    private lateinit var viewModel: FeatureDetailActivity.ViewModel
+    private lateinit var viewModel: ViewModel
 
     override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
             viewModelProvider.get(ViewModel::class.java)

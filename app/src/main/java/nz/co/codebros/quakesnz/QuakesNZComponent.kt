@@ -14,8 +14,8 @@ import javax.inject.Singleton
     QuakesNZModule::class,
     ServicesModule::class
 ])
-internal interface QuakesNZComponent : AndroidInjector<QuakesNZApplication> {
+interface QuakesNZComponent : AndroidInjector<QuakesNZApplication> {
 
-    @Component.Builder
-    abstract class Builder : AndroidInjector.Builder<QuakesNZApplication>()
+    @Component.Factory
+    interface Factory : AndroidInjector.Factory<QuakesNZApplication>
 }

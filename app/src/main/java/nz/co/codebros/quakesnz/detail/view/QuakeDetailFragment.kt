@@ -57,7 +57,7 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
                                     .toLowerCase(),
                             properties.magnitude,
                             properties.locality,
-                            properties.publicId
+                            properties.publicID
                     ))
                     .setType("text/plain"))
         }

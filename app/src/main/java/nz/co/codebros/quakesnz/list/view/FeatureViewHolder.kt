@@ -37,7 +37,7 @@ class FeatureViewHolder(
             }
 
             magnitudeSmallTextView.apply {
-                text = ".${magnitude[1]}"
+                text = "." + magnitude[1]
                 setTextColor(colorForIntensity)
             }
 
@@ -62,6 +62,6 @@ class FeatureViewHolder(
             override val itemViewType: Int = -1
     ) : RecyclableViewHolder.Properties {
         override val itemId: String
-            get() = feature.properties.publicId
+            get() = feature.properties.publicID
     }
 }
