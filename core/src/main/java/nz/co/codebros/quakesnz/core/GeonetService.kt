@@ -6,9 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-/**
- * Created by leandro on 9/07/15.
- */
 interface GeonetService {
 
     @GET("quake/{publicID}")

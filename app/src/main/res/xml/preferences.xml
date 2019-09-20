@@ -7,5 +7,5 @@
         android:entryValues="@array/intensity_values"
         android:key="pref_intensity"
         android:summary="@string/intensity_pref_summary"
-        android:title="@string/intensity"/>
+        android:title="@string/intensity" />
 </PreferenceScreen>

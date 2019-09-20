@@ -1,1 +1,1 @@
-include ':buildSrc', ':app', ':core', ':cycler', ':dagger-lifecycle'
+include ':app', ':core'

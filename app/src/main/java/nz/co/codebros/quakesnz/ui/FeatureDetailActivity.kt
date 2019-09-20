@@ -3,35 +3,36 @@ package nz.co.codebros.quakesnz.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.NavUtils
-import android.support.v4.app.TaskStackBuilder
 import android.view.MenuItem
-import ar.soflete.daggerlifecycle.DaggerViewModel
-import ar.soflete.daggerlifecycle.appcompat.DaggerViewModelActivity
-import dagger.Binds
+import androidx.core.app.NavUtils
+import androidx.core.app.TaskStackBuilder
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModelProvider
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.Feature
-import nz.co.codebros.quakesnz.detail.QuakeDetailEvent
-import nz.co.codebros.quakesnz.detail.QuakeDetailFragment
-import nz.co.codebros.quakesnz.detail.QuakeDetailModel
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractor
-import nz.co.codebros.quakesnz.interactor.LoadFeatureInteractorImpl
-import nz.co.codebros.quakesnz.interactor.Result
-import nz.co.codebros.quakesnz.map.QuakeMapFragment
+import nz.co.codebros.quakesnz.core.usecase.Result
+import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
+import nz.co.codebros.quakesnz.detail.model.QuakeDetailModel
+import nz.co.codebros.quakesnz.detail.view.QuakeDetailFragment
+import nz.co.codebros.quakesnz.map.model.QuakeMapState
+import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
+import nz.co.vilemob.daggerviewmodel.DaggerViewModel
+import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
 import javax.inject.Inject
 
 class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
 
-    override val viewModelClass: Class<ViewModel>
-        get() = ViewModel::class.java
+    private lateinit var viewModel: ViewModel
 
-    private lateinit var viewModel: FeatureDetailActivity.ViewModel
+    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
+            viewModelProvider.get(ViewModel::class.java)
 
-    override fun onBindViewModel(viewModel: ViewModel) {
-        super.onBindViewModel(viewModel)
+    override fun onViewModelCreated(viewModel: ViewModel) {
+        super.onViewModelCreated(viewModel)
         this.viewModel = viewModel
+        intent.handle()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,15 +43,19 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
                 supportFragmentManager.beginTransaction()
                         .add(android.R.id.content, QuakeDetailFragment())
                         .commit()
-
-                intent.let {
-                    when {
-                        it.data != null -> viewModel.loadFeature(it.data.lastPathSegment)
-                        else -> viewModel.loadFeature(it.getParcelableExtra<Feature>(EXTRA_FEATURE))
-                    }
-                }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.handle()
+        setIntent(intent)
+    }
+
+    private fun Intent.handle() {
+        feature?.let { viewModel.onFeatureLoaded(it) }
+        data?.lastPathSegment?.let { viewModel.onLoadFeature(it) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
@@ -69,25 +74,22 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         else -> super.onOptionsItemSelected(item)
     }
 
-
-    companion object {
-        private const val EXTRA_FEATURE = "extra_feature"
-        fun newIntent(
-                context: Context,
-                feature: Feature
-        ): Intent = Intent(context, FeatureDetailActivity::class.java)
-                .putExtra(EXTRA_FEATURE, feature)
-    }
-
     class ViewModel @Inject constructor(
             private val quakeDetailModel: QuakeDetailModel
     ) : DaggerViewModel() {
 
-        fun loadFeature(feature: Feature) {
+        private val disposable = quakeDetailModel.subscribe()
+
+        override fun onCleared() {
+            super.onCleared()
+            disposable.dispose()
+        }
+
+        fun onFeatureLoaded(feature: Feature) {
             quakeDetailModel.publish(QuakeDetailEvent.LoadQuakeComplete(Result.Success(feature)))
         }
 
-        fun loadFeature(publicId: String) {
+        fun onLoadFeature(publicId: String) {
             quakeDetailModel.publish(QuakeDetailEvent.LoadQuake(publicId))
         }
     }
@@ -100,21 +102,32 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         @ContributesAndroidInjector
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
-        @Binds
-        internal abstract fun loadFeatureInteractor(
-                loadFeatureInteractorImpl: LoadFeatureInteractorImpl
-        ): LoadFeatureInteractor
-
         @dagger.Module
         internal companion object {
 
             @JvmStatic
             @Provides
-            fun featureObservable(
+            fun quakeMapState(
                     quakeDetailModel: QuakeDetailModel
-            ): Observable<Feature> = quakeDetailModel.stateObservable
-                    .filter { it.feature != null }
-                    .map { it.feature }
+            ): LiveData<QuakeMapState> = Transformations.map(quakeDetailModel.state) {
+                QuakeMapState(it.feature?.geometry?.coordinates)
+            }
         }
+    }
+
+    companion object {
+        private const val EXTRA_FEATURE = "extra_feature"
+
+        private var Intent.feature: Feature?
+            set(value) {
+                putExtra(EXTRA_FEATURE, value)
+            }
+            get() = getParcelableExtra(EXTRA_FEATURE)
+
+        fun newIntent(
+                context: Context,
+                feature: Feature
+        ): Intent = Intent(context, FeatureDetailActivity::class.java)
+                .apply { this.feature = feature }
     }
 }

@@ -1,24 +1,20 @@
 package nz.co.codebros.quakesnz.core
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import nz.co.codebros.quakesnz.core.data.Coordinates
-import nz.co.codebros.quakesnz.core.data.CoordinatesTypeAdapter
+import nz.co.codebros.quakesnz.core.moshi.CoordinatesTypeAdapter
+import nz.co.codebros.quakesnz.core.moshi.DateTypeAdapter
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
 
-/**
- * Created by leandro on 22/07/16.
- */
 @Module
 object ServicesModule {
 
@@ -40,18 +36,18 @@ object ServicesModule {
 
     @JvmStatic
     @Provides
-    internal fun gson() = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
-            .registerTypeAdapter(Coordinates::class.java, CoordinatesTypeAdapter())
-            .create()
+    internal fun moshi() = Moshi.Builder()
+            .add(DateTypeAdapter("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
+            .add(CoordinatesTypeAdapter())
+            .build()
 
     @JvmStatic
     @Provides
-    internal fun retrofit(client: OkHttpClient, gson: Gson) = Retrofit.Builder()
-            .baseUrl("http://api.geonet.org.nz/")
+    internal fun retrofit(client: OkHttpClient, moshi: Moshi) = Retrofit.Builder()
+            .baseUrl("https://api.geonet.org.nz/")
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
     @JvmStatic
