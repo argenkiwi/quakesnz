@@ -2,8 +2,7 @@ package nz.co.codebros.quakesnz
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.google.android.gms.analytics.GoogleAnalytics
-import com.google.android.gms.analytics.Tracker
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
@@ -36,13 +35,11 @@ internal abstract class QuakesNZModule {
         @JvmStatic
         @Provides
         fun sharedPreferences(application: QuakesNZApplication): SharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(application)
+            PreferenceManager.getDefaultSharedPreferences(application)
 
         @JvmStatic
         @Provides
         @Singleton
-        @Named("app")
-        fun tracker(application: QuakesNZApplication): Tracker =
-                GoogleAnalytics.getInstance(application).newTracker(R.xml.app_tracker)
+        fun tracker(application: QuakesNZApplication) = FirebaseAnalytics.getInstance(application)
     }
 }

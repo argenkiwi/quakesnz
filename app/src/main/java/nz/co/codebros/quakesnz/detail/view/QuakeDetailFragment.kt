@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.fragment_quake_detail.*
 import kotlinx.android.synthetic.main.item_summary.*
 import nz.co.codebros.quakesnz.R
@@ -49,7 +51,16 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
         timeTextView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
         colorTabView.setBackgroundColor(colorForIntensity)
 
+        // FIXME Handle this as an event.
         shareFloatingActionButton.setOnClickListener {
+            FirebaseAnalytics.getInstance(requireContext()).logEvent(
+                FirebaseAnalytics.Event.SHARE,
+                bundleOf(
+                    FirebaseAnalytics.Param.CONTENT_TYPE to "quake",
+                    FirebaseAnalytics.Param.ITEM_ID to feature.properties.publicID
+                )
+            )
+
             startActivity(Intent()
                     .setAction(Intent.ACTION_SEND)
                     .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
