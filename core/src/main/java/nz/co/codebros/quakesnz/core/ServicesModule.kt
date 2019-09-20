@@ -44,7 +44,7 @@ object ServicesModule {
     @JvmStatic
     @Provides
     internal fun retrofit(client: OkHttpClient, moshi: Moshi) = Retrofit.Builder()
-            .baseUrl("http://api.geonet.org.nz/")
+            .baseUrl("https://api.geonet.org.nz/")
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
