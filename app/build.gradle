@@ -12,8 +12,8 @@ android {
         applicationId "nz.co.codebros.quakesnz"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 22
-        versionName "2.6.4"
+        versionCode 23
+        versionName "2.6.5"
     }
 
     signingConfigs {
@@ -51,6 +51,15 @@ android {
 
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
