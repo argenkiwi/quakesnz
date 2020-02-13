@@ -2,7 +2,7 @@ package nz.co.codebros.quakesnz.map.view
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -24,9 +24,9 @@ class QuakeMapFragment : SupportMapFragment() {
         super.onActivityCreated(bundle)
         AndroidSupportInjection.inject(this)
 
-        ViewModelProviders.of(this, viewModelFactory)
+        ViewModelProvider(this, viewModelFactory)
                 .get(QuakeMapViewModel::class.java)
-                .quakeMapState.observe(this, Observer {
+                .quakeMapState.observe(viewLifecycleOwner, Observer {
             it?.apply {
                 when (coordinates) {
                     null -> {
@@ -34,15 +34,15 @@ class QuakeMapFragment : SupportMapFragment() {
                         marker = null
                     }
                     else -> coordinates.run { LatLng(latitude, longitude) }.let { latLng ->
-                        getMapAsync {
+                        getMapAsync { googleMap ->
                             when (marker) {
                                 null -> {
-                                    marker = it.addMarker(MarkerOptions().position(latLng))
-                                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 6f))
+                                    marker = googleMap.addMarker(MarkerOptions().position(latLng))
+                                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 6f))
                                 }
                                 else -> {
                                     marker?.position = latLng
-                                    it.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
                                 }
                             }
                         }

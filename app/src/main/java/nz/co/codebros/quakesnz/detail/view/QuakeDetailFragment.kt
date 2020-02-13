@@ -65,7 +65,7 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
                     .setAction(Intent.ACTION_SEND)
                     .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
                             QuakesUtils.getIntensity(context!!, properties.mmi)
-                                    .toLowerCase(),
+                                    .toLowerCase(Locale.getDefault()),
                             properties.magnitude,
                             properties.locality,
                             properties.publicID
