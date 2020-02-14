@@ -23,13 +23,11 @@ android {
         release {
             storeFile file("codebros.jks")
             keyAlias "quakesnz"
-            File propsFile = file("secure.properties")
-            if (propsFile.exists()) {
-                Properties props = new Properties()
-                props.load(new FileInputStream(propsFile))
-                storePassword props.getProperty('key.store.password')
-                keyPassword props.getProperty('key.alias.password')
-            }
+
+            def props = new Properties()
+            project.rootProject.file("local.properties").withInputStream { props.load(it) }
+            storePassword props.getProperty('key.store.password')
+            keyPassword props.getProperty('key.alias.password')
         }
     }
 
