@@ -11,11 +11,11 @@ import javax.inject.Singleton
 @Component(modules = [
     AndroidInjectionModule::class,
     AndroidSupportInjectionModule::class,
-    QuakesNZModule::class,
+    AppModule::class,
     ServicesModule::class
 ])
-interface QuakesNZComponent : AndroidInjector<QuakesNZApplication> {
+interface AppComponent : AndroidInjector<QuakesNZ> {
 
     @Component.Factory
-    interface Factory : AndroidInjector.Factory<QuakesNZApplication>
+    interface Factory : AndroidInjector.Factory<QuakesNZ>
 }

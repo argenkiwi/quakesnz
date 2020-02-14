@@ -14,7 +14,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-internal abstract class QuakesNZModule {
+internal abstract class AppModule {
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [FeatureListActivity.Module::class])
@@ -30,16 +30,16 @@ internal abstract class QuakesNZModule {
         @JvmStatic
         @Provides
         @Named("cacheDir")
-        fun cacheDir(application: QuakesNZApplication): File = application.cacheDir
+        fun cacheDir(application: QuakesNZ): File = application.cacheDir
 
         @JvmStatic
         @Provides
-        fun sharedPreferences(application: QuakesNZApplication): SharedPreferences =
+        fun sharedPreferences(application: QuakesNZ): SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(application)
 
         @JvmStatic
         @Provides
         @Singleton
-        fun tracker(application: QuakesNZApplication) = FirebaseAnalytics.getInstance(application)
+        fun tracker(application: QuakesNZ) = FirebaseAnalytics.getInstance(application)
     }
 }
