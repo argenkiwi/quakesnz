@@ -58,7 +58,7 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         data?.lastPathSegment?.let { viewModel.onLoadFeature(it) }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> {
             NavUtils.getParentActivityIntent(this)?.let {
                 when {
