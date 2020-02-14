@@ -18,32 +18,23 @@ import javax.inject.Singleton
 @Module
 object ServicesModule {
 
-    @JvmStatic
-    @Provides
-    internal fun httpLoggingInterceptor() = HttpLoggingInterceptor()
-            .setLevel(HttpLoggingInterceptor.Level.BASIC)
+    private val httpLoggingInterceptor
+        get() = HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BASIC)
 
-    @JvmStatic
-    @Provides
-    internal fun okHttpClient(
-            @Named("cacheDir") cacheDir: File,
-            interceptor: HttpLoggingInterceptor
-    ) = OkHttpClient()
+    private val moshi
+        get() = Moshi.Builder()
+                .add(DateTypeAdapter("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
+                .add(CoordinatesTypeAdapter())
+                .build()
+
+    private fun okHttpClient(cacheDir: File) = OkHttpClient()
             .newBuilder()
             .cache(Cache(cacheDir, (2 * 1024 * 1024).toLong())) // 2Mb
-            .addInterceptor(interceptor)
+            .addInterceptor(httpLoggingInterceptor)
             .build()
 
-    @JvmStatic
-    @Provides
-    internal fun moshi() = Moshi.Builder()
-            .add(DateTypeAdapter("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
-            .add(CoordinatesTypeAdapter())
-            .build()
-
-    @JvmStatic
-    @Provides
-    internal fun retrofit(client: OkHttpClient, moshi: Moshi) = Retrofit.Builder()
+    private fun retrofit(client: OkHttpClient) = Retrofit.Builder()
             .baseUrl("https://api.geonet.org.nz/")
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -53,5 +44,7 @@ object ServicesModule {
     @JvmStatic
     @Provides
     @Singleton
-    internal fun geonetService(retrofit: Retrofit) = retrofit.create(GeonetService::class.java)
+    internal fun geonetService(
+            @Named("cacheDir") cacheDir: File
+    ) = retrofit(okHttpClient(cacheDir)).create(GeonetService::class.java)
 }
