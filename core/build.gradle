@@ -40,16 +40,21 @@ ext {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61'
-    implementation 'com.google.dagger:dagger:2.26'
-    kapt 'com.google.dagger:dagger-compiler:2.26'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.17'
+    implementation Dependencies.kotlinStdlibJdk7
+    implementation Dependencies.dagger
+    kapt Dependencies.daggerCompiler
+    implementation Dependencies.rxjava
+
+    def versionsMoshi = "1.9.2"
+    implementation "com.squareup.moshi:moshi:$versionsMoshi"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$versionsMoshi"
+
+    def versionsRetrofit = "2.7.1"
+    implementation "com.squareup.retrofit2:retrofit:$versionsRetrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versionsRetrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$versionsRetrofit"
+
     implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.7.1'
-    implementation('com.squareup.moshi:moshi:1.9.2')
-    kapt('com.squareup.moshi:moshi-kotlin-codegen:1.9.2')
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.1'
 }
 
 repositories {
