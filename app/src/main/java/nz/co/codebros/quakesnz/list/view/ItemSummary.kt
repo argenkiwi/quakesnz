@@ -2,16 +2,16 @@ package nz.co.codebros.quakesnz.list.view
 
 import android.text.format.DateUtils
 import android.view.View
+import androidx.cardview.widget.CardView
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
 import nz.co.codebros.quakesnz.util.QuakesUtils
-import nz.co.codebros.quakesnz.util.RecyclableViewHolder
 import java.util.Locale
 
 data class ItemSummaryProperties(
     val feature: Feature,
-    val selected: Boolean
+    val selected: Boolean = false
 )
 
 fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: (view: View, feature: Feature) -> Unit) {
@@ -36,7 +36,6 @@ fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: (view: 
             setTextColor(colorForIntensity)
         }
 
-
         intensityTextView.text = QuakesUtils.getIntensity(intensityTextView.context, properties.mmi)
         locationTextView.text = properties.locality
         depthTextView.text = depthTextView.resources.getString(R.string.depth, properties.depth)
@@ -44,7 +43,7 @@ fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: (view: 
         colorTabView.setBackgroundColor(colorForIntensity)
 
 
-        with(root as androidx.cardview.widget.CardView) {
+        with(root as CardView) {
             cardElevation = when {
                 selected -> 8.0f
                 else -> 2.0f
