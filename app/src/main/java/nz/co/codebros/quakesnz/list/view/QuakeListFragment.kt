@@ -21,9 +21,9 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_quakes, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
     }
 
     override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
-            viewModelProvider[QuakeListViewModel::class.java]
+        viewModelProvider[QuakeListViewModel::class.java]
 
     override fun onViewModelCreated(viewModel: QuakeListViewModel) {
         swipeRefreshLayout.setOnRefreshListener { viewModel.refreshQuakes() }
@@ -49,9 +49,9 @@ class QuakeListFragment : ViewModelFragment<QuakeListViewModel>() {
             it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.map { feature ->
-                    FeatureViewHolder.Properties(
-                            feature,
-                            feature == selectedFeature
+                    ItemSummaryProperties(
+                        feature,
+                        feature == selectedFeature
                     )
                 }?.let { propertiesList ->
                     featureAdapter.submitList(propertiesList)

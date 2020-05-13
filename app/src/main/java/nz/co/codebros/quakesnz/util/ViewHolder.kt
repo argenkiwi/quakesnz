@@ -1,7 +1,7 @@
 package nz.co.codebros.quakesnz.util
 
-import kotlinx.android.extensions.LayoutContainer
+import androidx.viewbinding.ViewBinding
 
-interface ViewHolder<T> : LayoutContainer {
-    fun bind(props: T)
-}
+class ViewHolder(
+    val viewBinding: ViewBinding
+)
