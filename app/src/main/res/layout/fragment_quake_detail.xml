@@ -28,6 +28,7 @@
         </androidx.cardview.widget.CardView>
 
         <include
+            android:id="@+id/item_summary"
             layout="@layout/item_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

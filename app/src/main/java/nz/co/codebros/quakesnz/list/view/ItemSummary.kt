@@ -7,12 +7,11 @@ import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
 import nz.co.codebros.quakesnz.util.QuakesUtils
-import nz.co.codebros.quakesnz.util.RecyclableViewHolder
 import java.util.Locale
 
 data class ItemSummaryProperties(
     val feature: Feature,
-    val selected: Boolean
+    val selected: Boolean = false
 )
 
 fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: (view: View, feature: Feature) -> Unit) {

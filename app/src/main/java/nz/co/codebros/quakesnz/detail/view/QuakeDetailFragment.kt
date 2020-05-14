@@ -1,34 +1,41 @@
 package nz.co.codebros.quakesnz.detail.view
 
-import androidx.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.fragment_quake_detail.*
-import kotlinx.android.synthetic.main.item_summary.*
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
 import nz.co.codebros.quakesnz.detail.QuakeDetailViewModel
+import nz.co.codebros.quakesnz.list.view.ItemSummaryProperties
+import nz.co.codebros.quakesnz.list.view.bind
 import nz.co.codebros.quakesnz.util.QuakesUtils
 import nz.co.vilemob.daggerviewmodel.ViewModelFragment
-import java.util.*
+import java.util.Locale
 
 class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDetailView {
 
+    private lateinit var itemSummaryViewBinding: ItemSummaryBinding
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_quake_detail, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        this.itemSummaryViewBinding = ItemSummaryBinding.bind(view.findViewById(R.id.item_summary))
+    }
+
     override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
-            viewModelProvider.get(QuakeDetailViewModel::class.java)
+        viewModelProvider.get(QuakeDetailViewModel::class.java)
 
     override fun onViewModelCreated(viewModel: QuakeDetailViewModel) {
         viewModel.quakeDetailModel.state.observe(this, QuakeDetailStatePresenter(this))
@@ -36,41 +43,25 @@ class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDeta
     }
 
     override fun updateFeature(feature: Feature) {
-        val properties = feature.properties
-        val colorForIntensity = QuakesUtils.getColor(context!!, properties.mmi)
-        val magnitude = String.format(Locale.ENGLISH, "%1$.1f", properties.magnitude)
-                .split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-        magnitudeBigTextView.text = magnitude[0]
-        magnitudeBigTextView.setTextColor(colorForIntensity)
-        magnitudeSmallTextView.text = ".${magnitude[1]}"
-        magnitudeSmallTextView.setTextColor(colorForIntensity)
-        intensityTextView.text = QuakesUtils.getIntensity(context!!, properties.mmi)
-        locationTextView.text = properties.locality
-        depthTextView.text = getString(R.string.depth, properties.depth)
-        timeTextView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
-        colorTabView.setBackgroundColor(colorForIntensity)
-
-        // FIXME Handle this as an event.
-        shareFloatingActionButton.setOnClickListener {
-            FirebaseAnalytics.getInstance(requireContext()).logEvent(
-                FirebaseAnalytics.Event.SHARE,
-                bundleOf(
-                    FirebaseAnalytics.Param.CONTENT_TYPE to "quake",
-                    FirebaseAnalytics.Param.ITEM_ID to feature.properties.publicID
+        itemSummaryViewBinding.bind(ItemSummaryProperties(feature)) { v, f ->
+            with(f.properties) {
+                FirebaseAnalytics.getInstance(v.context).logEvent(
+                    FirebaseAnalytics.Event.SHARE,
+                    bundleOf(
+                        FirebaseAnalytics.Param.CONTENT_TYPE to "quake",
+                        FirebaseAnalytics.Param.ITEM_ID to publicID
+                    )
                 )
-            )
 
-            startActivity(Intent()
-                    .setAction(Intent.ACTION_SEND)
-                    .putExtra(Intent.EXTRA_TEXT, getString(R.string.default_share_content,
-                            QuakesUtils.getIntensity(context!!, properties.mmi)
-                                    .toLowerCase(Locale.getDefault()),
-                            properties.magnitude,
-                            properties.locality,
-                            properties.publicID
-                    ))
-                    .setType("text/plain"))
+                startActivity(
+                    Intent().setAction(Intent.ACTION_SEND).putExtra(
+                        Intent.EXTRA_TEXT, getString(
+                            R.string.default_share_content, QuakesUtils.getIntensity(v.context, mmi)
+                                .toLowerCase(Locale.getDefault()), magnitude, locality, publicID
+                        )
+                    ).setType("text/plain")
+                )
+            }
         }
     }
 

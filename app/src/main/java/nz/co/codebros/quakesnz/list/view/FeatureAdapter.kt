@@ -7,21 +7,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
-import nz.co.codebros.quakesnz.util.RecyclableViewHolder
 import nz.co.codebros.quakesnz.util.ViewHolder
 
 class FeatureAdapter(
     private val onItemClicked: (view: View, feature: Feature) -> Unit
-) : ListAdapter<ItemSummaryProperties, RecyclableViewHolder>(DiffCallback) {
+) : ListAdapter<ItemSummaryProperties, ViewHolder<ItemSummaryBinding>>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclableViewHolder {
-        return RecyclableViewHolder(ViewHolder(ItemSummaryBinding.inflate(LayoutInflater.from(parent.context), parent, false)))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<ItemSummaryBinding> =
+        ViewHolder(ItemSummaryBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: RecyclableViewHolder, position: Int) {
-        when (val viewBinding = holder.viewHolder.viewBinding) {
-            is ItemSummaryBinding -> viewBinding.bind(getItem(position), onItemClicked)
-        }
+    override fun onBindViewHolder(holder: ViewHolder<ItemSummaryBinding>, position: Int) {
+        holder.viewBinding.bind(getItem(position), onItemClicked);
     }
 
     object DiffCallback : DiffUtil.ItemCallback<ItemSummaryProperties>() {
