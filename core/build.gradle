@@ -4,12 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.1'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.1'
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
@@ -45,16 +45,16 @@ dependencies {
     kapt Dependencies.daggerCompiler
     implementation Dependencies.rxjava
 
-    def versionsMoshi = "1.9.2"
+    def versionsMoshi = '1.9.3'
     implementation "com.squareup.moshi:moshi:$versionsMoshi"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$versionsMoshi"
 
-    def versionsRetrofit = "2.7.1"
+    def versionsRetrofit = '2.9.0'
     implementation "com.squareup.retrofit2:retrofit:$versionsRetrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$versionsRetrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$versionsRetrofit"
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
 }
 
 repositories {
