@@ -42,7 +42,7 @@ fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: (view: 
         timeTextView.text = DateUtils.getRelativeTimeSpanString(properties.time.time)
         colorTabView.setBackgroundColor(colorForIntensity)
 
-        with(root as CardView) {
+        with(root) {
             cardElevation = when {
                 selected -> 8.0f
                 else -> 2.0f
