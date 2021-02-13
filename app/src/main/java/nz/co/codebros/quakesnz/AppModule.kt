@@ -24,20 +24,16 @@ internal abstract class AppModule {
     @ContributesAndroidInjector(modules = [FeatureDetailActivity.Module::class])
     internal abstract fun featureDetailActivity(): FeatureDetailActivity
 
-    @Module
     companion object {
 
-        @JvmStatic
         @Provides
         @Named("cacheDir")
         fun cacheDir(application: QuakesNZ): File = application.cacheDir
 
-        @JvmStatic
         @Provides
         fun sharedPreferences(application: QuakesNZ): SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(application)
 
-        @JvmStatic
         @Provides
         @Singleton
         fun tracker(application: QuakesNZ) = FirebaseAnalytics.getInstance(application)

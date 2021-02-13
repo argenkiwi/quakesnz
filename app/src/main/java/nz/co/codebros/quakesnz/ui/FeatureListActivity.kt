@@ -87,6 +87,7 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivity.ViewMode
 
     @dagger.Module
     abstract class Module {
+
         @FragmentScope
         @ContributesAndroidInjector
         internal abstract fun quakeListFragment(): QuakeListFragment
@@ -95,10 +96,8 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivity.ViewMode
         @ContributesAndroidInjector
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
-        @dagger.Module
         companion object {
 
-            @JvmStatic
             @Provides
             fun quakeMapState(
                     quakeListModel: QuakeListModel
