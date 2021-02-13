@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '30.0.1'
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         minSdkVersion 21
@@ -54,7 +54,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$versionsRetrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$versionsRetrofit"
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 }
 
 repositories {
