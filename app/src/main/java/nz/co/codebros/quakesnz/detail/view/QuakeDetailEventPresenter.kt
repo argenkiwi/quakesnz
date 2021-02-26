@@ -7,6 +7,7 @@ import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
 class QuakeDetailEventPresenter(
         private val view: QuakeDetailView
 ) : Observer<QuakeDetailEvent> {
+
     override fun onChanged(t: QuakeDetailEvent?) {
         when (t) {
             is QuakeDetailEvent.LoadQuakeError -> view.showLoadingError()

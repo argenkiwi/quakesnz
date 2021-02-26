@@ -38,6 +38,18 @@ class QuakeListModel @Inject constructor(
                                     }
                                 }
                             },
+                    eventObservable
+                            .ofType<QuakeListEvent.RefreshQuakes>()
+                            .map {
+                                runBlocking {
+                                    try {
+                                        loadFeaturesUseCase.execute(true)
+                                                .let { QuakeListEvent.QuakesLoaded(it.features) }
+                                    } catch (t: Throwable) {
+                                        QuakeListEvent.LoadQuakesError(t)
+                                    }
+                                }
+                            },
                     sharedPreferences.changes()
                             .filter { it == "pref_intensity" }
                             .map { QuakeListEvent.RefreshQuakes }
