@@ -12,5 +12,8 @@ interface GeonetService {
     fun getQuake(@Path("publicID") publicID: String): Observable<FeatureCollection>
 
     @GET("quake")
-    fun getQuakes(@Query("MMI") mmi: Int): Observable<FeatureCollection>
+    fun getQuakesRx(@Query("MMI") mmi: Int): Observable<FeatureCollection>
+
+    @GET("quake")
+    suspend fun getQuakes(@Query("MMI") mmi: Int): FeatureCollection
 }

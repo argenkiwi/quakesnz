@@ -1,5 +1,7 @@
 package nz.co.codebros.quakesnz.core
 
+import com.dropbox.android.external.store4.Fetcher
+import com.dropbox.android.external.store4.StoreBuilder
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -47,4 +49,11 @@ object ServicesModule {
     internal fun geonetService(
             @Named("cacheDir") cacheDir: File
     ) = retrofit(okHttpClient(cacheDir)).create(GeonetService::class.java)
+
+    @JvmStatic
+    @Provides
+    @Singleton
+    internal fun featuresStore(service: GeonetService) = StoreBuilder.from(
+            Fetcher.of { mmi: Int -> service.getQuakes(mmi) }
+    ).build()
 }

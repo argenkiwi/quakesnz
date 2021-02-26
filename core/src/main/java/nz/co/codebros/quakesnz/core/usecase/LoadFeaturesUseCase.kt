@@ -1,17 +1,17 @@
 package nz.co.codebros.quakesnz.core.usecase
 
 import android.content.SharedPreferences
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
-import nz.co.codebros.quakesnz.core.GeonetService
+import com.dropbox.android.external.store4.Store
+import com.dropbox.android.external.store4.fresh
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import javax.inject.Inject
 
 class LoadFeaturesUseCase @Inject constructor(
-        private val service: GeonetService,
-        private val sharedPreferences: SharedPreferences
+        private val sharedPreferences: SharedPreferences,
+        private val store: Store<Int, FeatureCollection>
 ) {
-    fun execute(): Observable<FeatureCollection> = service
-            .getQuakes((sharedPreferences.getString("pref_intensity", null) ?: "3").toInt())
-            .subscribeOn(Schedulers.io())
+    suspend fun execute(): FeatureCollection {
+        val mmi = sharedPreferences.getString("pref_intensity", null)?.toInt() ?: 3
+        return store.fresh(mmi)
+    }
 }
