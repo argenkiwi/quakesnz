@@ -1,4 +1,4 @@
-package nz.co.codebros.quakesnz.core
+package nz.co.codebros.quakesnz.core.service
 
 import io.reactivex.Observable
 import nz.co.codebros.quakesnz.core.data.FeatureCollection

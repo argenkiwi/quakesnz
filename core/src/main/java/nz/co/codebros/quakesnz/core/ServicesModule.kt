@@ -3,8 +3,11 @@ package nz.co.codebros.quakesnz.core
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import nz.co.codebros.quakesnz.core.moshi.CoordinatesTypeAdapter
 import nz.co.codebros.quakesnz.core.moshi.DateTypeAdapter
+import nz.co.codebros.quakesnz.core.service.GeonetService
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,6 +19,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 object ServicesModule {
 
     private val httpLoggingInterceptor
@@ -41,7 +45,6 @@ object ServicesModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
-    @JvmStatic
     @Provides
     @Singleton
     internal fun geonetService(

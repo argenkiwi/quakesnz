@@ -1,9 +1,7 @@
 package nz.co.codebros.quakesnz
 
-import dagger.android.AndroidInjector
-import dagger.android.support.DaggerApplication
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class QuakesNZ : DaggerApplication() {
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
-            DaggerAppComponent.factory().create(this)
-}
+@HiltAndroidApp
+class QuakesNZ : Application()

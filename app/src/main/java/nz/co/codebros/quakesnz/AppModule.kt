@@ -1,41 +1,32 @@
 package nz.co.codebros.quakesnz
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
-import nz.co.codebros.quakesnz.scope.ActivityScope
-import nz.co.codebros.quakesnz.ui.FeatureDetailActivity
-import nz.co.codebros.quakesnz.ui.FeatureListActivity
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-internal abstract class AppModule {
+@InstallIn(SingletonComponent::class)
+object AppModule {
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [FeatureListActivity.Module::class])
-    internal abstract fun featureListActivity(): FeatureListActivity
+    @Provides
+    @Named("cacheDir")
+    fun cacheDir(@ApplicationContext context: Context): File = context.cacheDir
 
-    @ActivityScope
-    @ContributesAndroidInjector(modules = [FeatureDetailActivity.Module::class])
-    internal abstract fun featureDetailActivity(): FeatureDetailActivity
+    @Provides
+    fun sharedPreferences(
+            @ApplicationContext context: Context
+    ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-    companion object {
-
-        @Provides
-        @Named("cacheDir")
-        fun cacheDir(application: QuakesNZ): File = application.cacheDir
-
-        @Provides
-        fun sharedPreferences(application: QuakesNZ): SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(application)
-
-        @Provides
-        @Singleton
-        fun tracker(application: QuakesNZ) = FirebaseAnalytics.getInstance(application)
-    }
+    @Provides
+    @Singleton
+    fun tracker(@ApplicationContext context: Context) = FirebaseAnalytics.getInstance(context)
 }

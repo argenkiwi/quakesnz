@@ -3,7 +3,7 @@ package nz.co.codebros.quakesnz.core.usecase
 import android.content.SharedPreferences
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import nz.co.codebros.quakesnz.core.GeonetService
+import nz.co.codebros.quakesnz.core.service.GeonetService
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import javax.inject.Inject
 
