@@ -4,7 +4,7 @@ import nz.co.vilemob.rxmodel.Reducer
 
 object QuakeListReducer : Reducer<QuakeListState, QuakeListEvent> {
     override fun apply(state: QuakeListState, event: QuakeListEvent) = when (event) {
-        is QuakeListEvent.LoadQuakes -> state.copy(isLoading = true)
+        QuakeListEvent.LoadQuakes -> state.copy(isLoading = true)
         is QuakeListEvent.LoadQuakesError -> state.copy(isLoading = false)
         is QuakeListEvent.QuakesLoaded -> state.run {
             copy(isLoading = false, features = event.features, selectedFeature = when {
@@ -13,5 +13,6 @@ object QuakeListReducer : Reducer<QuakeListState, QuakeListEvent> {
             })
         }
         is QuakeListEvent.SelectQuake -> state.copy(selectedFeature = event.feature)
+        else -> state
     }
 }
