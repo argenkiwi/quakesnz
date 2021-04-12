@@ -43,7 +43,13 @@ class QuakeListFragment : Fragment() {
             adapter = featureAdapter
         }
 
-        viewModel.quakeListModel.state.observe(viewLifecycleOwner) {
+        viewModel.liveEvent.observe(viewLifecycleOwner) {
+            if (it is QuakeListEvent.LoadQuakesError) {
+                Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.liveState.observe(viewLifecycleOwner) {
             it?.apply {
                 swipeRefreshLayout.isRefreshing = isLoading
                 features?.map { feature ->
@@ -54,12 +60,6 @@ class QuakeListFragment : Fragment() {
                 }?.let { propertiesList ->
                     featureAdapter.submitList(propertiesList)
                 }
-            }
-        }
-
-        viewModel.quakeListModel.events.observe(viewLifecycleOwner) {
-            if (it is QuakeListEvent.LoadQuakesError) {
-                Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
             }
         }
     }

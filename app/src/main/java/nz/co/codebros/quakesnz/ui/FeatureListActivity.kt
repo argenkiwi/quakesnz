@@ -1,23 +1,32 @@
 package nz.co.codebros.quakesnz.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.toLiveData
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.processors.PublishProcessor
+import io.reactivex.rxkotlin.plusAssign
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.about.AboutActivity
+import nz.co.codebros.quakesnz.core.extension.mapNotNull
 import nz.co.codebros.quakesnz.list.model.QuakeListEvent
-import nz.co.codebros.quakesnz.list.model.QuakeListModel
+import nz.co.codebros.quakesnz.list.model.QuakeListState
+import nz.co.codebros.quakesnz.map.model.QuakeMapEvent
+import nz.co.codebros.quakesnz.map.model.QuakeMapModel
 import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
 import nz.co.codebros.quakesnz.settings.SettingsActivity
-import nz.co.codebros.quakesnz.util.toLiveData
+import nz.co.codebros.quakesnz.util.changes
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -71,9 +80,38 @@ class FeatureListActivity : AppCompatActivity() {
 
     @HiltViewModel
     class ViewModel @Inject constructor(
-            private val quakeListModel: QuakeListModel
+            private val events: PublishProcessor<QuakeListEvent>,
+            state: Flowable<QuakeListState>,
+            sharedPreferences: SharedPreferences,
+            quakeMapModel: QuakeMapModel
     ) : androidx.lifecycle.ViewModel() {
+
         val quakeListEvents
-            get() = quakeListModel.eventObservable.toLiveData(BackpressureStrategy.LATEST)
+            get() = events.toLiveData()
+
+        private val disposables = CompositeDisposable()
+
+        init {
+            disposables += sharedPreferences.changes()
+                    .filter { it == "pref_intensity" }
+                    .map { QuakeListEvent.RefreshQuakes }
+                    .subscribe(events::onNext)
+
+            disposables += state
+                    .mapNotNull { it.selectedFeature?.geometry?.coordinates }
+                    .distinct()
+                    .subscribe({
+                        quakeMapModel.publish(QuakeMapEvent.OnNewCoordinates(it))
+                    }, {
+                        Log.e(FeatureListActivity::class.simpleName, "Coordinates are null.", it)
+                    })
+
+            disposables += state.subscribe()
+        }
+
+        override fun onCleared() {
+            super.onCleared()
+            disposables.clear()
+        }
     }
 }

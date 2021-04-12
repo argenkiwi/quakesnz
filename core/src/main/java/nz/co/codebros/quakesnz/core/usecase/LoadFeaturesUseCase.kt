@@ -12,7 +12,7 @@ class LoadFeaturesUseCase @Inject constructor(
         private val sharedPreferences: SharedPreferences
 ) {
     fun execute(): Single<FeatureCollection> {
-        val mmi = sharedPreferences.getInt("pref_intensity", 3)
-        return service.getQuakes(mmi).subscribeOn(Schedulers.io())
+        val mmi = sharedPreferences.getString("pref_intensity", null) ?: "3"
+        return service.getQuakes(mmi.toInt()).subscribeOn(Schedulers.io())
     }
 }
