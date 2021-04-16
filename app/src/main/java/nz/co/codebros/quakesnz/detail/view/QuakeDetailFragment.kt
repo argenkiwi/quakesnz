@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.hilt.android.AndroidEntryPoint
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
@@ -16,50 +18,46 @@ import nz.co.codebros.quakesnz.detail.QuakeDetailViewModel
 import nz.co.codebros.quakesnz.list.view.ItemSummaryProperties
 import nz.co.codebros.quakesnz.list.view.bind
 import nz.co.codebros.quakesnz.util.QuakesUtils
-import nz.co.vilemob.daggerviewmodel.ViewModelFragment
-import java.util.Locale
+import java.util.*
 
-class QuakeDetailFragment : ViewModelFragment<QuakeDetailViewModel>(), QuakeDetailView {
+@AndroidEntryPoint
+class QuakeDetailFragment : Fragment(), QuakeDetailView {
 
     private lateinit var itemSummaryViewBinding: ItemSummaryBinding
+    private val viewModel: QuakeDetailViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_quake_detail, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.itemSummaryViewBinding = ItemSummaryBinding.bind(view.findViewById(R.id.item_summary))
-    }
 
-    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
-        viewModelProvider.get(QuakeDetailViewModel::class.java)
-
-    override fun onViewModelCreated(viewModel: QuakeDetailViewModel) {
-        viewModel.quakeDetailModel.state.observe(this, QuakeDetailStatePresenter(this))
-        viewModel.quakeDetailModel.events.observe(this, QuakeDetailEventPresenter(this))
+        viewModel.quakeDetailModel.state.observe(viewLifecycleOwner, QuakeDetailStatePresenter(this))
+        viewModel.quakeDetailModel.events.observe(viewLifecycleOwner, QuakeDetailEventPresenter(this))
     }
 
     override fun updateFeature(feature: Feature) {
         itemSummaryViewBinding.bind(ItemSummaryProperties(feature)) { v, f ->
             with(f.properties) {
                 FirebaseAnalytics.getInstance(v.context).logEvent(
-                    FirebaseAnalytics.Event.SHARE,
-                    bundleOf(
-                        FirebaseAnalytics.Param.CONTENT_TYPE to "quake",
-                        FirebaseAnalytics.Param.ITEM_ID to publicID
-                    )
+                        FirebaseAnalytics.Event.SHARE,
+                        bundleOf(
+                                FirebaseAnalytics.Param.CONTENT_TYPE to "quake",
+                                FirebaseAnalytics.Param.ITEM_ID to publicID
+                        )
                 )
 
                 startActivity(
-                    Intent().setAction(Intent.ACTION_SEND).putExtra(
-                        Intent.EXTRA_TEXT, getString(
-                            R.string.default_share_content, QuakesUtils.getIntensity(v.context, mmi)
+                        Intent().setAction(Intent.ACTION_SEND).putExtra(
+                                Intent.EXTRA_TEXT, getString(
+                                R.string.default_share_content, QuakesUtils.getIntensity(v.context, mmi)
                                 .toLowerCase(Locale.getDefault()), magnitude, locality, publicID
                         )
-                    ).setType("text/plain")
+                        ).setType("text/plain")
                 )
             }
         }

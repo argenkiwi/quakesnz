@@ -13,6 +13,12 @@ class QuakeDetailEventPresenter(
             is QuakeDetailEvent.LoadQuakeError -> view.showLoadingError()
             is QuakeDetailEvent.LoadQuakeComplete -> when (t.result) {
                 is Result.Failure -> view.showLoadingError()
+                else -> {
+                    // Nothing
+                }
+            }
+            else -> {
+                // Nothing
             }
         }
     }

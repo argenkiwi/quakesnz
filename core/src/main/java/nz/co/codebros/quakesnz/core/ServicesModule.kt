@@ -6,6 +6,10 @@ import com.dropbox.android.external.store4.StoreBuilder
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import nz.co.codebros.quakesnz.core.moshi.CoordinatesTypeAdapter
@@ -22,6 +26,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 object ServicesModule {
 
     private val httpLoggingInterceptor
@@ -46,12 +51,12 @@ object ServicesModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
-    @JvmStatic
     @Provides
     @Singleton
     internal fun geonetService() = retrofit(okHttpClient()).create(GeonetService::class.java)
 
-    @JvmStatic
+    @ExperimentalCoroutinesApi
+    @FlowPreview
     @Provides
     @Singleton
     internal fun featuresStore(
@@ -75,7 +80,8 @@ object ServicesModule {
             )
     ).build()
 
-    @JvmStatic
+    @ExperimentalCoroutinesApi
+    @FlowPreview
     @Provides
     @Singleton
     internal fun featureStore(

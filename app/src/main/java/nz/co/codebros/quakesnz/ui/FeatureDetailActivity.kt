@@ -5,41 +5,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.app.NavUtils
 import androidx.core.app.TaskStackBuilder
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModelProvider
-import dagger.Provides
-import dagger.android.ContributesAndroidInjector
+import androidx.fragment.app.FragmentActivity
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.usecase.Result
 import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.model.QuakeDetailModel
 import nz.co.codebros.quakesnz.detail.view.QuakeDetailFragment
-import nz.co.codebros.quakesnz.map.model.QuakeMapState
-import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
-import nz.co.vilemob.daggerviewmodel.DaggerViewModel
-import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
-import java.io.Serializable
 import javax.inject.Inject
 
-class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
+@AndroidEntryPoint
+class FeatureDetailActivity : FragmentActivity() {
 
-    private lateinit var viewModel: ViewModel
-
-    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
-            viewModelProvider.get(ViewModel::class.java)
-
-    override fun onViewModelCreated(viewModel: ViewModel) {
-        super.onViewModelCreated(viewModel)
-        this.viewModel = viewModel
-        intent.handle()
-    }
+    private val viewModel: ViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
         when (savedInstanceState) {
             null -> {
                 supportFragmentManager.beginTransaction()
@@ -47,6 +35,8 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
                         .commit()
             }
         }
+
+        intent.handle()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -76,9 +66,10 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         else -> super.onOptionsItemSelected(item)
     }
 
+    @HiltViewModel
     class ViewModel @Inject constructor(
             private val quakeDetailModel: QuakeDetailModel
-    ) : DaggerViewModel() {
+    ) : androidx.lifecycle.ViewModel() {
 
         private val disposable = quakeDetailModel.subscribe()
 
@@ -93,26 +84,6 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
 
         fun onLoadFeature(publicId: String) {
             quakeDetailModel.publish(QuakeDetailEvent.LoadQuake(publicId))
-        }
-    }
-
-    @dagger.Module
-    internal abstract class Module {
-
-        @ContributesAndroidInjector
-        internal abstract fun quakeDetailFragment(): QuakeDetailFragment
-
-        @ContributesAndroidInjector
-        internal abstract fun quakeMapFragment(): QuakeMapFragment
-
-        internal companion object {
-
-            @Provides
-            fun quakeMapState(
-                    quakeDetailModel: QuakeDetailModel
-            ): LiveData<QuakeMapState> = Transformations.map(quakeDetailModel.state) {
-                QuakeMapState(it.feature?.geometry?.coordinates)
-            }
         }
     }
 

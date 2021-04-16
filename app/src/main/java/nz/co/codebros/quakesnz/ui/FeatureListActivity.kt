@@ -1,48 +1,40 @@
 package nz.co.codebros.quakesnz.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModelProvider
-import dagger.Provides
-import dagger.android.ContributesAndroidInjector
-import io.reactivex.BackpressureStrategy
+import androidx.lifecycle.toLiveData
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.Flowable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.processors.PublishProcessor
+import io.reactivex.rxkotlin.plusAssign
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.about.AboutActivity
+import nz.co.codebros.quakesnz.core.extension.mapNotNull
 import nz.co.codebros.quakesnz.list.model.QuakeListEvent
-import nz.co.codebros.quakesnz.list.model.QuakeListModel
-import nz.co.codebros.quakesnz.list.view.QuakeListFragment
-import nz.co.codebros.quakesnz.map.model.QuakeMapState
+import nz.co.codebros.quakesnz.list.model.QuakeListState
+import nz.co.codebros.quakesnz.map.model.QuakeMapEvent
+import nz.co.codebros.quakesnz.map.model.QuakeMapModel
 import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
-import nz.co.codebros.quakesnz.scope.FragmentScope
 import nz.co.codebros.quakesnz.settings.SettingsActivity
-import nz.co.codebros.quakesnz.util.toLiveData
-import nz.co.vilemob.daggerviewmodel.DaggerViewModel
-import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
+import nz.co.codebros.quakesnz.util.changes
 import javax.inject.Inject
 
-class FeatureListActivity : DaggerViewModelActivity<FeatureListActivity.ViewModel>() {
+@AndroidEntryPoint
+class FeatureListActivity : AppCompatActivity() {
+
+    private val viewModel: ViewModel by viewModels()
 
     private var mTwoPane = false
-
-    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
-            viewModelProvider.get(ViewModel::class.java)
-
-    override fun onViewModelCreated(viewModel: ViewModel) {
-        super.onViewModelCreated(viewModel)
-        viewModel.quakeListEvents.observe(this, Observer {
-            when (it) {
-                is QuakeListEvent.SelectQuake -> when {
-                    !mTwoPane -> startActivity(FeatureDetailActivity.newIntent(this, it.feature))
-                }
-            }
-        })
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +50,14 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivity.ViewMode
             supportFragmentManager.beginTransaction()
                     .add(R.id.map_container, QuakeMapFragment())
                     .commit()
+        }
+
+        viewModel.quakeListEvents.observe(this) {
+            if (it is QuakeListEvent.SelectQuake) {
+                if (!mTwoPane) {
+                    startActivity(FeatureDetailActivity.newIntent(this, it.feature))
+                }
+            }
         }
     }
 
@@ -78,32 +78,40 @@ class FeatureListActivity : DaggerViewModelActivity<FeatureListActivity.ViewMode
         else -> super.onOptionsItemSelected(item)
     }
 
+    @HiltViewModel
     class ViewModel @Inject constructor(
-            private val quakeListModel: QuakeListModel
-    ) : DaggerViewModel() {
+            private val events: PublishProcessor<QuakeListEvent>,
+            state: Flowable<QuakeListState>,
+            sharedPreferences: SharedPreferences,
+            quakeMapModel: QuakeMapModel
+    ) : androidx.lifecycle.ViewModel() {
+
         val quakeListEvents
-            get() = quakeListModel.eventObservable.toLiveData(BackpressureStrategy.LATEST)
-    }
+            get() = events.toLiveData()
 
-    @dagger.Module
-    abstract class Module {
+        private val disposables = CompositeDisposable()
 
-        @FragmentScope
-        @ContributesAndroidInjector
-        internal abstract fun quakeListFragment(): QuakeListFragment
+        init {
+            disposables += sharedPreferences.changes()
+                    .filter { it == "pref_intensity" }
+                    .map { QuakeListEvent.RefreshQuakes }
+                    .subscribe(events::onNext)
 
-        @FragmentScope
-        @ContributesAndroidInjector
-        internal abstract fun quakeMapFragment(): QuakeMapFragment
+            disposables += state
+                    .mapNotNull { it.selectedFeature?.geometry?.coordinates }
+                    .distinct()
+                    .subscribe({
+                        quakeMapModel.publish(QuakeMapEvent.OnNewCoordinates(it))
+                    }, {
+                        Log.e(FeatureListActivity::class.simpleName, "Coordinates are null.", it)
+                    })
 
-        companion object {
+            disposables += state.subscribe()
+        }
 
-            @Provides
-            fun quakeMapState(
-                    quakeListModel: QuakeListModel
-            ) = Transformations.map(quakeListModel.state) {
-                QuakeMapState(it.selectedFeature?.geometry?.coordinates)
-            }
+        override fun onCleared() {
+            super.onCleared()
+            disposables.clear()
         }
     }
 }

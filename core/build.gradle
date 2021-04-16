@@ -1,7 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
 
 android {
     compileSdkVersion 30
@@ -31,16 +34,11 @@ android {
     }
 }
 
-androidExtensions {
-    experimental = true
-}
-
 ext {
     retrofit_version = '2.5.0'
 }
 
 dependencies {
-    implementation Dependencies.kotlinStdlibJdk7
     implementation Dependencies.dagger
     kapt Dependencies.daggerCompiler
     implementation Dependencies.rxjava
@@ -53,6 +51,9 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$versionsRetrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$versionsRetrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$versionsRetrofit"
+
+    implementation "com.google.dagger:hilt-android:${Versions.hilt}"
+    kapt "com.google.dagger:hilt-compiler:${Versions.hilt}"
 
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     implementation Dependencies.store
