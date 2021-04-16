@@ -8,7 +8,7 @@ import io.reactivex.Observable
 fun <T> Observable<T>.toLiveData(backpressureStrategy: BackpressureStrategy) =
         toFlowable(backpressureStrategy).toLiveData()
 
-fun <T, S> Observable<T>.mapNotNull(mapper: (T) -> S): Observable<S> = map { Optional(mapper(it)) }
+fun <T, S> Observable<T>.mapNotNull(mapper: (T) -> S?): Observable<S> = map { Optional(mapper(it)) }
         .filter { it.value != null }
         .map { it.value }
 

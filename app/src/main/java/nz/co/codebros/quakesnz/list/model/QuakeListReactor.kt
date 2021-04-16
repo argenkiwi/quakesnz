@@ -5,6 +5,7 @@ import androidx.core.os.bundleOf
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.runBlocking
 import nz.co.codebros.quakesnz.core.usecase.LoadFeaturesUseCase
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class QuakeListReactor @Inject constructor(
 ) {
 
     fun react(event: QuakeListEvent): Single<QuakeListEvent>? = when (event) {
-        is QuakeListEvent.LoadQuakes -> loadFeaturesUseCase.execute()
+        is QuakeListEvent.LoadQuakes -> Single.fromCallable { runBlocking { loadFeaturesUseCase.execute() } }
                 .map<QuakeListEvent> { QuakeListEvent.QuakesLoaded(it.features) }
                 .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
                 .observeOn(AndroidSchedulers.mainThread())

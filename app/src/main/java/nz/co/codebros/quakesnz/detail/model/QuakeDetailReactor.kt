@@ -2,6 +2,7 @@ package nz.co.codebros.quakesnz.detail.model
 
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.runBlocking
 import nz.co.codebros.quakesnz.core.usecase.LoadFeatureUseCase
 import javax.inject.Inject
 
@@ -11,7 +12,7 @@ class QuakeDetailReactor @Inject constructor(
 
     fun react(event: QuakeDetailEvent): Single<QuakeDetailEvent>? = when (event) {
         is QuakeDetailEvent.LoadQuake -> with(event) {
-            loadFeatureUseCase.execute(publicId)
+            Single.fromCallable { runBlocking { loadFeatureUseCase.execute(publicId) } }
                     .map<QuakeDetailEvent> { QuakeDetailEvent.LoadQuakeComplete(it) }
                     .onErrorReturn { QuakeDetailEvent.LoadQuakeError(it) }
                     .observeOn(AndroidSchedulers.mainThread())
