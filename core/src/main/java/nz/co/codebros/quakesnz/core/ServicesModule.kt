@@ -1,17 +1,23 @@
 package nz.co.codebros.quakesnz.core
 
+import com.dropbox.android.external.store4.Fetcher
+import com.dropbox.android.external.store4.SourceOfTruth
+import com.dropbox.android.external.store4.StoreBuilder
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import nz.co.codebros.quakesnz.core.moshi.CoordinatesTypeAdapter
 import nz.co.codebros.quakesnz.core.moshi.DateTypeAdapter
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -28,9 +34,8 @@ object ServicesModule {
                 .add(CoordinatesTypeAdapter())
                 .build()
 
-    private fun okHttpClient(cacheDir: File) = OkHttpClient()
+    private fun okHttpClient() = OkHttpClient()
             .newBuilder()
-            .cache(Cache(cacheDir, (2 * 1024 * 1024).toLong())) // 2Mb
             .addInterceptor(httpLoggingInterceptor)
             .build()
 
@@ -44,7 +49,53 @@ object ServicesModule {
     @JvmStatic
     @Provides
     @Singleton
-    internal fun geonetService(
+    internal fun geonetService() = retrofit(okHttpClient()).create(GeonetService::class.java)
+
+    @JvmStatic
+    @Provides
+    @Singleton
+    internal fun featuresStore(
+            service: GeonetService,
             @Named("cacheDir") cacheDir: File
-    ) = retrofit(okHttpClient(cacheDir)).create(GeonetService::class.java)
+    ) = StoreBuilder.from(
+            Fetcher.of { mmi: Int -> service.getQuakes(mmi) },
+            SourceOfTruth.Companion.of(
+                    nonFlowReader = { mmi: Int ->
+                        val file = File(cacheDir, "MMI$mmi.obj")
+                        when {
+                            file.exists() -> ObjectInputStream(file.inputStream())
+                                    .use { it.readObject() as FeatureCollection }
+                            else -> null
+                        }
+                    },
+                    writer = { mmi: Int, featureCollection: FeatureCollection ->
+                        val file = File(cacheDir, "MMI$mmi.obj")
+                        ObjectOutputStream(file.outputStream()).use { it.writeObject(featureCollection) }
+                    }
+            )
+    ).build()
+
+    @JvmStatic
+    @Provides
+    @Singleton
+    internal fun featureStore(
+            service: GeonetService,
+            @Named("cacheDir") cacheDir: File
+    ) = StoreBuilder.from(
+            Fetcher.of { publicID: String -> service.getQuake(publicID).features.first() },
+            SourceOfTruth.Companion.of(
+                    nonFlowReader = { publicId: String ->
+                        val file = File(cacheDir, "$publicId.obj")
+                        when {
+                            file.exists() -> ObjectInputStream(file.inputStream())
+                                    .use { it.readObject() as Feature }
+                            else -> null
+                        }
+                    },
+                    writer = { publicId: String, feature: Feature ->
+                        val file = File(cacheDir, "$publicId.obj")
+                        ObjectOutputStream(file.outputStream()).use { it.writeObject(feature) }
+                    }
+            )
+    ).build()
 }

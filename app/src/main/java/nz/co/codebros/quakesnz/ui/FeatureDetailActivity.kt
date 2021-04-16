@@ -3,6 +3,7 @@ package nz.co.codebros.quakesnz.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.MenuItem
 import androidx.core.app.NavUtils
 import androidx.core.app.TaskStackBuilder
@@ -20,6 +21,7 @@ import nz.co.codebros.quakesnz.map.model.QuakeMapState
 import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
 import nz.co.vilemob.daggerviewmodel.DaggerViewModel
 import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
+import java.io.Serializable
 import javax.inject.Inject
 
 class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
@@ -96,16 +98,15 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
 
     @dagger.Module
     internal abstract class Module {
+
         @ContributesAndroidInjector
         internal abstract fun quakeDetailFragment(): QuakeDetailFragment
 
         @ContributesAndroidInjector
         internal abstract fun quakeMapFragment(): QuakeMapFragment
 
-        @dagger.Module
         internal companion object {
 
-            @JvmStatic
             @Provides
             fun quakeMapState(
                     quakeDetailModel: QuakeDetailModel
@@ -120,7 +121,7 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
 
         private var Intent.feature: Feature?
             set(value) {
-                putExtra(EXTRA_FEATURE, value)
+                putExtra(EXTRA_FEATURE, value as Parcelable)
             }
             get() = getParcelableExtra(EXTRA_FEATURE)
 
