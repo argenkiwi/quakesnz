@@ -1,7 +1,8 @@
 package nz.co.codebros.quakesnz.util
 
-import kotlinx.android.extensions.LayoutContainer
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 
-interface ViewHolder<T> : LayoutContainer {
-    fun bind(props: T)
-}
+class ViewHolder<T: ViewBinding>(
+    val viewBinding: T
+) : RecyclerView.ViewHolder(viewBinding.root)

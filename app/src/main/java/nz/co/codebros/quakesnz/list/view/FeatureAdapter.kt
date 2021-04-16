@@ -1,23 +1,32 @@
 package nz.co.codebros.quakesnz.list.view
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import nz.co.codebros.quakesnz.core.data.Feature
-import nz.co.codebros.quakesnz.util.BaseAdapter
-import nz.co.codebros.quakesnz.util.RecyclableViewHolder
+import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
+import nz.co.codebros.quakesnz.util.ViewHolder
 
 class FeatureAdapter(
-        private val onItemClicked: (view: View, feature: Feature) -> Unit
-) : BaseAdapter() {
+    private val onItemClicked: (view: View, feature: Feature) -> Unit
+) : ListAdapter<ItemSummaryProperties, ViewHolder<ItemSummaryBinding>>(DiffCallback) {
 
-    override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
-    ) = RecyclableViewHolder(FeatureViewHolder(parent, onItemClicked))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<ItemSummaryBinding> =
+        ViewHolder(ItemSummaryBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: RecyclableViewHolder<*>, position: Int) {
-        when(val item = getItem(position)){
-          is  FeatureViewHolder.Properties -> (holder as RecyclableViewHolder<FeatureViewHolder.Properties>).bind(item)
+    override fun onBindViewHolder(holder: ViewHolder<ItemSummaryBinding>, position: Int) {
+        holder.viewBinding.bind(getItem(position), onItemClicked);
+    }
+
+    object DiffCallback : DiffUtil.ItemCallback<ItemSummaryProperties>() {
+        override fun areItemsTheSame(oldItem: ItemSummaryProperties, newItem: ItemSummaryProperties): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: ItemSummaryProperties, newItem: ItemSummaryProperties): Boolean {
+            return oldItem.feature.properties.publicID == newItem.feature.properties.publicID
         }
     }
 }

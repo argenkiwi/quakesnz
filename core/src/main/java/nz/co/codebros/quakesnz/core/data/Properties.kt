@@ -1,9 +1,9 @@
 package nz.co.codebros.quakesnz.core.data
 
 import android.os.Parcelable
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 import java.util.*
 
 @Parcelize
@@ -16,4 +16,4 @@ data class Properties(
         val locality: String,
         val mmi: Int,
         val quality: String
-) : Parcelable
+) : Parcelable, Serializable

@@ -3,41 +3,31 @@ package nz.co.codebros.quakesnz.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.app.NavUtils
 import androidx.core.app.TaskStackBuilder
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModelProvider
-import dagger.Provides
-import dagger.android.ContributesAndroidInjector
+import androidx.fragment.app.FragmentActivity
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.core.usecase.Result
 import nz.co.codebros.quakesnz.detail.model.QuakeDetailEvent
 import nz.co.codebros.quakesnz.detail.model.QuakeDetailModel
 import nz.co.codebros.quakesnz.detail.view.QuakeDetailFragment
-import nz.co.codebros.quakesnz.map.model.QuakeMapState
-import nz.co.codebros.quakesnz.map.view.QuakeMapFragment
-import nz.co.vilemob.daggerviewmodel.DaggerViewModel
-import nz.co.vilemob.daggerviewmodel.appcompat.DaggerViewModelActivity
 import javax.inject.Inject
 
-class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.ViewModel>() {
+@AndroidEntryPoint
+class FeatureDetailActivity : FragmentActivity() {
 
-    private lateinit var viewModel: ViewModel
-
-    override fun onCreateViewModel(viewModelProvider: ViewModelProvider) =
-            viewModelProvider.get(ViewModel::class.java)
-
-    override fun onViewModelCreated(viewModel: ViewModel) {
-        super.onViewModelCreated(viewModel)
-        this.viewModel = viewModel
-        intent.handle()
-    }
+    private val viewModel: ViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
         when (savedInstanceState) {
             null -> {
                 supportFragmentManager.beginTransaction()
@@ -45,6 +35,8 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
                         .commit()
             }
         }
+
+        intent.handle()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -58,7 +50,7 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         data?.lastPathSegment?.let { viewModel.onLoadFeature(it) }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> {
             NavUtils.getParentActivityIntent(this)?.let {
                 when {
@@ -74,9 +66,10 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         else -> super.onOptionsItemSelected(item)
     }
 
+    @HiltViewModel
     class ViewModel @Inject constructor(
             private val quakeDetailModel: QuakeDetailModel
-    ) : DaggerViewModel() {
+    ) : androidx.lifecycle.ViewModel() {
 
         private val disposable = quakeDetailModel.subscribe()
 
@@ -94,33 +87,12 @@ class FeatureDetailActivity : DaggerViewModelActivity<FeatureDetailActivity.View
         }
     }
 
-    @dagger.Module
-    internal abstract class Module {
-        @ContributesAndroidInjector
-        internal abstract fun quakeDetailFragment(): QuakeDetailFragment
-
-        @ContributesAndroidInjector
-        internal abstract fun quakeMapFragment(): QuakeMapFragment
-
-        @dagger.Module
-        internal companion object {
-
-            @JvmStatic
-            @Provides
-            fun quakeMapState(
-                    quakeDetailModel: QuakeDetailModel
-            ): LiveData<QuakeMapState> = Transformations.map(quakeDetailModel.state) {
-                QuakeMapState(it.feature?.geometry?.coordinates)
-            }
-        }
-    }
-
     companion object {
         private const val EXTRA_FEATURE = "extra_feature"
 
         private var Intent.feature: Feature?
             set(value) {
-                putExtra(EXTRA_FEATURE, value)
+                putExtra(EXTRA_FEATURE, value as Parcelable)
             }
             get() = getParcelableExtra(EXTRA_FEATURE)
 

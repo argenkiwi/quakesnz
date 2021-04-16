@@ -1,57 +1,107 @@
 package nz.co.codebros.quakesnz.core
 
+import com.dropbox.android.external.store4.Fetcher
+import com.dropbox.android.external.store4.SourceOfTruth
+import com.dropbox.android.external.store4.StoreBuilder
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.core.data.FeatureCollection
 import nz.co.codebros.quakesnz.core.moshi.CoordinatesTypeAdapter
 import nz.co.codebros.quakesnz.core.moshi.DateTypeAdapter
-import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 object ServicesModule {
 
-    @JvmStatic
-    @Provides
-    internal fun httpLoggingInterceptor() = HttpLoggingInterceptor()
-            .setLevel(HttpLoggingInterceptor.Level.BASIC)
+    private val httpLoggingInterceptor
+        get() = HttpLoggingInterceptor()
+                .setLevel(HttpLoggingInterceptor.Level.BASIC)
 
-    @JvmStatic
-    @Provides
-    internal fun okHttpClient(
-            @Named("cacheDir") cacheDir: File,
-            interceptor: HttpLoggingInterceptor
-    ) = OkHttpClient()
+    private val moshi
+        get() = Moshi.Builder()
+                .add(DateTypeAdapter("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
+                .add(CoordinatesTypeAdapter())
+                .build()
+
+    private fun okHttpClient() = OkHttpClient()
             .newBuilder()
-            .cache(Cache(cacheDir, (2 * 1024 * 1024).toLong())) // 2Mb
-            .addInterceptor(interceptor)
+            .addInterceptor(httpLoggingInterceptor)
             .build()
 
-    @JvmStatic
-    @Provides
-    internal fun moshi() = Moshi.Builder()
-            .add(DateTypeAdapter("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
-            .add(CoordinatesTypeAdapter())
-            .build()
-
-    @JvmStatic
-    @Provides
-    internal fun retrofit(client: OkHttpClient, moshi: Moshi) = Retrofit.Builder()
+    private fun retrofit(client: OkHttpClient) = Retrofit.Builder()
             .baseUrl("https://api.geonet.org.nz/")
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
-    @JvmStatic
     @Provides
     @Singleton
-    internal fun geonetService(retrofit: Retrofit) = retrofit.create(GeonetService::class.java)
+    internal fun geonetService() = retrofit(okHttpClient()).create(GeonetService::class.java)
+
+    @ExperimentalCoroutinesApi
+    @FlowPreview
+    @Provides
+    @Singleton
+    internal fun featuresStore(
+            service: GeonetService,
+            @Named("cacheDir") cacheDir: File
+    ) = StoreBuilder.from(
+            Fetcher.of { mmi: Int -> service.getQuakes(mmi) },
+            SourceOfTruth.Companion.of(
+                    nonFlowReader = { mmi: Int ->
+                        val file = File(cacheDir, "MMI$mmi.obj")
+                        when {
+                            file.exists() -> ObjectInputStream(file.inputStream())
+                                    .use { it.readObject() as FeatureCollection }
+                            else -> null
+                        }
+                    },
+                    writer = { mmi: Int, featureCollection: FeatureCollection ->
+                        val file = File(cacheDir, "MMI$mmi.obj")
+                        ObjectOutputStream(file.outputStream()).use { it.writeObject(featureCollection) }
+                    }
+            )
+    ).build()
+
+    @ExperimentalCoroutinesApi
+    @FlowPreview
+    @Provides
+    @Singleton
+    internal fun featureStore(
+            service: GeonetService,
+            @Named("cacheDir") cacheDir: File
+    ) = StoreBuilder.from(
+            Fetcher.of { publicID: String -> service.getQuake(publicID).features.first() },
+            SourceOfTruth.Companion.of(
+                    nonFlowReader = { publicId: String ->
+                        val file = File(cacheDir, "$publicId.obj")
+                        when {
+                            file.exists() -> ObjectInputStream(file.inputStream())
+                                    .use { it.readObject() as Feature }
+                            else -> null
+                        }
+                    },
+                    writer = { publicId: String, feature: Feature ->
+                        val file = File(cacheDir, "$publicId.obj")
+                        ObjectOutputStream(file.outputStream()).use { it.writeObject(feature) }
+                    }
+            )
+    ).build()
 }

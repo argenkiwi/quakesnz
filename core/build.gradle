@@ -1,15 +1,18 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.0'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 29
+        minSdkVersion 21
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
@@ -31,25 +34,30 @@ android {
     }
 }
 
-androidExtensions {
-    experimental = true
-}
-
 ext {
     retrofit_version = '2.5.0'
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50'
-    implementation 'com.google.dagger:dagger:2.23.1'
-    kapt 'com.google.dagger:dagger-compiler:2.23.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
-    api 'com.squareup.okhttp3:logging-interceptor:3.14.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    api 'com.squareup.retrofit2:converter-moshi:2.5.0'
-    implementation("com.squareup.moshi:moshi:1.8.0")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.8.0")
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    implementation Dependencies.dagger
+    kapt Dependencies.daggerCompiler
+    implementation Dependencies.rxjava
+
+    def versionsMoshi = '1.9.3'
+    implementation "com.squareup.moshi:moshi:$versionsMoshi"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$versionsMoshi"
+
+    def versionsRetrofit = '2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$versionsRetrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versionsRetrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$versionsRetrofit"
+
+    implementation "com.google.dagger:hilt-android:${Versions.hilt}"
+    kapt "com.google.dagger:hilt-compiler:${Versions.hilt}"
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation Dependencies.store
+    implementation Dependencies.coroutines
 }
 
 repositories {

@@ -19,7 +19,7 @@
             app:cardUseCompatPadding="true"
             app:contentPadding="4dp">
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/map"
                 android:name="nz.co.codebros.quakesnz.map.view.QuakeMapFragment"
                 android:layout_width="match_parent"
@@ -28,10 +28,10 @@
         </androidx.cardview.widget.CardView>
 
         <include
+            android:id="@+id/item_summary"
             layout="@layout/item_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
