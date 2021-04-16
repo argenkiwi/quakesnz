@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,7 +21,7 @@ class QuakeListFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
 
-    private val viewModel: QuakeListViewModel by viewModels()
+    private val viewModel: QuakeListViewModel by activityViewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -43,7 +43,7 @@ class QuakeListFragment : Fragment() {
             adapter = featureAdapter
         }
 
-        viewModel.liveEvent.observe(viewLifecycleOwner) {
+        viewModel.liveEvents.observe(viewLifecycleOwner) {
             if (it is QuakeListEvent.LoadQuakesError) {
                 Toast.makeText(context, R.string.failed_to_download, Toast.LENGTH_SHORT).show()
             }
