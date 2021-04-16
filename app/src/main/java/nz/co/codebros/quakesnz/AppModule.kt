@@ -26,9 +26,9 @@ object AppModule {
     fun cacheDir(@ApplicationContext context: Context): File = context.cacheDir
 
     @Provides
-    fun sharedPreferences(
-            @ApplicationContext context: Context
-    ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    fun sharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+    }
 
     @Provides
     @Singleton

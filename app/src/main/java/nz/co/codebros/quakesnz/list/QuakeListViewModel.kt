@@ -40,7 +40,7 @@ class QuakeListViewModel @Inject constructor(
 
     init {
 
-        disposables += events.startWith(QuakeListEvent.LoadQuakes)
+        disposables += events.startWith(QuakeListEvent.RefreshQuakes)
                 .react(reactor::react)
                 .subscribe(events::onNext)
 
