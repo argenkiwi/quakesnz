@@ -36,7 +36,7 @@ class QuakeListFragment : Fragment() {
 
         swipeRefreshLayout.setOnRefreshListener { viewModel.refreshQuakes() }
 
-        val featureAdapter = FeatureAdapter { _, feature -> viewModel.selectQuake(feature) }
+        val featureAdapter = FeatureAdapter { feature -> viewModel.selectQuake(feature) }
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)

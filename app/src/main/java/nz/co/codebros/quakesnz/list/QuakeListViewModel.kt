@@ -53,7 +53,7 @@ class QuakeListViewModel @Inject constructor(
 
         disposables += state
                 .mapNotNull { it.selectedFeature?.geometry?.coordinates }
-                .distinct()
+                .distinctUntilChanged()
                 .subscribe({
                     quakeMapModel.publish(QuakeMapEvent.OnNewCoordinates(it))
                 }, {

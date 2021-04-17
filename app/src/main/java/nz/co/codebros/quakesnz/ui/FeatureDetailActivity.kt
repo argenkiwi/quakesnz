@@ -29,11 +29,9 @@ class FeatureDetailActivity : FragmentActivity() {
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
         when (savedInstanceState) {
-            null -> {
-                supportFragmentManager.beginTransaction()
-                        .add(android.R.id.content, QuakeDetailFragment())
-                        .commit()
-            }
+            null -> supportFragmentManager.beginTransaction()
+                    .add(android.R.id.content, QuakeDetailFragment())
+                    .commit()
         }
 
         intent.handle()

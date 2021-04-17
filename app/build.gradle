@@ -14,8 +14,8 @@ android {
         applicationId "nz.co.codebros.quakesnz"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 25
-        versionName "2.7.0"
+        versionCode 26
+        versionName "2.7.1"
     }
 
     signingConfigs {
