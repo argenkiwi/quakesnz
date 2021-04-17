@@ -1,7 +1,6 @@
 package nz.co.codebros.quakesnz.list.view
 
 import android.text.format.DateUtils
-import android.view.View
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
 import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
@@ -13,7 +12,7 @@ data class ItemSummaryProperties(
         val selected: Boolean = false
 )
 
-fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: (view: View, feature: Feature) -> Unit) {
+fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: ((feature: Feature) -> Unit)?) {
 
     with(props) {
         val properties = feature.properties
@@ -45,7 +44,7 @@ fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: (view: 
                 selected -> 8.0f
                 else -> 2.0f
             }
-            setOnClickListener { onItemClicked(it, feature) }
+            setOnClickListener { onItemClicked?.invoke(feature) }
         }
     }
 }

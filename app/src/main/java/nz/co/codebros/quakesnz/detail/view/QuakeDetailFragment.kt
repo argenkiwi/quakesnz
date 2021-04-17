@@ -13,6 +13,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.core.data.Feature
+import nz.co.codebros.quakesnz.databinding.FragmentQuakeDetailBinding
 import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
 import nz.co.codebros.quakesnz.detail.QuakeDetailViewModel
 import nz.co.codebros.quakesnz.list.view.ItemSummaryProperties
@@ -23,27 +24,30 @@ import java.util.*
 @AndroidEntryPoint
 class QuakeDetailFragment : Fragment(), QuakeDetailView {
 
-    private lateinit var itemSummaryViewBinding: ItemSummaryBinding
+    private lateinit var binding: FragmentQuakeDetailBinding
+    private lateinit var itemSummaryBinding: ItemSummaryBinding
     private val viewModel: QuakeDetailViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_quake_detail, container, false)
+    ): View {
+        this.binding = FragmentQuakeDetailBinding.inflate(inflater, container, false)
+        return this.binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.itemSummaryViewBinding = ItemSummaryBinding.bind(view.findViewById(R.id.item_summary))
-
+        this.itemSummaryBinding = ItemSummaryBinding.bind(view.findViewById(R.id.item_summary))
         viewModel.quakeDetailModel.state.observe(viewLifecycleOwner, QuakeDetailStatePresenter(this))
         viewModel.quakeDetailModel.events.observe(viewLifecycleOwner, QuakeDetailEventPresenter(this))
     }
 
     override fun updateFeature(feature: Feature) {
-        itemSummaryViewBinding.bind(ItemSummaryProperties(feature)) { v, f ->
-            with(f.properties) {
-                FirebaseAnalytics.getInstance(v.context).logEvent(
+        binding.shareFloatingActionButton.setOnClickListener {
+            with(feature.properties) {
+                FirebaseAnalytics.getInstance(requireContext()).logEvent(
                         FirebaseAnalytics.Event.SHARE,
                         bundleOf(
                                 FirebaseAnalytics.Param.CONTENT_TYPE to "quake",
@@ -51,16 +55,17 @@ class QuakeDetailFragment : Fragment(), QuakeDetailView {
                         )
                 )
 
-                startActivity(
-                        Intent().setAction(Intent.ACTION_SEND).putExtra(
-                                Intent.EXTRA_TEXT, getString(
-                                R.string.default_share_content, QuakesUtils.getIntensity(v.context, mmi)
-                                .toLowerCase(Locale.getDefault()), magnitude, locality, publicID
-                        )
-                        ).setType("text/plain")
-                )
+                val intensity = QuakesUtils.getIntensity(requireContext(), mmi)
+                        .toLowerCase(Locale.getDefault())
+                val shareContent = getString(R.string.default_share_content, intensity, magnitude, locality, publicID)
+                val intent = Intent().setAction(Intent.ACTION_SEND)
+                        .putExtra(Intent.EXTRA_TEXT, shareContent)
+                        .setType("text/plain")
+
+                startActivity(intent)
             }
         }
+        itemSummaryBinding.bind(ItemSummaryProperties(feature), null)
     }
 
     override fun showLoadingError() {
