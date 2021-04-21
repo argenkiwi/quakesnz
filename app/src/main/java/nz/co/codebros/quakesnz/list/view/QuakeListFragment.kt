@@ -49,18 +49,10 @@ class QuakeListFragment : Fragment() {
             }
         }
 
-        viewModel.liveState.observe(viewLifecycleOwner) {
-            it?.apply {
-                swipeRefreshLayout.isRefreshing = isLoading
-                features?.map { feature ->
-                    ItemSummaryProperties(
-                            feature,
-                            feature == selectedFeature
-                    )
-                }?.let { propertiesList ->
-                    featureAdapter.submitList(propertiesList)
-                }
-            }
+        viewModel.liveState.observe(viewLifecycleOwner) { (isLoading, features, selectedFeature) ->
+            swipeRefreshLayout.isRefreshing = isLoading
+            features?.map { ItemSummaryProperties(it, it == selectedFeature) }
+                    ?.let { featureAdapter.submitList(it) }
         }
     }
 }
