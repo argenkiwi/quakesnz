@@ -30,8 +30,16 @@ import javax.inject.Singleton
 object ServicesModule {
 
     private val httpLoggingInterceptor
-        get() = HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BASIC)
+        get() = HttpLoggingInterceptor().setLevel(when {
+            BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
+            else -> HttpLoggingInterceptor.Level.BASIC
+        })
+
+    private val okHttpClient
+        get() = OkHttpClient()
+                .newBuilder()
+                .addInterceptor(httpLoggingInterceptor)
+                .build()
 
     private val moshi
         get() = Moshi.Builder()
@@ -39,21 +47,16 @@ object ServicesModule {
                 .add(CoordinatesTypeAdapter())
                 .build()
 
-    private fun okHttpClient() = OkHttpClient()
-            .newBuilder()
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
-
-    private fun retrofit(client: OkHttpClient) = Retrofit.Builder()
+    private val retrofit = Retrofit.Builder()
             .baseUrl("https://api.geonet.org.nz/")
-            .client(client)
+            .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
     @Provides
     @Singleton
-    internal fun geonetService() = retrofit(okHttpClient()).create(GeonetService::class.java)
+    internal fun geonetService() = retrofit.create(GeonetService::class.java)
 
     @ExperimentalCoroutinesApi
     @FlowPreview

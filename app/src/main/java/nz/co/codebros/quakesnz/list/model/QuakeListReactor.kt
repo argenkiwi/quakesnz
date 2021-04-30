@@ -21,7 +21,9 @@ class QuakeListReactor @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
         is QuakeListEvent.RefreshQuakes -> {
             tracker.logEvent("refresh", Bundle.EMPTY)
-            Single.fromCallable<QuakeListEvent> { QuakeListEvent.LoadQuakes }
+            Single.fromCallable { runBlocking { loadFeaturesUseCase.execute(true) } }
+                    .map<QuakeListEvent> { QuakeListEvent.QuakesLoaded(it.features) }
+                    .onErrorReturn { QuakeListEvent.LoadQuakesError(it) }
                     .observeOn(AndroidSchedulers.mainThread())
         }
         is QuakeListEvent.LoadQuakesError -> null
