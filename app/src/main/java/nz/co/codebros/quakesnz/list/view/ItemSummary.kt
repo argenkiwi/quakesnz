@@ -7,19 +7,19 @@ import nz.co.codebros.quakesnz.databinding.ItemSummaryBinding
 import nz.co.codebros.quakesnz.util.QuakesUtils
 import java.text.DecimalFormat
 
-data class ItemSummaryProperties(
-        val feature: Feature,
-        val selected: Boolean = false
-)
+data class ItemSummaryProperties(val feature: Feature, val selected: Boolean = false)
 
-fun ItemSummaryBinding.bind(props: ItemSummaryProperties, onItemClicked: ((feature: Feature) -> Unit)?) {
+fun ItemSummaryBinding.bind(
+    props: ItemSummaryProperties,
+    onItemClicked: ((feature: Feature) -> Unit)?
+) {
 
     with(props) {
         val properties = feature.properties
 
         val magnitude = DecimalFormat("0.0")
-                .format(properties.magnitude)
-                .split(".")
+            .format(properties.magnitude)
+            .split(".")
 
         val colorForIntensity = QuakesUtils.getColor(root.context, properties.mmi)
 

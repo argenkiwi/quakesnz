@@ -65,6 +65,7 @@ class QuakeDetailFragment : Fragment(), QuakeDetailView {
                 startActivity(intent)
             }
         }
+
         itemSummaryBinding.bind(ItemSummaryProperties(feature), null)
     }
 

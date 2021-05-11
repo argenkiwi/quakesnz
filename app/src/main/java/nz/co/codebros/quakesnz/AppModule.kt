@@ -9,8 +9,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.reactivex.processors.BehaviorProcessor
-import io.reactivex.processors.PublishProcessor
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import nz.co.codebros.quakesnz.list.model.QuakeListEvent
 import nz.co.codebros.quakesnz.list.model.QuakeListState
 import java.io.File
@@ -36,9 +36,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun quakeListEvents(): PublishProcessor<QuakeListEvent> = PublishProcessor.create()
+    fun quakeListEventFlow() = MutableSharedFlow<QuakeListEvent>()
 
     @Provides
     @Singleton
-    fun quakeListState(): BehaviorProcessor<QuakeListState> = BehaviorProcessor.create()
+    fun quakeListStateFlow() = MutableStateFlow(QuakeListState())
 }

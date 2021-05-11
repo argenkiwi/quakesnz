@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.list.QuakeListViewModel
 import nz.co.codebros.quakesnz.list.model.QuakeListEvent
@@ -21,6 +22,7 @@ class QuakeListFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
 
+    @ExperimentalCoroutinesApi
     private val viewModel: QuakeListViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -29,6 +31,7 @@ class QuakeListFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_quakes, container, false)
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)

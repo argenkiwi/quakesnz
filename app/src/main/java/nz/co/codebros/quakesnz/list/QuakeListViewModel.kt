@@ -3,62 +3,62 @@ package nz.co.codebros.quakesnz.list
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.toLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.processors.BehaviorProcessor
-import io.reactivex.processors.PublishProcessor
-import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import nz.co.codebros.quakesnz.core.data.Feature
-import nz.co.codebros.quakesnz.core.extension.mapNotNull
-import nz.co.codebros.quakesnz.core.extension.react
+import nz.co.codebros.quakesnz.core.extension.reactIn
+import nz.co.codebros.quakesnz.core.extension.reduceIn
 import nz.co.codebros.quakesnz.list.model.QuakeListEvent
 import nz.co.codebros.quakesnz.list.model.QuakeListReactor
 import nz.co.codebros.quakesnz.list.model.QuakeListState
 import nz.co.codebros.quakesnz.list.model.reduce
 import nz.co.codebros.quakesnz.map.model.QuakeMapEvent
 import nz.co.codebros.quakesnz.map.model.QuakeMapModel
-import nz.co.codebros.quakesnz.ui.FeatureListActivity
-import nz.co.codebros.quakesnz.util.changes
+import nz.co.codebros.quakesnz.util.changesFlow
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class QuakeListViewModel @Inject constructor(
-        private val events: PublishProcessor<QuakeListEvent>,
-        state: BehaviorProcessor<QuakeListState>,
-        reactor: QuakeListReactor,
-        sharedPreferences: SharedPreferences,
-        quakeMapModel: QuakeMapModel
+    private val events: MutableSharedFlow<QuakeListEvent>,
+    state: MutableStateFlow<QuakeListState>,
+    reactor: QuakeListReactor,
+    sharedPreferences: SharedPreferences,
+    quakeMapModel: QuakeMapModel
 ) : ViewModel() {
 
     val liveEvents
-        get() = events.toLiveData()
+        get() = events.asLiveData()
 
-    val liveState = state.toLiveData()
+    val liveState = state.asLiveData()
 
     private val disposables = CompositeDisposable()
 
     init {
 
-        disposables += events.startWith(QuakeListEvent.RefreshQuakes)
-                .react(reactor::react)
-                .subscribe(events::onNext)
+        events.reactIn(viewModelScope, reactor::react)
+        state.reduceIn(viewModelScope, events, ::reduce)
 
-        disposables += events.scan(QuakeListState(), ::reduce).subscribe(state::onNext)
+        viewModelScope.launch { events.emit(QuakeListEvent.RefreshQuakes) }
 
-        disposables += sharedPreferences.changes()
+        viewModelScope.launch {
+            sharedPreferences.changesFlow()
                 .filter { it == "pref_intensity" }
-                .map { QuakeListEvent.RefreshQuakes }
-                .subscribe(events::onNext)
+                .collect { events.emit(QuakeListEvent.RefreshQuakes) }
+        }
 
-        disposables += state
-                .mapNotNull { it.selectedFeature?.geometry?.coordinates }
-                .distinctUntilChanged()
-                .subscribe({
+        viewModelScope.launch {
+            state.map { it.selectedFeature?.geometry?.coordinates }.collect {
+                it?.let {
                     quakeMapModel.publish(QuakeMapEvent.OnNewCoordinates(it))
-                }, {
-                    Log.e(FeatureListActivity::class.simpleName, "Coordinates are null.", it)
-                })
+                } ?: Log.w(QuakeListViewModel::class.simpleName, "Coordinates are null.")
+            }
+        }
     }
 
     override fun onCleared() {
@@ -67,10 +67,10 @@ class QuakeListViewModel @Inject constructor(
     }
 
     fun refreshQuakes() {
-        events.onNext(QuakeListEvent.RefreshQuakes)
+        viewModelScope.launch { events.emit(QuakeListEvent.RefreshQuakes) }
     }
 
     fun selectQuake(feature: Feature) {
-        events.onNext(QuakeListEvent.SelectQuake(feature))
+        viewModelScope.launch { events.emit(QuakeListEvent.SelectQuake(feature)) }
     }
 }

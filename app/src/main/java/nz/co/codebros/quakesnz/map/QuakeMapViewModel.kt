@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuakeMapViewModel @Inject constructor(
-        private val quakeMapModel: QuakeMapModel
+        quakeMapModel: QuakeMapModel
 ) : ViewModel() {
     val liveState = quakeMapModel.stateObservable.toLiveData(BackpressureStrategy.LATEST)
 }

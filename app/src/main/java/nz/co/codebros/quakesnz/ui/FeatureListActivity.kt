@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import nz.co.codebros.quakesnz.R
 import nz.co.codebros.quakesnz.about.AboutActivity
 import nz.co.codebros.quakesnz.list.QuakeListViewModel
@@ -19,10 +20,12 @@ import nz.co.codebros.quakesnz.settings.SettingsActivity
 @AndroidEntryPoint
 class FeatureListActivity : AppCompatActivity() {
 
+    @ExperimentalCoroutinesApi
     private val viewModel: QuakeListViewModel by viewModels()
 
     private var mTwoPane = false
 
+    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feature_list)

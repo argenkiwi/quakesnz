@@ -11,6 +11,7 @@ class LoadFeaturesUseCase @Inject constructor(
         private val sharedPreferences: SharedPreferences,
         private val store: Store<Int, FeatureCollection>
 ) {
+
     suspend fun execute(refresh: Boolean = false): FeatureCollection {
         val mmi = sharedPreferences.getString("pref_intensity", null)?.toInt() ?: 3
         return when {
