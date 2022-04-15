@@ -1,10 +1,10 @@
 object Versions {
-    const val kotlin = "1.3.72"
+    const val kotlin = "1.4.20"
     const val dagger = "2.26"
     const val rxjava2 = "2.2.17"
     const val store = "4.0.0"
     const val coroutines = "1.3.9"
-    const val hilt = "2.33-beta"
+    const val hilt = "2.41"
 }
 
 object Dependencies {
